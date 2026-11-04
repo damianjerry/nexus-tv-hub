@@ -8,6 +8,9 @@
   
   <link rel="icon" type="image/png" href="icon.png">
   <link rel="apple-touch-icon" href="icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -27,22 +30,130 @@
     <!-- Web Embed Fallback -->
     <iframe id="web-embed-container" style="display: none;" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms"></iframe>
 
-    <!-- High-Design Official Standby Screen (for offline Parliament, BNR & Gov feeds) -->
-    <div id="event-standby-screen" class="event-standby-screen hidden">
-      <div class="standby-card">
-        <div class="standby-badge" id="standby-badge">CDEP</div>
-        <div class="standby-status-pill">
-          <span class="standby-pulse-dot"></span>
-          <span>MONITORIZARE LIVE // STANDBY</span>
+    <!-- ==================================================================
+         SCREEN 3: TRANSMISIUNE STANDBY (DARK COCKPIT SLATE)
+         ================================================================== -->
+    <div id="event-standby-screen" class="event-standby-screen hidden" role="dialog" aria-modal="true">
+      <!-- Subtle Ambient Backlight -->
+      <div class="standby-ambient-glow" aria-hidden="true"></div>
+
+      <!-- TV Header: Linear Broadcast Metadata Bar -->
+      <header class="standby-header">
+        <!-- Channel Identity & Mode -->
+        <div class="standby-meta-left">
+          <span class="standby-ch-num tabular-nums" id="standby-ch-num">CH 110</span>
+          <span class="standby-sep-dot"></span>
+          <span class="standby-ch-name-top" id="standby-ch-name-top">GUVERNUL ROMÂNIEI</span>
+          <span class="standby-sep-dot"></span>
+          <div class="standby-status-pill">
+            <span class="standby-pulse-dot"></span>
+            <span>STANDBY</span>
+          </div>
         </div>
-        <h2 class="standby-title" id="standby-title">Camera Deputaților (România)</h2>
-        <p class="standby-headline">Transmisiune Oficială în Așteptare</p>
-        <p class="standby-sub">Următoarea conferință sau ședință de plen va fi preluată automat în direct pe ecran.</p>
-        <div class="standby-portal" id="standby-portal">cdep.ro</div>
-      </div>
+
+        <!-- Realtime Broadcast Clock -->
+        <div class="standby-clock-right">
+          <span class="standby-date-text" id="standby-date-text">JOI, 24 OCTOMBRIE</span>
+          <span class="standby-sep-dot"></span>
+          <span class="standby-clock-text tabular-nums" id="standby-clock-text">20:42</span>
+        </div>
+      </header>
+
+      <!-- Main Centerpiece: Clean, horizontal, monolith layout -->
+      <main class="standby-main">
+        <div class="standby-monolith">
+          <!-- Crest & Institutional Title -->
+          <div class="standby-crest-section">
+            <div class="standby-crest-icon">
+              <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" width="28" height="28">
+                <path d="M24 5L11 9.5v12c0 11.25 6 18.5 13 21 7-2.5 13-9.75 13-21V9.5L24 5z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                <path d="M24 13v15M17 19h14M20 33h8" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.75"/>
+                <circle cx="24" cy="13" fill="currentColor" r="1.5"/>
+              </svg>
+            </div>
+            <h1 class="standby-title" id="standby-title">Guvernul României</h1>
+            <p class="standby-status-label">Transmisiune în așteptare</p>
+          </div>
+
+          <!-- Countdown Section: All Numbers in Uniform Pure White (#ffffff) -->
+          <div class="standby-countdown-section">
+            <div class="standby-countdown-label">Următoarea ședință începe în</div>
+            <div class="standby-countdown-digits" id="broadcast-countdown">
+              <!-- Ore -->
+              <div class="countdown-unit">
+                <span class="cd-num tabular-nums" id="cd-hours">02</span>
+                <span class="cd-label">Ore</span>
+              </div>
+              <span class="cd-sep">:</span>
+              <!-- Minute -->
+              <div class="countdown-unit">
+                <span class="cd-num tabular-nums" id="cd-minutes">44</span>
+                <span class="cd-label">Minute</span>
+              </div>
+              <span class="cd-sep">:</span>
+              <!-- Secunde -->
+              <div class="countdown-unit">
+                <span class="cd-num tabular-nums" id="cd-seconds">11</span>
+                <span class="cd-label">Secunde</span>
+              </div>
+            </div>
+
+            <!-- Integrated Subtle Baseline Accent Line -->
+            <div class="standby-baseline-bar">
+              <div class="standby-baseline-fill" id="standby-baseline-fill"></div>
+            </div>
+          </div>
+
+          <!-- Transmission Info: Subtle, refined format -->
+          <div class="standby-info-section">
+            <div class="standby-info-meta">
+              <span class="standby-info-date" id="standby-info-date">Vineri, 25 Octombrie 2024</span>
+              <span class="standby-sep-dot"></span>
+              <span class="standby-info-time tabular-nums" id="standby-info-time">11:00 EEST</span>
+              <span class="standby-sep-dot"></span>
+              <span class="standby-info-tag">DE INTERES PUBLIC</span>
+            </div>
+            <p class="standby-agenda-text" id="standby-agenda-text">
+              Ședința de Guvern: Analiza măsurilor economice și proiecte de ordonanță
+            </p>
+            <div class="standby-portal" id="standby-portal">gov.ro</div>
+          </div>
+
+          <!-- Refined Action Button -->
+          <button class="standby-reminder-btn" id="reminder-btn" type="button">
+            <span class="key-badge">OK</span>
+            <span id="reminder-label">Notifică-mă la pornire</span>
+            <svg class="bell-icon" viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+              <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/>
+            </svg>
+          </button>
+        </div>
+      </main>
+
+      <!-- Bottom TV Navigation Shortcuts Bar -->
+      <footer class="standby-footer">
+        <div class="standby-shortcuts-row">
+          <div class="shortcut-item">
+            <span class="shortcut-key">▲▼</span>
+            <span>Schimbă Canal</span>
+          </div>
+          <div class="shortcut-item">
+            <span class="shortcut-key">GUIDE</span>
+            <span>Ghid TV</span>
+          </div>
+          <div class="shortcut-item">
+            <span class="shortcut-key">OK</span>
+            <span>Notificare</span>
+          </div>
+          <div class="shortcut-item">
+            <span class="shortcut-key">BACK</span>
+            <span>Înapoi</span>
+          </div>
+        </div>
+      </footer>
     </div>
 
-    <!-- Audio Unmute Prompt (for browsers restricting unmuted autoplay) -->
+    <!-- Audio Unmute Prompt -->
     <div class="unmute-banner" id="unmute-prompt" style="display: none;">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
       <span>Apasă orice tastă pentru sunet</span>
@@ -50,52 +161,55 @@
   </div>
 
   <!-- ======================================================================
-       STAGE 2: LINEAR TV GUIDE (MINIMALIST OBSIDIAN ARCHITECTURE - 10-FOOT SCALE)
+       STAGE 2: LINEAR TV GUIDE (MINIMALIST OBSIDIAN ARCHITECTURE)
+       SCREEN 1: MINIMAL TV GUIDE (EXPANDED PROPORTIONS)
        ====================================================================== -->
   <div class="tv-guide-overlay hidden" id="guide-overlay" role="dialog" aria-modal="true">
     
-    <!-- Header -->
+    <!-- ================= TOP BAR ================= -->
     <header class="guide-header">
-      <div class="guide-brand">
-        <div class="guide-logo-box">N</div>
-        <div class="guide-brand-text">
-          <h1>NEXUS // GHID TV</h1>
+      <!-- Left: EPG Logo and Navigation Pills -->
+      <div class="guide-brand-wrap">
+        <div class="epg-brand-badge">
+          <div class="epg-brand-dot"></div>
+          <span class="epg-brand-text">EPG</span>
         </div>
+        <!-- Categories Filter Bar -->
+        <nav class="guide-category-pills" id="guide-categories" role="tablist">
+          <!-- Dynamically rendered category pills -->
+        </nav>
       </div>
 
-      <!-- Categories Filter Bar -->
-      <nav class="guide-category-pills" id="guide-categories" role="tablist">
-        <!-- Dynamically rendered category pills -->
-      </nav>
-
+      <!-- Right: Digital Clock & Date -->
       <div class="guide-header-right">
-        <div class="guide-clock">
-          <span class="guide-clock-time tabular-nums" id="guide-clock">--:--:--</span>
-          <span class="guide-clock-date" id="guide-date">București</span>
+        <div class="guide-clock-block">
+          <span class="guide-clock-time tabular-nums" id="guide-clock">20:42</span>
+          <span class="guide-clock-date" id="guide-date">Joi, 24 Octombrie</span>
         </div>
-        <button class="guide-btn-close" id="btn-close-guide" title="Închide ghidul (ESC / Return)">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        <button class="guide-btn-close" id="btn-close-guide" title="Închide ghidul (BACK / Return)">
+          <span class="key-badge">BACK</span>
           <span>Urmărește TV</span>
         </button>
       </div>
     </header>
 
-    <!-- Linear EPG Timeline Grid -->
-    <div class="epg-main-viewport">
+    <!-- ================= MAIN EPG GRID (EXPANDED PROPORTIONS) ================= -->
+    <main class="epg-main-viewport">
       
       <!-- Scrollable Grid Body (Header + Channel Rows & Program Cards) -->
       <div class="epg-grid-scrollable" id="epg-grid-container">
         <!-- Timeline Header: Channel Label + Time Slices Ruler -->
         <div class="epg-timeline-header-wrap">
-          <div class="epg-channel-header-col">CANAL TV</div>
+          <div class="epg-channel-header-col">CANAL</div>
           <div class="epg-time-ruler" id="epg-time-ruler">
             <!-- Dynamically populated time slots -->
           </div>
         </div>
 
-        <!-- Amber Vertical Line showing Current Minute -->
+        <!-- Vertical Live Time Indicator Line traversing rows -->
         <div class="epg-now-marker" id="epg-now-marker">
-          <div class="epg-now-label">ACUM</div>
+          <div class="epg-now-dot"></div>
+          <div class="epg-now-beam"></div>
         </div>
 
         <div class="epg-channels-body" id="epg-channels-rows">
@@ -103,80 +217,118 @@
         </div>
       </div>
 
-      <!-- Bottom Inspector: Editorial Details of Focused Show -->
+      <!-- ================= PROGRAM DETAILS / INSPECTOR PANEL ================= -->
       <aside class="epg-inspector-panel" id="epg-inspector">
-        <div class="inspector-left">
-          <div class="inspector-badge" id="insp-badge">CMP</div>
-          <div class="inspector-meta">
-            <div class="inspector-tag-row">
-              <span class="inspector-ch-name" id="insp-ch-name">CineMaraton Plus HD</span>
-              <span class="inspector-cat-tag" id="insp-cat-tag">CINEMA ROMÂNESC</span>
+        <div class="inspector-content">
+          <!-- Program Info -->
+          <div class="inspector-details">
+            <div class="inspector-meta-row">
+              <span class="inspector-ch-name" id="insp-ch-name">Bloomberg</span>
+              <span class="inspector-meta-dot">•</span>
+              <span class="inspector-time tabular-nums" id="insp-time">20:00 – 21:00</span>
+              <span class="inspector-meta-dot">•</span>
               <span class="inspector-status-pill" id="insp-status-pill">● LIVE ACUM</span>
             </div>
-            <h2 class="inspector-title" id="insp-title">Program în Desfășurare</h2>
-            <div class="inspector-time-row">
-              <span class="inspector-time tabular-nums" id="insp-time">--:-- - --:--</span>
-              <span class="inspector-progress-text tabular-nums" id="insp-progress-text">A mai rămas: -- min</span>
-            </div>
+            <h2 class="inspector-title" id="insp-title">
+              Bloomberg Technology: Semiconductor AI Supercycles
+            </h2>
+            <p class="inspector-desc" id="insp-desc">
+              Analiză aprofundată a piețelor globale de tehnologie, tranziției energetice și arhitecturii de calcul de înaltă performanță.
+            </p>
+          </div>
+
+          <!-- Quick Actions Button -->
+          <div class="inspector-actions">
+            <button class="insp-watch-btn" id="btn-insp-watch" type="button">
+              <span class="key-badge-dark">OK</span>
+              <span>Urmărește TV</span>
+            </button>
           </div>
         </div>
-        <div class="inspector-right">
-          <p class="inspector-desc" id="insp-desc">Detalii emisiune selectată.</p>
+
+        <!-- Integrated Cyan Progress Bar -->
+        <div class="inspector-progress-track">
+          <div class="inspector-progress-bar" id="insp-progress-bar-fill" style="width: 70%;"></div>
         </div>
       </aside>
 
-    </div>
+      <!-- ================= REMOTE D-PAD NAVIGATION HINT BAR ================= -->
+      <footer class="epg-footer-nav">
+        <div class="footer-shortcuts-left">
+          <span><strong class="key-txt">▲▼ ◄►</strong> Navighează</span>
+          <span><strong class="key-txt">OK</strong> Selectează</span>
+          <span><strong class="key-txt">BACK</strong> Înapoi</span>
+        </div>
+        <div class="footer-shortcuts-right">
+          <span class="footer-mode-label">Ghid Liniar Telemetrie</span>
+        </div>
+      </footer>
+
+    </main>
 
   </div>
 
   <!-- ======================================================================
        STAGE 3: QUICK OSD INFO BANNER (FULLSCREEN BROADCAST - 10-FOOT SCALE)
+       SCREEN 2: CHANNEL BANNER OVERLAY (REFINED QUALITY ONLY)
        ====================================================================== -->
-  <div class="osd-channel-banner hidden" id="osd-banner">
-    <div class="osd-top-row">
-      <div class="osd-left">
-        <span class="osd-num tabular-nums" id="osd-num">01</span>
-        <div class="osd-badge" id="osd-badge">CMP</div>
-        <div class="osd-info">
-          <div class="osd-title-group">
-            <h2 id="osd-name">CineMaraton Plus HD</h2>
-            <span class="osd-tag" id="osd-tag">CINEMA ROMÂNESC</span>
-            <span class="osd-quality tabular-nums" id="osd-quality">1080p HLS Direct</span>
+  <div class="osd-channel-banner hidden" id="osd-banner" role="status" aria-live="polite">
+    <div class="osd-card-inner">
+      <div class="osd-main-row">
+        <!-- Primary Section: Live Now Information -->
+        <div class="osd-primary-section">
+          <!-- Channel Meta & Stream Quality Pills -->
+          <div class="osd-meta-row">
+            <span class="osd-num tabular-nums" id="osd-num">104</span>
+            <span class="osd-name" id="osd-name">BLOOMBERG</span>
+            <span class="osd-sep-dot">•</span>
+            <span class="osd-time tabular-nums" id="osd-current-show-time">20:00 – 21:00</span>
+            <span class="osd-quality-badge" id="osd-quality">4K UHD</span>
           </div>
-          <p class="osd-channel-desc" id="osd-desc">Cele mai bune producții cinematografice românești</p>
+
+          <!-- Show Title -->
+          <h1 class="osd-show-title" id="osd-current-show-title">
+            Bloomberg Technology: Semiconductor AI Supercycles
+          </h1>
+
+          <!-- Show Synopsis -->
+          <p class="osd-show-desc" id="osd-desc">
+            Ed Ludlow and Caroline Hyde analyze current global capital shifts in semiconductor manufacturing and frontier AI infrastructure.
+          </p>
+        </div>
+
+        <!-- Split Section: Dedicated Compact "UP NEXT" Preview Card -->
+        <div class="osd-split-section" id="osd-next-container">
+          <div class="osd-next-header">
+            <span class="osd-next-label">URMEAZĂ</span>
+            <span class="osd-next-time tabular-nums" id="osd-next-show-time">21:00 – 22:00</span>
+          </div>
+          <div class="osd-next-card">
+            <div class="osd-next-title" id="osd-next-show-title">Balance of Power: Capital & Trade</div>
+            <div class="osd-next-desc" id="osd-next-show-desc">Dezbateri geopolitice și politica monetară a băncilor centrale.</div>
+          </div>
         </div>
       </div>
 
-      <div class="osd-right">
-        <div class="osd-clock tabular-nums" id="osd-clock">--:--:--</div>
+      <!-- Integrated Cyan Progress Bar along bottom border -->
+      <div class="osd-progress-track">
+        <div class="osd-progress-bar" id="osd-progress-bar-fill" style="width: 70%;"></div>
       </div>
     </div>
 
-    <!-- Current & Upcoming Program EPG Bar -->
-    <div class="osd-epg-section">
-      <div class="osd-epg-now">
-        <div class="osd-epg-badge">ÎN DIRECT</div>
-        <div class="osd-epg-details">
-          <div class="osd-show-title" id="osd-current-show-title">Program Live</div>
-          <div class="osd-show-time tabular-nums" id="osd-current-show-time">--:-- - --:--</div>
-          <!-- Live Program Progress Bar -->
-          <div class="osd-progress-track">
-            <div class="osd-progress-bar" id="osd-progress-bar-fill" style="width: 45%;"></div>
-          </div>
-        </div>
+    <!-- Remote Navigation Hints Bar below banner card -->
+    <footer class="osd-footer-hints">
+      <div class="osd-hints-left">
+        <span><strong class="key-txt">▲▼</strong> Canale</span>
+        <span><strong class="key-txt">◄►</strong> Program</span>
+        <span><strong class="key-txt">OK</strong> Ghid TV (2x OK)</span>
+        <span><strong class="key-txt">BACK</strong> Închide</span>
       </div>
-
-      <div class="osd-epg-next" id="osd-next-container">
-        <span class="osd-next-label">URMEAZĂ:</span>
-        <span class="osd-next-title" id="osd-next-show-title">Următorul Program</span>
-        <span class="osd-next-time tabular-nums" id="osd-next-show-time">--:--</span>
+      <div class="osd-hints-right">
+        <span class="key-badge-white">OK</span>
+        <span class="osd-hint-action">Vizionează</span>
       </div>
-
-      <div class="osd-guide-callout">
-        <span class="key-badge">OK</span>
-        <span>Ghid TV</span>
-      </div>
-    </div>
+    </footer>
   </div>
 
   <!-- ======================================================================

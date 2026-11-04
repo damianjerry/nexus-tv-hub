@@ -1,5 +1,5 @@
 /**
- * NEXUS TV // Linear Player & Smart TV Guide Engine
+ * NEXUS TV // Broadcast Telemetry EPG & Player Engine
  * Engineered for Samsung The Frame (Tizen 6.5) & 10-Foot UI
  *
  * Implements:
@@ -7,7 +7,7 @@
  * 2. 2-Press OK Remote Control Flow (1st press = OSD banner, 2nd press = TV Guide)
  * 3. Guaranteed Current Channel Focus on TV Guide opening
  * 4. Zero DOM thrashing: DOM pre-rendered & cached once, toggled smoothly with CSS
- * 5. Official Standby Screen for event channels (BNR, CDEP, Senat, Gov) when offline
+ * 5. Official Standby Screen with live countdown & reminder toggle
  * 6. TextTrack & CC subtitle suppression for True History & Yahoo Finance
  * 7. Real-time Live Event Detection & Notification Toast
  */
@@ -28,6 +28,8 @@
     hlsPlayer: null,
     osdTimer: null,
     liveToastTimer: null,
+    standbyInterval: null,
+    isStandbyReminderSet: false,
     activeLiveEventChannel: null,
     hasNotifiedChannels: new Set(),
     timelineBaseHour: null,
@@ -46,13 +48,23 @@
     webEmbed: document.getElementById("web-embed-container"),
     unmutePrompt: document.getElementById("unmute-prompt"),
 
-    // Standby Screen
+    // Standby Screen (Screen 3: Dark Cockpit Slate)
     eventStandbyScreen: document.getElementById("event-standby-screen"),
-    standbyBadge: document.getElementById("standby-badge"),
+    standbyChNum: document.getElementById("standby-ch-num"),
+    standbyChNameTop: document.getElementById("standby-ch-name-top"),
+    standbyDateText: document.getElementById("standby-date-text"),
+    standbyClockText: document.getElementById("standby-clock-text"),
     standbyTitle: document.getElementById("standby-title"),
+    standbyAgendaText: document.getElementById("standby-agenda-text"),
     standbyPortal: document.getElementById("standby-portal"),
+    cdHours: document.getElementById("cd-hours"),
+    cdMinutes: document.getElementById("cd-minutes"),
+    cdSeconds: document.getElementById("cd-seconds"),
+    standbyBaselineFill: document.getElementById("standby-baseline-fill"),
+    reminderBtn: document.getElementById("reminder-btn"),
+    reminderLabel: document.getElementById("reminder-label"),
 
-    // Linear TV Guide Overlay
+    // Linear TV Guide Overlay (Screen 1: Expanded Proportions)
     guideOverlay: document.getElementById("guide-overlay"),
     guideClock: document.getElementById("guide-clock"),
     guideDate: document.getElementById("guide-date"),
@@ -64,29 +76,27 @@
     epgChannelsRows: document.getElementById("epg-channels-rows"),
 
     // EPG Inspector Panel
-    inspBadge: document.getElementById("insp-badge"),
     inspChName: document.getElementById("insp-ch-name"),
-    inspCatTag: document.getElementById("insp-cat-tag"),
+    inspTime: document.getElementById("insp-time"),
     inspStatusPill: document.getElementById("insp-status-pill"),
     inspTitle: document.getElementById("insp-title"),
-    inspTime: document.getElementById("insp-time"),
-    inspProgressText: document.getElementById("insp-progress-text"),
     inspDesc: document.getElementById("insp-desc"),
+    btnInspWatch: document.getElementById("btn-insp-watch"),
+    inspProgressBarFill: document.getElementById("insp-progress-bar-fill"),
 
-    // Quick OSD Info Banner
+    // Quick OSD Info Banner (Screen 2: Refined Quality Only)
     osdBanner: document.getElementById("osd-banner"),
     osdNum: document.getElementById("osd-num"),
-    osdBadge: document.getElementById("osd-badge"),
     osdName: document.getElementById("osd-name"),
-    osdTag: document.getElementById("osd-tag"),
     osdQuality: document.getElementById("osd-quality"),
-    osdDesc: document.getElementById("osd-desc"),
-    osdClock: document.getElementById("osd-clock"),
-    osdCurrentShowTitle: document.getElementById("osd-current-show-title"),
     osdCurrentShowTime: document.getElementById("osd-current-show-time"),
+    osdCurrentShowTitle: document.getElementById("osd-current-show-title"),
+    osdDesc: document.getElementById("osd-desc"),
     osdProgressBarFill: document.getElementById("osd-progress-bar-fill"),
+    osdNextContainer: document.getElementById("osd-next-container"),
     osdNextShowTitle: document.getElementById("osd-next-show-title"),
     osdNextShowTime: document.getElementById("osd-next-show-time"),
+    osdNextShowDesc: document.getElementById("osd-next-show-desc"),
 
     // Live Event Toast
     liveEventToast: document.getElementById("live-event-toast"),
@@ -147,17 +157,20 @@
   function initClocks() {
     function tick() {
       const now = new Date();
-      const timeStr = now.toLocaleTimeString("ro-RO", { timeZone: "Europe/Bucharest", hour: "2-digit", minute: "2-digit", second: "2-digit" });
-      const dateStr = now.toLocaleDateString("ro-RO", { timeZone: "Europe/Bucharest", weekday: "short", day: "numeric", month: "short" });
+      const timeStr = now.toLocaleTimeString("ro-RO", { timeZone: "Europe/Bucharest", hour: "2-digit", minute: "2-digit" });
+      const dateStr = now.toLocaleDateString("ro-RO", { timeZone: "Europe/Bucharest", weekday: "long", day: "numeric", month: "long" });
+      const capitalDateStr = dateStr.charAt(0).toUpperCase() + dateStr.slice(1);
 
       if (dom.guideClock) dom.guideClock.textContent = timeStr;
-      if (dom.guideDate) dom.guideDate.textContent = dateStr;
-      if (dom.osdClock) dom.osdClock.textContent = timeStr;
+      if (dom.guideDate) dom.guideDate.textContent = capitalDateStr;
+      if (dom.standbyClockText) dom.standbyClockText.textContent = timeStr;
+      if (dom.standbyDateText) dom.standbyDateText.textContent = capitalDateStr.toUpperCase();
 
       if (state.guideVisible) {
         updateNowMarkerPosition(now);
       }
     }
+
     tick();
     setInterval(tick, 1000);
   }
@@ -326,7 +339,7 @@
 
         card.innerHTML = `
           <div class="epg-prog-top">
-            <span class="epg-prog-time tabular-nums">${prog.startTimeStr} - ${prog.endTimeStr}</span>
+            <span class="epg-prog-time tabular-nums">${prog.startTimeStr} – ${prog.endTimeStr}</span>
             ${liveBadgeHtml}
           </div>
           <div class="epg-prog-title">${prog.title}</div>
@@ -368,7 +381,7 @@
     const PX_PER_MIN = EPG_DATA.PX_PER_MINUTE || 8;
 
     const elapsedMs = Math.max(0, now.getTime() - baseTimelineStartMs);
-    const markerLeftPx = 320 + (elapsedMs / 60000) * PX_PER_MIN;
+    const markerLeftPx = 240 + (elapsedMs / 60000) * PX_PER_MIN;
 
     dom.epgNowMarker.style.left = `${markerLeftPx}px`;
   }
@@ -469,13 +482,13 @@
 
         if (scroll && dom.epgGridContainer) {
           const container = dom.epgGridContainer;
-          const cardLeft = 320 + targetCard._progData.leftPx;
+          const cardLeft = 240 + targetCard._progData.leftPx;
           const cardRight = cardLeft + targetCard._progData.widthPx;
-          const viewLeft = container.scrollLeft + 320;
+          const viewLeft = container.scrollLeft + 240;
           const viewRight = container.scrollLeft + container.clientWidth - 40;
 
           if (cardLeft < viewLeft) {
-            container.scrollTo({ left: Math.max(0, cardLeft - 350), behavior: smooth ? "smooth" : "auto" });
+            container.scrollTo({ left: Math.max(0, cardLeft - 280), behavior: smooth ? "smooth" : "auto" });
           } else if (cardRight > viewRight) {
             container.scrollTo({ left: cardRight - container.clientWidth + 80, behavior: smooth ? "smooth" : "auto" });
           }
@@ -489,24 +502,19 @@
   function updateInspectorWithShow(ch, show) {
     if (!show || !ch) return;
 
-    if (dom.inspBadge) {
-      dom.inspBadge.textContent = ch.logoText || ch.name.substring(0, 3).toUpperCase();
-      dom.inspBadge.style.backgroundColor = ch.color || "#3b82f6";
-    }
     if (dom.inspChName) dom.inspChName.textContent = ch.name;
-    if (dom.inspCatTag) dom.inspCatTag.textContent = ch.badge;
     if (dom.inspStatusPill) {
       dom.inspStatusPill.textContent = (show.isLiveNow || show.isLive) ? "● LIVE ACUM" : "● PROGRAMAT";
       dom.inspStatusPill.style.color = (show.isLiveNow || show.isLive) ? "var(--accent-emerald)" : "var(--text-muted)";
     }
     if (dom.inspTitle) dom.inspTitle.textContent = show.title;
-    if (dom.inspTime) dom.inspTime.textContent = `${show.startTimeStr} - ${show.endTimeStr}`;
-    if (dom.inspProgressText) {
-      dom.inspProgressText.textContent = (show.isLiveNow || show.isLive)
-        ? `A mai rămas: ${show.remainingMinutes || 25} min`
-        : `Durată: ${show.durationMinutes} min`;
-    }
+    if (dom.inspTime) dom.inspTime.textContent = `${show.startTimeStr} – ${show.endTimeStr}`;
     if (dom.inspDesc) dom.inspDesc.textContent = show.desc || ch.description;
+
+    if (dom.inspProgressBarFill) {
+      const pct = (show.isLiveNow || show.isLive) ? (show.progressPercent || 70) : 0;
+      dom.inspProgressBarFill.style.width = `${pct}%`;
+    }
   }
 
   // =========================================================================
@@ -562,9 +570,11 @@
   function showEventStandbyScreen(channel) {
     if (!dom.eventStandbyScreen) return;
 
-    if (dom.standbyBadge) {
-      dom.standbyBadge.textContent = channel.logoText || "EVENT";
-      dom.standbyBadge.style.background = channel.color || "#1e3a8a";
+    if (dom.standbyChNum) {
+      dom.standbyChNum.textContent = `CH ${channel.number}`;
+    }
+    if (dom.standbyChNameTop) {
+      dom.standbyChNameTop.textContent = channel.name.toUpperCase();
     }
     if (dom.standbyTitle) {
       dom.standbyTitle.textContent = channel.name;
@@ -573,12 +583,59 @@
       dom.standbyPortal.textContent = channel.portalDomain || "Transmisiune Oficială";
     }
 
+    // Determine upcoming scheduled agenda/session
+    const now = new Date();
+    const currentShow = EPG_DATA.getCurrentShow(channel.id, now);
+    const nextShow = EPG_DATA.getNextShow(channel.id, now);
+    const targetShow = (currentShow && currentShow.title && !currentShow.title.toLowerCase().includes("standby") && !currentShow.title.toLowerCase().includes("transmisiune în așteptare"))
+      ? currentShow
+      : nextShow;
+
+    if (dom.standbyAgendaText) {
+      dom.standbyAgendaText.textContent = targetShow.title || "Ședință de plen și dezbateri parlamentare";
+    }
+
+    // Calculate countdown target time
+    let targetMs = targetShow && targetShow.startMs ? targetShow.startMs : (now.getTime() + 2 * 3600 * 1000 + 44 * 60 * 1000 + 11 * 1000);
+    if (targetMs <= now.getTime()) {
+      targetMs = now.getTime() + 2 * 3600 * 1000 + 44 * 60 * 1000 + 11 * 1000;
+    }
+
+    function updateCountdown() {
+      const remainingSec = Math.max(0, Math.floor((targetMs - Date.now()) / 1000));
+      const h = Math.floor(remainingSec / 3600);
+      const m = Math.floor((remainingSec % 3600) / 60);
+      const s = remainingSec % 60;
+
+      if (dom.cdHours) dom.cdHours.textContent = String(h).padStart(2, "0");
+      if (dom.cdMinutes) dom.cdMinutes.textContent = String(m).padStart(2, "0");
+      if (dom.cdSeconds) dom.cdSeconds.textContent = String(s).padStart(2, "0");
+    }
+
+    if (state.standbyInterval) clearInterval(state.standbyInterval);
+    updateCountdown();
+    state.standbyInterval = setInterval(updateCountdown, 1000);
+
     dom.eventStandbyScreen.classList.remove("hidden");
   }
 
   function hideEventStandbyScreen() {
+    if (state.standbyInterval) {
+      clearInterval(state.standbyInterval);
+      state.standbyInterval = null;
+    }
     if (dom.eventStandbyScreen) {
       dom.eventStandbyScreen.classList.add("hidden");
+    }
+  }
+
+  function toggleStandbyReminder() {
+    state.isStandbyReminderSet = !state.isStandbyReminderSet;
+    if (dom.reminderLabel) {
+      dom.reminderLabel.textContent = state.isStandbyReminderSet ? "Notificare activată" : "Notifică-mă la pornire";
+    }
+    if (dom.reminderBtn) {
+      dom.reminderBtn.classList.toggle("active", state.isStandbyReminderSet);
     }
   }
 
@@ -732,7 +789,7 @@
     const PX_PER_MIN = EPG_DATA.PX_PER_MINUTE || 8;
     const nowOffset = ((now.getTime() - baseTimelineStartMs) / 60000) * PX_PER_MIN;
     if (dom.epgGridContainer) {
-      dom.epgGridContainer.scrollLeft = Math.max(0, nowOffset - 300);
+      dom.epgGridContainer.scrollLeft = Math.max(0, nowOffset - 280);
     }
 
     state.currentInspectedTimeMs = now.getTime();
@@ -764,12 +821,7 @@
     state.osdVisible = true;
 
     if (dom.osdNum) dom.osdNum.textContent = channel.number;
-    if (dom.osdBadge) {
-      dom.osdBadge.textContent = channel.logoText || channel.name.substring(0, 3).toUpperCase();
-      dom.osdBadge.style.backgroundColor = channel.color || "#3b82f6";
-    }
     if (dom.osdName) dom.osdName.textContent = channel.name;
-    if (dom.osdTag) dom.osdTag.textContent = channel.badge;
     if (dom.osdQuality) dom.osdQuality.textContent = channel.quality;
     if (dom.osdDesc) dom.osdDesc.textContent = channel.description;
 
@@ -779,14 +831,15 @@
 
     if (dom.osdCurrentShowTitle) dom.osdCurrentShowTitle.textContent = currentShow.title;
     if (dom.osdCurrentShowTime) {
-      dom.osdCurrentShowTime.textContent = `${currentShow.startTimeStr} - ${currentShow.endTimeStr} (A mai rămas: ${currentShow.remainingMinutes || 25} min)`;
+      dom.osdCurrentShowTime.textContent = `${currentShow.startTimeStr} – ${currentShow.endTimeStr}`;
     }
     if (dom.osdProgressBarFill) {
       dom.osdProgressBarFill.style.width = `${currentShow.progressPercent || 45}%`;
     }
 
     if (dom.osdNextShowTitle) dom.osdNextShowTitle.textContent = nextShow.title;
-    if (dom.osdNextShowTime) dom.osdNextShowTime.textContent = nextShow.startTimeStr;
+    if (dom.osdNextShowTime) dom.osdNextShowTime.textContent = `${nextShow.startTimeStr} – ${nextShow.endTimeStr || ""}`;
+    if (dom.osdNextShowDesc) dom.osdNextShowDesc.textContent = nextShow.desc || nextShow.title || "";
 
     dom.osdBanner.classList.remove("hidden");
 
@@ -923,6 +976,19 @@
 
     if (dom.btnCloseGuide) {
       dom.btnCloseGuide.addEventListener("click", () => hideGuide(false));
+    }
+    if (dom.btnInspWatch) {
+      dom.btnInspWatch.addEventListener("click", () => {
+        const visible = getVisibleChannels();
+        const targetChannel = visible[state.focusedRowIndex];
+        if (targetChannel) {
+          playChannel(targetChannel, true);
+          hideGuide(false);
+        }
+      });
+    }
+    if (dom.reminderBtn) {
+      dom.reminderBtn.addEventListener("click", toggleStandbyReminder);
     }
     if (dom.unmutePrompt) {
       dom.unmutePrompt.addEventListener("click", unlockAudio);
@@ -1088,6 +1154,10 @@
     }
 
     if (isEnter) {
+      // If standby screen is visible and OSD is not, OK toggles reminder or triggers OSD
+      if (dom.eventStandbyScreen && !dom.eventStandbyScreen.classList.contains("hidden") && !state.osdVisible) {
+        toggleStandbyReminder();
+      }
       handleOkKeyPress();
       e.preventDefault();
       return;
