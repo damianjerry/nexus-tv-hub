@@ -23,7 +23,7 @@ WGT_PATH = DIR / "NexusTvHub.wgt"
 def run():
     print("=== 1. Împachetare arhivă WGT ===")
     import zipfile
-    files = ["config.xml", "icon.png", "index.html", "styles.css", "channels.js", "app.js", "hls.min.js"]
+    files = ["config.xml", "icon.png", "index.html", "styles.css", "channels.js", "epg.js", "app.js", "hls.min.js"]
     with zipfile.ZipFile(WGT_PATH, "w", zipfile.ZIP_DEFLATED) as z:
         for f in files:
             z.write(DIR / f, f)

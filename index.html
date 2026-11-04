@@ -13,18 +13,18 @@
 <body>
 
   <!-- ======================================================================
-       STAGE 1: FULLSCREEN VIDEO PLAYER (RUNS CONTINUOUSLY BEHIND)
+       STAGE 1: FULLSCREEN VIDEO PLAYER (RUNS CONTINUOUSLY IN BACKGROUND)
        ====================================================================== -->
   <div id="video-stage">
-    <!-- Native / HLS.js Player -->
+    <!-- Native / HLS.js Direct Player -->
     <video id="hls-video" playsinline preload="auto"></video>
     
-    <!-- YouTube Live Stream Viewport Crop Engine (Crops out title/share/status bar) -->
+    <!-- Clean YouTube Live Stream Viewport Crop Engine -->
     <div class="yt-crop-container" id="yt-crop-stage" style="display: none;">
       <div id="yt-player-target"></div>
     </div>
     
-    <!-- Web Embed Stage -->
+    <!-- Web Embed Fallback -->
     <iframe id="web-embed-container" style="display: none;" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms"></iframe>
 
     <!-- Audio Unmute Prompt (for browsers restricting unmuted autoplay) -->
@@ -35,19 +35,24 @@
   </div>
 
   <!-- ======================================================================
-       STAGE 2: TV GUIDE OVERLAY (EPG GLASS ARCHITECTURE)
+       STAGE 2: LINEAR TV GUIDE (EPG GRID ARCHITECTURE - 10-FOOT SCALE)
        ====================================================================== -->
-  <div class="tv-guide-overlay" id="guide-overlay" role="dialog" aria-modal="true">
+  <div class="tv-guide-overlay hidden" id="guide-overlay" role="dialog" aria-modal="true">
     
     <!-- Header -->
     <header class="guide-header">
       <div class="guide-brand">
         <div class="guide-logo-box">N</div>
         <div class="guide-brand-text">
-          <h1>NEXUS // TV GUIDE <span class="guide-tag">THE FRAME</span></h1>
-          <p>Grilă dedicată: Finanțe, Economie, Instituții Publice, TVR & Cultură</p>
+          <h1>NEXUS // GHID TV LINIAR <span class="guide-tag">THE FRAME 50"</span></h1>
+          <p>Grilă Națională & Internațională: Cinema, Istorie, Finanțe, Știri & Transmisiuni Live</p>
         </div>
       </div>
+
+      <!-- Categories Filter Bar -->
+      <nav class="guide-category-pills" id="guide-categories" role="tablist">
+        <!-- Dynamically rendered category pills -->
+      </nav>
 
       <div class="guide-header-right">
         <div class="guide-clock">
@@ -56,47 +61,56 @@
         </div>
         <button class="guide-btn-close" id="btn-close-guide" title="Închide ghidul (ESC / Return)">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-          <span>Urmărește TV (Return / ESC)</span>
+          <span>Urmărește TV (Return)</span>
         </button>
       </div>
     </header>
 
-    <!-- Main Content: Categories Sidebar | Channel Rows | Live Details Preview -->
-    <div class="guide-main">
+    <!-- Linear EPG Timeline Grid -->
+    <div class="epg-main-viewport">
       
-      <!-- Column 1: Categories -->
-      <nav class="guide-categories" id="guide-categories" role="tablist">
-        <!-- Dynamically rendered categories -->
-      </nav>
+      <!-- Timeline Header: Channel Label + Time Slices Ruler -->
+      <div class="epg-timeline-header-wrap">
+        <div class="epg-channel-header-col">CANAL TV</div>
+        <div class="epg-time-ruler" id="epg-time-ruler">
+          <!-- Dynamically populated time slots (e.g. 14:00, 14:30, 15:00...) -->
+        </div>
+      </div>
 
-      <!-- Column 2: Channel Rows (EPG Table List) -->
-      <section class="guide-channels-list" id="guide-channels-list" role="region">
-        <!-- Dynamically rendered channel rows -->
-      </section>
+      <!-- Scrollable Grid Body (Channel Rows & Program Cards) -->
+      <div class="epg-grid-scrollable" id="epg-grid-container">
+        <!-- Red/Amber Vertical Line showing Current Minute -->
+        <div class="epg-now-marker" id="epg-now-marker">
+          <div class="epg-now-label">ACUM</div>
+        </div>
 
-      <!-- Column 3: Live Preview & Editorial Details Panel -->
-      <aside class="guide-preview-panel" id="guide-preview-panel">
-        <div class="preview-badge-large" id="prev-badge">BBG</div>
-        <h2 class="preview-channel-name" id="prev-name">Bloomberg Television</h2>
-        <div class="preview-category-tag" id="prev-cat">BURSĂ & FINANȚE</div>
-        <p class="preview-desc" id="prev-desc">Piețe internaționale de capital, earnings, decizii FED/BCE și analize macroeconomice în direct.</p>
-        
-        <div class="preview-meta-list">
-          <div class="preview-meta-item">
-            <span>Număr Canal:</span>
-            <strong class="tabular-nums" id="prev-num">CH 01</strong>
+        <div class="epg-channels-body" id="epg-channels-rows">
+          <!-- Dynamically rendered channel rows with program cards -->
+        </div>
+      </div>
+
+      <!-- Bottom Inspector: Editorial Details of Focused Show -->
+      <aside class="epg-inspector-panel" id="epg-inspector">
+        <div class="inspector-left">
+          <div class="inspector-badge" id="insp-badge">BBG</div>
+          <div class="inspector-meta">
+            <div class="inspector-tag-row">
+              <span class="inspector-ch-name" id="insp-ch-name">Bloomberg Television</span>
+              <span class="inspector-cat-tag" id="insp-cat-tag">BURSĂ & FINANȚE</span>
+              <span class="inspector-status-pill" id="insp-status-pill">● LIVE ACUM</span>
+            </div>
+            <h2 class="inspector-title" id="insp-title">Bloomberg Markets: European Close</h2>
+            <div class="inspector-time-row">
+              <span class="inspector-time tabular-nums" id="insp-time">14:00 - 15:30</span>
+              <span class="inspector-progress-text tabular-nums" id="insp-progress-text">A mai rămas: 34 min</span>
+            </div>
           </div>
-          <div class="preview-meta-item">
-            <span>Calitate Stream:</span>
-            <strong class="tabular-nums" id="prev-quality">1080p HLS Direct</strong>
-          </div>
-          <div class="preview-meta-item">
-            <span>Protocol:</span>
-            <strong id="prev-protocol">HLS Direct CDN</strong>
-          </div>
-          <div class="preview-meta-item">
-            <span>Stare Sursă:</span>
-            <strong style="color: var(--accent-emerald);">● VERIFICAT ACTIV</strong>
+        </div>
+        <div class="inspector-right">
+          <p class="inspector-desc" id="insp-desc">Trading action, stock winners and losers, European corporate earnings and commodity wraps.</p>
+          <div class="inspector-actions">
+            <span class="hint-pill"><span class="key-badge">OK / Enter</span> Deschide Canal</span>
+            <span class="hint-pill"><span class="key-badge">◄ ►</span> Programe în timp</span>
           </div>
         </div>
       </aside>
@@ -107,46 +121,93 @@
     <footer class="guide-footer-hints">
       <div class="hints-group">
         <span class="hint-pill"><span class="key-badge">▲ ▼</span> Navigare Canale</span>
-        <span class="hint-pill"><span class="key-badge">◄ ►</span> Comutare Categorii</span>
-        <span class="hint-pill"><span class="key-badge">OK / Enter</span> Deschide Canal</span>
-        <span class="hint-pill"><span class="key-badge">Return / ESC</span> Ascunde Ghidul</span>
+        <span class="hint-pill"><span class="key-badge">◄ ►</span> Navigare Program în Timp</span>
+        <span class="hint-pill"><span class="key-badge">OK</span> Comutare Canal</span>
+        <span class="hint-pill"><span class="key-badge">Return / ESC</span> Închide Ghidul</span>
       </div>
       <div class="hints-group">
-        <span class="hint-pill"><span class="key-badge">CH+ / CH-</span> Schimbare Rapidă</span>
-        <span class="hint-pill"><span class="key-badge">1 - 9</span> Săritură Directă Canal</span>
+        <span class="hint-pill"><span class="key-badge">CH+ / CH-</span> Paginare Rapidă</span>
+        <span class="hint-pill"><span class="key-badge">1 - 9</span> Săritură Directă</span>
       </div>
     </footer>
 
   </div>
 
   <!-- ======================================================================
-       STAGE 3: QUICK OSD BANNER (FULLSCREEN BROADCAST - 10-FOOT SCALE)
+       STAGE 3: QUICK OSD INFO BANNER (FULLSCREEN BROADCAST - 10-FOOT SCALE)
        ====================================================================== -->
   <div class="osd-channel-banner hidden" id="osd-banner">
-    <div class="osd-left">
-      <span class="osd-num tabular-nums" id="osd-num">01</span>
-      <div class="osd-badge" id="osd-badge">BBG</div>
-      <div class="osd-info">
-        <h2 id="osd-name">Bloomberg Television</h2>
-        <p id="osd-desc">Piețe internaționale de capital, decizii FED & burse globale</p>
+    <div class="osd-top-row">
+      <div class="osd-left">
+        <span class="osd-num tabular-nums" id="osd-num">01</span>
+        <div class="osd-badge" id="osd-badge">BBG</div>
+        <div class="osd-info">
+          <div class="osd-title-group">
+            <h2 id="osd-name">Bloomberg Television</h2>
+            <span class="osd-tag" id="osd-tag">FINANȚE</span>
+            <span class="osd-quality tabular-nums" id="osd-quality">1080p HLS Direct</span>
+          </div>
+          <p class="osd-channel-desc" id="osd-desc">Piețe internaționale de capital, decizii FED & burse globale</p>
+        </div>
+      </div>
+
+      <div class="osd-right">
+        <div class="osd-clock tabular-nums" id="osd-clock">--:--:--</div>
       </div>
     </div>
 
-    <div class="osd-right">
-      <span class="osd-tag" id="osd-tag">FINANȚE</span>
-      <div class="osd-quality">
-        <span class="row-quality-dot"></span>
-        <span class="tabular-nums" id="osd-quality">1080p Live</span>
+    <!-- Current & Upcoming Program EPG Bar -->
+    <div class="osd-epg-section">
+      <div class="osd-epg-now">
+        <div class="osd-epg-badge">ÎN DIRECT</div>
+        <div class="osd-epg-details">
+          <div class="osd-show-title" id="osd-current-show-title">Bloomberg Markets: European Close</div>
+          <div class="osd-show-time tabular-nums" id="osd-current-show-time">14:00 - 15:30 (A mai rămas: 34 min)</div>
+          <!-- Live Program Progress Bar -->
+          <div class="osd-progress-track">
+            <div class="osd-progress-bar" id="osd-progress-bar-fill" style="width: 45%;"></div>
+          </div>
+        </div>
       </div>
-      <div class="osd-clock tabular-nums" id="osd-clock">--:--:--</div>
+
+      <div class="osd-epg-next" id="osd-next-container">
+        <span class="osd-next-label">URMEAZĂ:</span>
+        <span class="osd-next-title" id="osd-next-show-title">The Pulse with Francine Lacqua</span>
+        <span class="osd-next-time tabular-nums" id="osd-next-show-time">15:30</span>
+      </div>
+
+      <div class="osd-guide-callout">
+        <span class="key-badge">OK</span>
+        <span>Apasă din nou pentru Ghid TV</span>
+      </div>
     </div>
   </div>
 
   <!-- ======================================================================
-       SCRIPTS: 100% LOCAL STATIC ENGINE (ZERO EXTERNAL SERVER DEPENDENCY)
+       STAGE 4: LIVE EVENT NOTIFICATION TOAST (OFFICIAL EVENT STREAMS)
+       ====================================================================== -->
+  <div class="live-event-toast hidden" id="live-event-toast" role="alert">
+    <div class="live-toast-pulse">
+      <span class="pulse-dot"></span>
+      <span class="pulse-ring"></span>
+    </div>
+    <div class="live-toast-content">
+      <div class="live-toast-kicker">🔴 TRANSMISIUNE SPECIALĂ ÎN DIRECT</div>
+      <div class="live-toast-channel" id="live-toast-channel-name">Camera Deputaților transmite în direct</div>
+      <div class="live-toast-sub" id="live-toast-subtext">Ședință de plen extraordinară / Dezbateri legislative</div>
+    </div>
+    <div class="live-toast-action">
+      <span class="key-badge">OK</span>
+      <span>Vizionează</span>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       SCRIPTS: LOCAL STATIC ENGINE (ZERO EXTERNAL SERVER DEPENDENCY)
        ====================================================================== -->
   <script src="hls.min.js"></script>
   <script src="channels.js"></script>
+  <script src="epg.js"></script>
   <script src="app.js"></script>
 
 </body>
