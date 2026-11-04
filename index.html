@@ -13,19 +13,34 @@
 <body>
 
   <!-- ======================================================================
-       STAGE 1: FULLSCREEN VIDEO PLAYER (RUNS CONTINUOUSLY IN BACKGROUND)
+       STAGE 1: FULLSCREEN VIDEO PLAYER & OFFICIAL STANDBY VIEWPORT
        ====================================================================== -->
   <div id="video-stage">
     <!-- Native / HLS.js Direct Player -->
     <video id="hls-video" playsinline preload="auto"></video>
     
-    <!-- Clean YouTube Live Stream Viewport Crop Engine -->
+    <!-- Clean YouTube Live Stream Viewport Crop Engine (Active Only When Live) -->
     <div class="yt-crop-container" id="yt-crop-stage" style="display: none;">
       <div id="yt-player-target"></div>
     </div>
     
     <!-- Web Embed Fallback -->
     <iframe id="web-embed-container" style="display: none;" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms"></iframe>
+
+    <!-- High-Design Official Standby Screen (for offline Parliament, BNR & Gov feeds) -->
+    <div id="event-standby-screen" class="event-standby-screen hidden">
+      <div class="standby-card">
+        <div class="standby-badge" id="standby-badge">CDEP</div>
+        <div class="standby-status-pill">
+          <span class="standby-pulse-dot"></span>
+          <span>MONITORIZARE LIVE // STANDBY</span>
+        </div>
+        <h2 class="standby-title" id="standby-title">Camera Deputaților (România)</h2>
+        <p class="standby-headline">Transmisiune Oficială în Așteptare</p>
+        <p class="standby-sub">Următoarea conferință sau ședință de plen va fi preluată automat în direct pe ecran.</p>
+        <div class="standby-portal" id="standby-portal">cdep.ro</div>
+      </div>
+    </div>
 
     <!-- Audio Unmute Prompt (for browsers restricting unmuted autoplay) -->
     <div class="unmute-banner" id="unmute-prompt" style="display: none;">
@@ -35,7 +50,7 @@
   </div>
 
   <!-- ======================================================================
-       STAGE 2: LINEAR TV GUIDE (EPG GRID ARCHITECTURE - 10-FOOT SCALE)
+       STAGE 2: LINEAR TV GUIDE (MINIMALIST OBSIDIAN ARCHITECTURE - 10-FOOT SCALE)
        ====================================================================== -->
   <div class="tv-guide-overlay hidden" id="guide-overlay" role="dialog" aria-modal="true">
     
@@ -44,8 +59,7 @@
       <div class="guide-brand">
         <div class="guide-logo-box">N</div>
         <div class="guide-brand-text">
-          <h1>NEXUS // GHID TV LINIAR <span class="guide-tag">THE FRAME 50"</span></h1>
-          <p>Grilă Națională & Internațională: Cinema, Istorie, Finanțe, Știri & Transmisiuni Live</p>
+          <h1>NEXUS // GHID TV</h1>
         </div>
       </div>
 
@@ -61,7 +75,7 @@
         </div>
         <button class="guide-btn-close" id="btn-close-guide" title="Închide ghidul (ESC / Return)">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-          <span>Urmărește TV (Return)</span>
+          <span>Urmărește TV</span>
         </button>
       </div>
     </header>
@@ -75,61 +89,43 @@
         <div class="epg-timeline-header-wrap">
           <div class="epg-channel-header-col">CANAL TV</div>
           <div class="epg-time-ruler" id="epg-time-ruler">
-            <!-- Dynamically populated time slots (e.g. 14:00, 14:30, 15:00...) -->
+            <!-- Dynamically populated time slots -->
           </div>
         </div>
 
-        <!-- Red/Amber Vertical Line showing Current Minute -->
+        <!-- Amber Vertical Line showing Current Minute -->
         <div class="epg-now-marker" id="epg-now-marker">
           <div class="epg-now-label">ACUM</div>
         </div>
 
         <div class="epg-channels-body" id="epg-channels-rows">
-          <!-- Dynamically rendered channel rows with program cards -->
+          <!-- Cached channel rows with program cards -->
         </div>
       </div>
 
       <!-- Bottom Inspector: Editorial Details of Focused Show -->
       <aside class="epg-inspector-panel" id="epg-inspector">
         <div class="inspector-left">
-          <div class="inspector-badge" id="insp-badge">BBG</div>
+          <div class="inspector-badge" id="insp-badge">CMP</div>
           <div class="inspector-meta">
             <div class="inspector-tag-row">
-              <span class="inspector-ch-name" id="insp-ch-name">Bloomberg Television</span>
-              <span class="inspector-cat-tag" id="insp-cat-tag">BURSĂ & FINANȚE</span>
+              <span class="inspector-ch-name" id="insp-ch-name">CineMaraton Plus HD</span>
+              <span class="inspector-cat-tag" id="insp-cat-tag">CINEMA ROMÂNESC</span>
               <span class="inspector-status-pill" id="insp-status-pill">● LIVE ACUM</span>
             </div>
-            <h2 class="inspector-title" id="insp-title">Bloomberg Markets: European Close</h2>
+            <h2 class="inspector-title" id="insp-title">Program în Desfășurare</h2>
             <div class="inspector-time-row">
-              <span class="inspector-time tabular-nums" id="insp-time">14:00 - 15:30</span>
-              <span class="inspector-progress-text tabular-nums" id="insp-progress-text">A mai rămas: 34 min</span>
+              <span class="inspector-time tabular-nums" id="insp-time">--:-- - --:--</span>
+              <span class="inspector-progress-text tabular-nums" id="insp-progress-text">A mai rămas: -- min</span>
             </div>
           </div>
         </div>
         <div class="inspector-right">
-          <p class="inspector-desc" id="insp-desc">Trading action, stock winners and losers, European corporate earnings and commodity wraps.</p>
-          <div class="inspector-actions">
-            <span class="hint-pill"><span class="key-badge">OK / Enter</span> Deschide Canal</span>
-            <span class="hint-pill"><span class="key-badge">◄ ►</span> Programe în timp</span>
-          </div>
+          <p class="inspector-desc" id="insp-desc">Detalii emisiune selectată.</p>
         </div>
       </aside>
 
     </div>
-
-    <!-- Guide Footer Navigation Hints -->
-    <footer class="guide-footer-hints">
-      <div class="hints-group">
-        <span class="hint-pill"><span class="key-badge">▲ ▼</span> Navigare Canale</span>
-        <span class="hint-pill"><span class="key-badge">◄ ►</span> Navigare Program în Timp</span>
-        <span class="hint-pill"><span class="key-badge">OK</span> Comutare Canal</span>
-        <span class="hint-pill"><span class="key-badge">Return / ESC</span> Închide Ghidul</span>
-      </div>
-      <div class="hints-group">
-        <span class="hint-pill"><span class="key-badge">CH+ / CH-</span> Paginare Rapidă</span>
-        <span class="hint-pill"><span class="key-badge">1 - 9</span> Săritură Directă</span>
-      </div>
-    </footer>
 
   </div>
 
@@ -140,14 +136,14 @@
     <div class="osd-top-row">
       <div class="osd-left">
         <span class="osd-num tabular-nums" id="osd-num">01</span>
-        <div class="osd-badge" id="osd-badge">BBG</div>
+        <div class="osd-badge" id="osd-badge">CMP</div>
         <div class="osd-info">
           <div class="osd-title-group">
-            <h2 id="osd-name">Bloomberg Television</h2>
-            <span class="osd-tag" id="osd-tag">FINANȚE</span>
+            <h2 id="osd-name">CineMaraton Plus HD</h2>
+            <span class="osd-tag" id="osd-tag">CINEMA ROMÂNESC</span>
             <span class="osd-quality tabular-nums" id="osd-quality">1080p HLS Direct</span>
           </div>
-          <p class="osd-channel-desc" id="osd-desc">Piețe internaționale de capital, decizii FED & burse globale</p>
+          <p class="osd-channel-desc" id="osd-desc">Cele mai bune producții cinematografice românești</p>
         </div>
       </div>
 
@@ -161,8 +157,8 @@
       <div class="osd-epg-now">
         <div class="osd-epg-badge">ÎN DIRECT</div>
         <div class="osd-epg-details">
-          <div class="osd-show-title" id="osd-current-show-title">Bloomberg Markets: European Close</div>
-          <div class="osd-show-time tabular-nums" id="osd-current-show-time">14:00 - 15:30 (A mai rămas: 34 min)</div>
+          <div class="osd-show-title" id="osd-current-show-title">Program Live</div>
+          <div class="osd-show-time tabular-nums" id="osd-current-show-time">--:-- - --:--</div>
           <!-- Live Program Progress Bar -->
           <div class="osd-progress-track">
             <div class="osd-progress-bar" id="osd-progress-bar-fill" style="width: 45%;"></div>
@@ -172,13 +168,13 @@
 
       <div class="osd-epg-next" id="osd-next-container">
         <span class="osd-next-label">URMEAZĂ:</span>
-        <span class="osd-next-title" id="osd-next-show-title">The Pulse with Francine Lacqua</span>
-        <span class="osd-next-time tabular-nums" id="osd-next-show-time">15:30</span>
+        <span class="osd-next-title" id="osd-next-show-title">Următorul Program</span>
+        <span class="osd-next-time tabular-nums" id="osd-next-show-time">--:--</span>
       </div>
 
       <div class="osd-guide-callout">
         <span class="key-badge">OK</span>
-        <span>Apasă din nou pentru Ghid TV</span>
+        <span>Ghid TV</span>
       </div>
     </div>
   </div>
@@ -207,6 +203,7 @@
        ====================================================================== -->
   <script src="hls.min.js"></script>
   <script src="channels.js"></script>
+  <script src="epg_real.js"></script>
   <script src="epg.js"></script>
   <script src="app.js"></script>
 

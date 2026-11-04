@@ -1,0 +1,2131 @@
+{
+  "date": "2026-11-04",
+  "channels": {
+    "cinemaraton": [
+      {
+        "time": "07:25",
+        "title": "Medalion / Scurtmetraj / Jurnal / Pastilă"
+      },
+      {
+        "time": "07:40",
+        "title": "Medalion Iulian Mihu"
+      },
+      {
+        "time": "07:46",
+        "title": "Medalion / Scurtmetraj / Jurnal / Pastilă"
+      },
+      {
+        "time": "08:00",
+        "title": "Restituiri Din Arhiva"
+      },
+      {
+        "time": "08:12",
+        "title": "Medalion / Scurtmetraj / Jurnal / Pastilă"
+      },
+      {
+        "time": "08:20",
+        "title": "La Mere"
+      },
+      {
+        "time": "08:44",
+        "title": "Medalion / Scurtmetraj / Jurnal / Pastilă"
+      },
+      {
+        "time": "08:50",
+        "title": "Omul și umbra sa"
+      },
+      {
+        "time": "10:02",
+        "title": "Medalion / Scurtmetraj / Jurnal / Pastilă"
+      },
+      {
+        "time": "10:20",
+        "title": "Anotimpul iubirii"
+      },
+      {
+        "time": "11:47",
+        "title": "Medalion / Scurtmetraj / Jurnal / Pastilă"
+      },
+      {
+        "time": "12:00",
+        "title": "Teleshopping"
+      },
+      {
+        "time": "12:20",
+        "title": "Medalion / Scurtmetraj / Jurnal / Pastilă"
+      },
+      {
+        "time": "12:25",
+        "title": "Granite"
+      },
+      {
+        "time": "12:42",
+        "title": "Medalion / Scurtmetraj / Jurnal / Pastilă"
+      },
+      {
+        "time": "12:50",
+        "title": "Eu, tu și Ovidiu"
+      },
+      {
+        "time": "14:39",
+        "title": "Medalion / Scurtmetraj / Jurnal / Pastilă"
+      },
+      {
+        "time": "16:21",
+        "title": "Medalion / Scurtmetraj / Jurnal / Pastilă"
+      },
+      {
+        "time": "16:40",
+        "title": "Zestrea domniței Ralu"
+      },
+      {
+        "time": "18:13",
+        "title": "Medalion / Scurtmetraj / Jurnal / Pastilă"
+      },
+      {
+        "time": "18:30",
+        "title": "Săptămâna nebunilor"
+      },
+      {
+        "time": "19:52",
+        "title": "Medalion / Scurtmetraj / Jurnal / Pastilă"
+      },
+      {
+        "time": "20:05",
+        "title": "Din dragoste cu cele mai bune intenții"
+      },
+      {
+        "time": "21:50",
+        "title": "Medalion / Scurtmetraj / Jurnal / Pastilă"
+      },
+      {
+        "time": "22:05",
+        "title": "Fixeur"
+      },
+      {
+        "time": "23:45",
+        "title": "Medalion / Scurtmetraj / Jurnal / Pastilă"
+      },
+      {
+        "time": "00:00",
+        "title": "Pescuit sportiv"
+      },
+      {
+        "time": "01:20",
+        "title": "Medalion / Scurtmetraj / Jurnal / Pastilă"
+      },
+      {
+        "time": "01:35",
+        "title": "Cheful"
+      },
+      {
+        "time": "01:52",
+        "title": "Medalion / Scurtmetraj / Jurnal / Pastilă"
+      },
+      {
+        "time": "02:05",
+        "title": "Ilegitim"
+      },
+      {
+        "time": "03:34",
+        "title": "Medalion / Scurtmetraj / Jurnal / Pastilă"
+      },
+      {
+        "time": "03:50",
+        "title": "Colivia"
+      },
+      {
+        "time": "04:07",
+        "title": "Medalion / Scurtmetraj / Jurnal / Pastilă"
+      },
+      {
+        "time": "04:10",
+        "title": "Artă"
+      },
+      {
+        "time": "04:27",
+        "title": "Medalion / Scurtmetraj / Jurnal / Pastilă"
+      },
+      {
+        "time": "04:35",
+        "title": "Valuri"
+      },
+      {
+        "time": "04:52",
+        "title": "Medalion / Scurtmetraj / Jurnal / Pastilă"
+      },
+      {
+        "time": "05:05",
+        "title": "Alerta"
+      },
+      {
+        "time": "06:03",
+        "title": "Medalion / Scurtmetraj / Jurnal / Pastilă"
+      },
+      {
+        "time": "06:15",
+        "title": "Rolul Lui Dumnezeu"
+      }
+    ],
+    "cinewow": [
+      {
+        "time": "07:50",
+        "title": "Sosesc păsările călătoare"
+      },
+      {
+        "time": "10:30",
+        "title": "La patru pași de infinit"
+      },
+      {
+        "time": "12:40",
+        "title": "Balul de sâmbătă seara"
+      },
+      {
+        "time": "17:35",
+        "title": "Pup-o, mă! 2: Mireasa nebună"
+      },
+      {
+        "time": "20:05",
+        "title": "Răzbunarea haiducilor"
+      },
+      {
+        "time": "22:05",
+        "title": "Secretul lui Nemesis"
+      },
+      {
+        "time": "00:40",
+        "title": "Stejar, extremă urgență"
+      },
+      {
+        "time": "02:45",
+        "title": "Crima la Aigues-Mortes"
+      },
+      {
+        "time": "04:40",
+        "title": "Doi vecini"
+      },
+      {
+        "time": "05:25",
+        "title": "Sibiu 825"
+      },
+      {
+        "time": "06:00",
+        "title": "Valea regilor"
+      },
+      {
+        "time": "06:15",
+        "title": "Grăbește-te încet"
+      }
+    ],
+    "nostalgia": [
+      {
+        "time": "07:00",
+        "title": "Stan și Bran aviatori"
+      },
+      {
+        "time": "08:30",
+        "title": "Piele de măgar"
+      },
+      {
+        "time": "10:00",
+        "title": "Desene animate"
+      },
+      {
+        "time": "10:30",
+        "title": "Cascadorii râsului"
+      },
+      {
+        "time": "11:00",
+        "title": "Terra Nostra"
+      },
+      {
+        "time": "13:00",
+        "title": "Generalul"
+      },
+      {
+        "time": "16:30",
+        "title": "Minele regelui Solomon"
+      },
+      {
+        "time": "18:00",
+        "title": "Marșul soldățeilor de lemn"
+      },
+      {
+        "time": "20:00",
+        "title": "Terra Nostra"
+      },
+      {
+        "time": "22:00",
+        "title": "Aur și circ"
+      },
+      {
+        "time": "00:30",
+        "title": "Programe în reluare"
+      },
+      {
+        "time": "03:00",
+        "title": "Festivalul de la Amara"
+      }
+    ],
+    "aleph-news": [
+      {
+        "time": "07:55",
+        "title": "Știu"
+      },
+      {
+        "time": "09:55",
+        "title": "Esti In Business News"
+      },
+      {
+        "time": "10:45",
+        "title": "Heads Eib News"
+      },
+      {
+        "time": "10:55",
+        "title": "Esti In Business News"
+      },
+      {
+        "time": "11:45",
+        "title": "Heads Eib News"
+      },
+      {
+        "time": "11:55",
+        "title": "Știrile"
+      },
+      {
+        "time": "12:55",
+        "title": "Ce Câștig Azi?"
+      },
+      {
+        "time": "15:55",
+        "title": "Cinemaleph"
+      },
+      {
+        "time": "16:55",
+        "title": "Știrile"
+      },
+      {
+        "time": "17:55",
+        "title": "Știrile"
+      },
+      {
+        "time": "18:55",
+        "title": "Știrile"
+      },
+      {
+        "time": "19:55",
+        "title": "Știu"
+      },
+      {
+        "time": "22:00",
+        "title": "Știu Pe Ce Lume Trăiesc"
+      },
+      {
+        "time": "23:55",
+        "title": "Știrile"
+      },
+      {
+        "time": "00:55",
+        "title": "Știu"
+      },
+      {
+        "time": "02:55",
+        "title": "Știrile"
+      },
+      {
+        "time": "03:55",
+        "title": "Știu Pe Ce Lume Trăiesc"
+      },
+      {
+        "time": "05:55",
+        "title": "Zigen"
+      },
+      {
+        "time": "06:55",
+        "title": "Next Day"
+      }
+    ],
+    "digi24": [
+      {
+        "time": "07:00",
+        "title": "Știrile dimineții"
+      },
+      {
+        "time": "08:00",
+        "title": "Știrile dimineții"
+      },
+      {
+        "time": "09:00",
+        "title": "Știrile dimineții"
+      },
+      {
+        "time": "10:00",
+        "title": "Știrile dimineții"
+      },
+      {
+        "time": "11:00",
+        "title": "Știrile dimineții"
+      },
+      {
+        "time": "12:00",
+        "title": "Știrile amiezii"
+      },
+      {
+        "time": "13:00",
+        "title": "Știrile amiezii"
+      },
+      {
+        "time": "14:00",
+        "title": "Știrile amiezii"
+      },
+      {
+        "time": "16:00",
+        "title": "Știrile zilei"
+      },
+      {
+        "time": "17:00",
+        "title": "Știrile zilei"
+      },
+      {
+        "time": "18:00",
+        "title": "Ediție specială"
+      },
+      {
+        "time": "18:30",
+        "title": "Business Club"
+      },
+      {
+        "time": "19:00",
+        "title": "Ediție specială"
+      },
+      {
+        "time": "20:00",
+        "title": "Ediție specială"
+      },
+      {
+        "time": "23:00",
+        "title": "Știrile serii"
+      },
+      {
+        "time": "00:00",
+        "title": "Știrile serii"
+      },
+      {
+        "time": "01:00",
+        "title": "Ediție specială 20:00 - 22:00 (r)"
+      },
+      {
+        "time": "04:00",
+        "title": "Ediție specială 18:00 + Business club (r)"
+      },
+      {
+        "time": "05:00",
+        "title": "Ediție specială 19:00 (r)"
+      },
+      {
+        "time": "05:50",
+        "title": "Știrile dimineții"
+      }
+    ],
+    "tvr-1": [
+      {
+        "time": "07:00",
+        "title": "Telejurnal matinal"
+      },
+      {
+        "time": "08:00",
+        "title": "Telejurnal matinal"
+      },
+      {
+        "time": "09:00",
+        "title": "Vizită de lucru (R)"
+      },
+      {
+        "time": "09:30",
+        "title": "Un zâmbet 16:9 (R)"
+      },
+      {
+        "time": "09:50",
+        "title": "Nepieritorii (R)"
+      },
+      {
+        "time": "10:00",
+        "title": "TVR 70 (R)"
+      },
+      {
+        "time": "10:30",
+        "title": "Dezacorduri de pace (R)"
+      },
+      {
+        "time": "11:30",
+        "title": "Vorbeşte corect!"
+      },
+      {
+        "time": "11:35",
+        "title": "Mic portret de mari românce"
+      },
+      {
+        "time": "11:40",
+        "title": "TVR 70 (R)"
+      },
+      {
+        "time": "12:40",
+        "title": "Zeul războiului (R)"
+      },
+      {
+        "time": "14:00",
+        "title": "Telejurnal"
+      },
+      {
+        "time": "15:50",
+        "title": "Convieţuiri"
+      },
+      {
+        "time": "16:40",
+        "title": "Zi de zi cu părintele Constantin Necula"
+      },
+      {
+        "time": "16:45",
+        "title": "TVR 70"
+      },
+      {
+        "time": "17:40",
+        "title": "Zeul războiului"
+      },
+      {
+        "time": "19:00",
+        "title": "Telejurnal"
+      },
+      {
+        "time": "20:00",
+        "title": "Ediţie specială"
+      },
+      {
+        "time": "22:00",
+        "title": "Dezacorduri de pace"
+      },
+      {
+        "time": "23:00",
+        "title": "Telejurnal"
+      },
+      {
+        "time": "00:00",
+        "title": "Dosar România (R)"
+      },
+      {
+        "time": "01:00",
+        "title": "Dezacorduri de pace (R)"
+      },
+      {
+        "time": "02:00",
+        "title": "Revizie tehnica"
+      },
+      {
+        "time": "06:00",
+        "title": "TVR 70 (R)"
+      },
+      {
+        "time": "06:55",
+        "title": "Imnul României"
+      }
+    ],
+    "tvr-2": [
+      {
+        "time": "07:00",
+        "title": "Teleshopping"
+      },
+      {
+        "time": "07:15",
+        "title": "Filler"
+      },
+      {
+        "time": "07:30",
+        "title": "Cap compas (R)"
+      },
+      {
+        "time": "08:00",
+        "title": "Documentar 360° Geo (R)"
+      },
+      {
+        "time": "09:00",
+        "title": "AI idee?! (R)"
+      },
+      {
+        "time": "09:30",
+        "title": "Tonomatul de pe 2 (R)"
+      },
+      {
+        "time": "11:00",
+        "title": "Teleshopping"
+      },
+      {
+        "time": "11:15",
+        "title": "Filler"
+      },
+      {
+        "time": "11:30",
+        "title": "România... în bucate (R)"
+      },
+      {
+        "time": "12:00",
+        "title": "Informatiile amiezii"
+      },
+      {
+        "time": "13:00",
+        "title": "Cultura minorităţilor"
+      },
+      {
+        "time": "13:30",
+        "title": "Magazin Deutsche Welle"
+      },
+      {
+        "time": "14:00",
+        "title": "Documentar 360° Geo"
+      },
+      {
+        "time": "16:00",
+        "title": "AI idee?!"
+      },
+      {
+        "time": "16:30",
+        "title": "România... în bucate"
+      },
+      {
+        "time": "17:00",
+        "title": "Poarta Pangrati"
+      },
+      {
+        "time": "18:00",
+        "title": "Ora de ştiri"
+      },
+      {
+        "time": "18:45",
+        "title": "E vremea ta!"
+      },
+      {
+        "time": "19:00",
+        "title": "Comisarul Rex: aventuri la Viena"
+      },
+      {
+        "time": "20:00",
+        "title": "Maine incepe azi"
+      },
+      {
+        "time": "20:30",
+        "title": "Emai simplu decat pare ?"
+      },
+      {
+        "time": "21:00",
+        "title": "Tonomatul de pe 2"
+      },
+      {
+        "time": "22:30",
+        "title": "Jodie Foster: Hollywood, dragostea mea"
+      },
+      {
+        "time": "23:30",
+        "title": "Poarta Pangrati (R)"
+      },
+      {
+        "time": "00:30",
+        "title": "Comisarul Rex: aventuri la Viena (R)"
+      },
+      {
+        "time": "01:30",
+        "title": "Toamna amintirilor"
+      },
+      {
+        "time": "02:00",
+        "title": "Revizie tehnica"
+      },
+      {
+        "time": "06:00",
+        "title": "E vremea ta! (R)"
+      },
+      {
+        "time": "06:20",
+        "title": "Generaţia Fit"
+      },
+      {
+        "time": "06:55",
+        "title": "Imnul României"
+      }
+    ],
+    "tvr-info": [
+      {
+        "time": "07:00",
+        "title": "Telejurnal matinal"
+      },
+      {
+        "time": "08:00",
+        "title": "Telejurnal matinal"
+      },
+      {
+        "time": "09:00",
+        "title": "Info Plus"
+      },
+      {
+        "time": "10:00",
+        "title": "Info Plus"
+      },
+      {
+        "time": "11:00",
+        "title": "Cine face legea"
+      },
+      {
+        "time": "12:00",
+        "title": "Informaţiile amiezii"
+      },
+      {
+        "time": "12:55",
+        "title": "Mic portret de mari românce"
+      },
+      {
+        "time": "13:00",
+        "title": "Telejurnal Moldova"
+      },
+      {
+        "time": "13:40",
+        "title": "Teleshopping"
+      },
+      {
+        "time": "14:00",
+        "title": "Telejurnal"
+      },
+      {
+        "time": "15:55",
+        "title": "Meteo"
+      },
+      {
+        "time": "16:00",
+        "title": "Banii, azi"
+      },
+      {
+        "time": "17:00",
+        "title": "Info Express"
+      },
+      {
+        "time": "18:00",
+        "title": "Ora de Stiri"
+      },
+      {
+        "time": "19:00",
+        "title": "Frontul"
+      },
+      {
+        "time": "20:00",
+        "title": "Editie speciala"
+      },
+      {
+        "time": "23:00",
+        "title": "Telejurnal"
+      },
+      {
+        "time": "00:00",
+        "title": "Alb-Negru (R)"
+      },
+      {
+        "time": "01:00",
+        "title": "Telejurnal Moldova (R)"
+      },
+      {
+        "time": "01:45",
+        "title": "Magazin (R)"
+      },
+      {
+        "time": "02:00",
+        "title": "Revizie tehnica"
+      },
+      {
+        "time": "05:55",
+        "title": "Imnul României"
+      },
+      {
+        "time": "06:00",
+        "title": "Frontul (R)"
+      }
+    ],
+    "tvr-cultural": [
+      {
+        "time": "07:00",
+        "title": "Eddie Murphy: regele de culoare al Hollywoodului (R)"
+      },
+      {
+        "time": "08:00",
+        "title": "Intrare liberă (R)"
+      },
+      {
+        "time": "09:30",
+        "title": "Jurnal Cultural (R)"
+      },
+      {
+        "time": "10:20",
+        "title": "Secolul 22"
+      },
+      {
+        "time": "10:30",
+        "title": "Classy Jukebox"
+      },
+      {
+        "time": "12:00",
+        "title": "Concert simfonic (R)"
+      },
+      {
+        "time": "13:00",
+        "title": "Jurnal Cultural"
+      },
+      {
+        "time": "13:05",
+        "title": "Documentar 360° Geo - Nepal - mandalele din nisip"
+      },
+      {
+        "time": "14:00",
+        "title": "Cultura minorităţilor"
+      },
+      {
+        "time": "15:30",
+        "title": "Nocturne"
+      },
+      {
+        "time": "16:15",
+        "title": "Muzeul Teatrului Naţional Bucureşti (R)"
+      },
+      {
+        "time": "16:25",
+        "title": "Jurnal Cultural"
+      },
+      {
+        "time": "16:30",
+        "title": "Concert simfonic"
+      },
+      {
+        "time": "17:30",
+        "title": "TVR 70"
+      },
+      {
+        "time": "18:00",
+        "title": "Notre-Dame: Ziditorii unui vis (R)"
+      },
+      {
+        "time": "19:00",
+        "title": "Istoriile oraşului"
+      },
+      {
+        "time": "19:30",
+        "title": "Intrare liberă"
+      },
+      {
+        "time": "21:00",
+        "title": "Jurnal Cultural"
+      },
+      {
+        "time": "22:00",
+        "title": "Teatru TV - Ciuta - de Victor Ion Popa"
+      },
+      {
+        "time": "23:35",
+        "title": "EduArte (R)"
+      },
+      {
+        "time": "00:30",
+        "title": "Prezenţe româneşti în Germania (R)"
+      },
+      {
+        "time": "01:00",
+        "title": "Jurnal Cultural (R)"
+      },
+      {
+        "time": "02:00",
+        "title": "Revizie tehnica"
+      },
+      {
+        "time": "06:00",
+        "title": "Cultart (R)"
+      },
+      {
+        "time": "06:55",
+        "title": "Imnul României"
+      }
+    ],
+    "travel-mix": [
+      {
+        "time": "07:00",
+        "title": "Doi viezuri"
+      },
+      {
+        "time": "07:30",
+        "title": "Muzee sub lupa"
+      },
+      {
+        "time": "08:00",
+        "title": "Info trip"
+      },
+      {
+        "time": "08:30",
+        "title": "Info trip"
+      },
+      {
+        "time": "09:00",
+        "title": "Romania mea"
+      },
+      {
+        "time": "09:30",
+        "title": "Travel experience"
+      },
+      {
+        "time": "10:00",
+        "title": "Muzee sub lupa"
+      },
+      {
+        "time": "10:30",
+        "title": "Unicool prin lumea mare"
+      },
+      {
+        "time": "11:00",
+        "title": "Unicool prin lumea mare"
+      },
+      {
+        "time": "11:30",
+        "title": "Ceck in show"
+      },
+      {
+        "time": "12:00",
+        "title": "Ceck in show"
+      },
+      {
+        "time": "12:30",
+        "title": "Travel guide"
+      },
+      {
+        "time": "13:00",
+        "title": "Pe poteci"
+      },
+      {
+        "time": "13:30",
+        "title": "Pe poteci"
+      },
+      {
+        "time": "14:00",
+        "title": "Romania mea"
+      },
+      {
+        "time": "14:30",
+        "title": "Travel experience"
+      },
+      {
+        "time": "15:30",
+        "title": "Travel experience"
+      },
+      {
+        "time": "16:00",
+        "title": "Unicool prin lumea mare"
+      },
+      {
+        "time": "16:30",
+        "title": "Unicool prin lumea mare"
+      },
+      {
+        "time": "17:00",
+        "title": "Pe poteci"
+      },
+      {
+        "time": "17:30",
+        "title": "Pe poteci"
+      },
+      {
+        "time": "18:00",
+        "title": "România mea"
+      },
+      {
+        "time": "18:30",
+        "title": "Jurnal de calatorii"
+      },
+      {
+        "time": "19:00",
+        "title": "Info trip"
+      },
+      {
+        "time": "19:30",
+        "title": "Mincinosii"
+      },
+      {
+        "time": "20:00",
+        "title": "Doi viezuri"
+      },
+      {
+        "time": "20:30",
+        "title": "Muzee sub lupa"
+      },
+      {
+        "time": "21:00",
+        "title": "Info trip"
+      },
+      {
+        "time": "21:30",
+        "title": "Info trip"
+      },
+      {
+        "time": "22:00",
+        "title": "Ceck in show"
+      },
+      {
+        "time": "22:30",
+        "title": "Ceck in show"
+      },
+      {
+        "time": "23:00",
+        "title": "Muzee sub lupa"
+      },
+      {
+        "time": "23:30",
+        "title": "Travel experience"
+      },
+      {
+        "time": "00:00",
+        "title": "Pe poteci"
+      },
+      {
+        "time": "00:30",
+        "title": "Pe poteci"
+      },
+      {
+        "time": "01:00",
+        "title": "Romania mea"
+      },
+      {
+        "time": "01:30",
+        "title": "Jurnal de calatorii"
+      },
+      {
+        "time": "02:00",
+        "title": "Info trip"
+      },
+      {
+        "time": "02:30",
+        "title": "Mincinosii"
+      },
+      {
+        "time": "03:00",
+        "title": "Doi viezuri"
+      },
+      {
+        "time": "03:30",
+        "title": "Muzee sub lupa"
+      },
+      {
+        "time": "04:00",
+        "title": "Info trip"
+      },
+      {
+        "time": "04:30",
+        "title": "Info trip"
+      },
+      {
+        "time": "05:00",
+        "title": "Romania mea"
+      },
+      {
+        "time": "05:30",
+        "title": "Travel experience"
+      },
+      {
+        "time": "06:00",
+        "title": "Muzee sub lupa"
+      },
+      {
+        "time": "06:30",
+        "title": "Unicool prin lumea mare"
+      }
+    ],
+    "euronews-ro": [
+      {
+        "time": "07:00",
+        "title": "Bună dimineața, România!"
+      },
+      {
+        "time": "07:50",
+        "title": "Euronews green"
+      },
+      {
+        "time": "08:00",
+        "title": "Bună dimineața, România!"
+      },
+      {
+        "time": "08:50",
+        "title": "România frumoasă"
+      },
+      {
+        "time": "09:00",
+        "title": "Bună dimineața, România!"
+      },
+      {
+        "time": "09:50",
+        "title": "Trăiești bine!"
+      },
+      {
+        "time": "10:00",
+        "title": "Euronews Acum"
+      },
+      {
+        "time": "10:50",
+        "title": "Euronews travel"
+      },
+      {
+        "time": "11:00",
+        "title": "Euronews Acum"
+      },
+      {
+        "time": "11:50",
+        "title": "Euronews Culture"
+      },
+      {
+        "time": "12:00",
+        "title": "Euronews Acum"
+      },
+      {
+        "time": "12:30",
+        "title": "UPB"
+      },
+      {
+        "time": "12:45",
+        "title": "Trăiești bine!"
+      },
+      {
+        "time": "13:00",
+        "title": "Euronews Acum"
+      },
+      {
+        "time": "13:50",
+        "title": "Euronews Next"
+      },
+      {
+        "time": "14:00",
+        "title": "Euronews Acum"
+      },
+      {
+        "time": "14:50",
+        "title": "Euronews My Europe"
+      },
+      {
+        "time": "15:30",
+        "title": "Cult"
+      },
+      {
+        "time": "16:00",
+        "title": "Euronews Acum"
+      },
+      {
+        "time": "16:50",
+        "title": "Euronews Travel"
+      },
+      {
+        "time": "17:00",
+        "title": "Euronews Acum"
+      },
+      {
+        "time": "17:50",
+        "title": "Traiesti bine!"
+      },
+      {
+        "time": "18:00",
+        "title": "Euronews prime-time"
+      },
+      {
+        "time": "18:50",
+        "title": "Euronews Culture"
+      },
+      {
+        "time": "19:00",
+        "title": "Ediție specială"
+      },
+      {
+        "time": "19:45",
+        "title": "Permis de antreprenor"
+      },
+      {
+        "time": "20:00",
+        "title": "Euronews Prime-Time"
+      },
+      {
+        "time": "20:50",
+        "title": "Euronews world"
+      },
+      {
+        "time": "21:00",
+        "title": "Vocile care conteaza"
+      },
+      {
+        "time": "21:50",
+        "title": "Meteo"
+      },
+      {
+        "time": "22:00",
+        "title": "Vocile care conteaza"
+      },
+      {
+        "time": "22:50",
+        "title": "Euronews Travel"
+      },
+      {
+        "time": "23:00",
+        "title": "Euronews prime-time"
+      },
+      {
+        "time": "23:50",
+        "title": "Euronews Green"
+      },
+      {
+        "time": "00:00",
+        "title": "Ediție specială (R)"
+      },
+      {
+        "time": "00:50",
+        "title": "Euronews My Europe"
+      },
+      {
+        "time": "01:00",
+        "title": "Euronews acum (R)"
+      },
+      {
+        "time": "01:50",
+        "title": "Euronews Culture"
+      },
+      {
+        "time": "02:00",
+        "title": "Euronews prime-time (R)"
+      },
+      {
+        "time": "02:50",
+        "title": "Euronews Next"
+      },
+      {
+        "time": "03:00",
+        "title": "Vocile care contează, cu Paula Rusu Nistor (R)"
+      },
+      {
+        "time": "04:00",
+        "title": "Vocile care contează, cu Paula Rusu Nistor (R)"
+      },
+      {
+        "time": "04:50",
+        "title": "Euronews Green"
+      },
+      {
+        "time": "05:00",
+        "title": "Euronews Travel"
+      },
+      {
+        "time": "05:15",
+        "title": "Traiesti Bine!"
+      },
+      {
+        "time": "05:30",
+        "title": "Euronews Culture"
+      },
+      {
+        "time": "06:00",
+        "title": "Euronews prime-time (R)"
+      },
+      {
+        "time": "06:50",
+        "title": "Euronews World"
+      }
+    ],
+    "euronews-en": [
+      {
+        "time": "07:00",
+        "title": "Wake up Europe"
+      },
+      {
+        "time": "07:15",
+        "title": "Wake up Europe"
+      },
+      {
+        "time": "07:30",
+        "title": "Wake up Europe"
+      },
+      {
+        "time": "07:49",
+        "title": "News"
+      },
+      {
+        "time": "08:00",
+        "title": "Wake up Europe"
+      },
+      {
+        "time": "08:15",
+        "title": "Wake up Europe"
+      },
+      {
+        "time": "08:30",
+        "title": "Wake up Europe"
+      },
+      {
+        "time": "09:00",
+        "title": "Europe Today"
+      },
+      {
+        "time": "09:30",
+        "title": "Wake up Europe"
+      },
+      {
+        "time": "10:00",
+        "title": "Europe Today"
+      },
+      {
+        "time": "10:30",
+        "title": "Wake up Europe"
+      },
+      {
+        "time": "11:00",
+        "title": "Europe Today"
+      },
+      {
+        "time": "11:30",
+        "title": "Euronews Now"
+      },
+      {
+        "time": "12:00",
+        "title": "Euronews Now"
+      },
+      {
+        "time": "12:30",
+        "title": "Euronews Now"
+      },
+      {
+        "time": "12:50",
+        "title": "Focus"
+      },
+      {
+        "time": "13:00",
+        "title": "Euronews Now"
+      },
+      {
+        "time": "13:15",
+        "title": "Euronews Now"
+      },
+      {
+        "time": "13:30",
+        "title": "Euronews Now"
+      },
+      {
+        "time": "14:00",
+        "title": "Euronews Now"
+      },
+      {
+        "time": "14:15",
+        "title": "Euronews Now"
+      },
+      {
+        "time": "14:30",
+        "title": "Euronews Now"
+      },
+      {
+        "time": "15:00",
+        "title": "Euronews Now"
+      },
+      {
+        "time": "15:30",
+        "title": "Euronews Now"
+      },
+      {
+        "time": "15:46",
+        "title": "News"
+      },
+      {
+        "time": "16:00",
+        "title": "Euronews Now"
+      },
+      {
+        "time": "16:15",
+        "title": "Euronews Now"
+      },
+      {
+        "time": "16:30",
+        "title": "Euronews Now"
+      },
+      {
+        "time": "17:00",
+        "title": "The European debrief"
+      },
+      {
+        "time": "17:30",
+        "title": "The European debrief"
+      },
+      {
+        "time": "17:50",
+        "title": "Focus"
+      },
+      {
+        "time": "18:00",
+        "title": "The European debrief"
+      },
+      {
+        "time": "18:15",
+        "title": "The European debrief"
+      },
+      {
+        "time": "18:30",
+        "title": "The European debrief"
+      },
+      {
+        "time": "19:00",
+        "title": "The European debrief"
+      },
+      {
+        "time": "19:15",
+        "title": "The European debrief"
+      },
+      {
+        "time": "19:30",
+        "title": "The European debrief"
+      },
+      {
+        "time": "19:45",
+        "title": "News"
+      },
+      {
+        "time": "20:00",
+        "title": "The European debrief"
+      },
+      {
+        "time": "20:15",
+        "title": "The European debrief"
+      },
+      {
+        "time": "20:30",
+        "title": "The European debrief"
+      },
+      {
+        "time": "21:00",
+        "title": "The European debrief"
+      },
+      {
+        "time": "21:15",
+        "title": "The Ring"
+      },
+      {
+        "time": "21:35",
+        "title": "The Ring"
+      },
+      {
+        "time": "22:00",
+        "title": "The European debrief"
+      },
+      {
+        "time": "22:15",
+        "title": "The European debrief"
+      },
+      {
+        "time": "22:30",
+        "title": "The European debrief"
+      },
+      {
+        "time": "23:00",
+        "title": "The European debrief"
+      },
+      {
+        "time": "23:15",
+        "title": "The European debrief"
+      },
+      {
+        "time": "23:30",
+        "title": "The European debrief"
+      },
+      {
+        "time": "00:00",
+        "title": "The European debrief."
+      },
+      {
+        "time": "00:15",
+        "title": "The European debrief."
+      },
+      {
+        "time": "00:29",
+        "title": "The Ring."
+      },
+      {
+        "time": "00:52",
+        "title": "The Ring."
+      },
+      {
+        "time": "01:00",
+        "title": "The European debrief"
+      },
+      {
+        "time": "01:15",
+        "title": "The European debrief"
+      },
+      {
+        "time": "01:30",
+        "title": "The European debrief"
+      },
+      {
+        "time": "01:46",
+        "title": "News"
+      },
+      {
+        "time": "02:00",
+        "title": "The European debrief"
+      },
+      {
+        "time": "02:15",
+        "title": "The European debrief"
+      },
+      {
+        "time": "02:30",
+        "title": "The European debrief"
+      },
+      {
+        "time": "03:00",
+        "title": "The European debrief"
+      },
+      {
+        "time": "03:15",
+        "title": "The European debrief"
+      },
+      {
+        "time": "03:30",
+        "title": "The European debrief"
+      },
+      {
+        "time": "04:00",
+        "title": "The European debrief"
+      },
+      {
+        "time": "04:14",
+        "title": "The European debrief"
+      },
+      {
+        "time": "04:30",
+        "title": "The European debrief"
+      },
+      {
+        "time": "05:00",
+        "title": "The European debrief"
+      },
+      {
+        "time": "05:15",
+        "title": "The European debrief"
+      },
+      {
+        "time": "05:30",
+        "title": "The European debrief"
+      },
+      {
+        "time": "06:00",
+        "title": "The European debrief"
+      },
+      {
+        "time": "06:15",
+        "title": "The European debrief"
+      },
+      {
+        "time": "06:30",
+        "title": "The European debrief"
+      }
+    ],
+    "arte": [
+      {
+        "time": "07:50",
+        "title": "Küchen der Welt"
+      },
+      {
+        "time": "08:20",
+        "title": "Stadt Land Kunst"
+      },
+      {
+        "time": "09:05",
+        "title": "Stadt Land Kunst"
+      },
+      {
+        "time": "09:55",
+        "title": "Irischer Kompass"
+      },
+      {
+        "time": "10:35",
+        "title": "Irischer Kompass"
+      },
+      {
+        "time": "11:20",
+        "title": "Irischer Kompass"
+      },
+      {
+        "time": "12:05",
+        "title": "Irischer Kompass"
+      },
+      {
+        "time": "12:55",
+        "title": "Küchen der Welt"
+      },
+      {
+        "time": "13:25",
+        "title": "Stadt Land Kunst"
+      },
+      {
+        "time": "14:10",
+        "title": "Stadt Land Kunst"
+      },
+      {
+        "time": "17:10",
+        "title": "Die gefährlichsten Bahnstrecken der Welt"
+      },
+      {
+        "time": "17:55",
+        "title": "Die gefährlichsten Bahnstrecken der Welt"
+      },
+      {
+        "time": "18:40",
+        "title": "Zauber der Korallenriffe"
+      },
+      {
+        "time": "19:35",
+        "title": "Seychellen – Archipel der Smaragde"
+      },
+      {
+        "time": "20:20",
+        "title": "ARTE Journal"
+      },
+      {
+        "time": "20:40",
+        "title": "Re: Türkei: Straßenhunde im Visier"
+      },
+      {
+        "time": "21:15",
+        "title": "Alles außer gewöhnlich"
+      },
+      {
+        "time": "23:00",
+        "title": "YMCA – Die Erfindung der Village People"
+      },
+      {
+        "time": "23:55",
+        "title": "\"Disco sucks!\" – Amerikas erster Kulturkampf"
+      },
+      {
+        "time": "00:49",
+        "title": "Music Queer"
+      },
+      {
+        "time": "00:55",
+        "title": "Als ob die Erde sie verschluckt hätte"
+      },
+      {
+        "time": "01:10",
+        "title": "You & Me"
+      },
+      {
+        "time": "01:35",
+        "title": "You & Me"
+      },
+      {
+        "time": "02:00",
+        "title": "You & Me"
+      },
+      {
+        "time": "02:25",
+        "title": "You & Me"
+      },
+      {
+        "time": "02:50",
+        "title": "You & Me"
+      },
+      {
+        "time": "03:15",
+        "title": "You & Me"
+      },
+      {
+        "time": "03:40",
+        "title": "Die gefährlichsten Bahnstrecken der Welt"
+      },
+      {
+        "time": "04:28",
+        "title": "Karambolage"
+      },
+      {
+        "time": "04:35",
+        "title": "Verdammte Katze!"
+      },
+      {
+        "time": "04:50",
+        "title": "28 Minuten"
+      }
+    ],
+    "france24": [
+      {
+        "time": "07:00",
+        "title": "A LA UNE - LE JOURNAL"
+      },
+      {
+        "time": "07:22",
+        "title": "FOCUS"
+      },
+      {
+        "time": "07:30",
+        "title": "A LA UNE - BULLETIN"
+      },
+      {
+        "time": "07:51",
+        "title": "SPORTS"
+      },
+      {
+        "time": "08:00",
+        "title": "A LA UNE - LE JOURNAL"
+      },
+      {
+        "time": "08:16",
+        "title": "REVUE DE PRESSE"
+      },
+      {
+        "time": "08:21",
+        "title": "REPORTAGE F24"
+      },
+      {
+        "time": "08:30",
+        "title": "A LA UNE - LE JOURNAL"
+      },
+      {
+        "time": "08:46",
+        "title": "L'INFO ECO"
+      },
+      {
+        "time": "08:51",
+        "title": "FOCUS"
+      },
+      {
+        "time": "09:00",
+        "title": "A LA UNE - LE JOURNAL"
+      },
+      {
+        "time": "09:15",
+        "title": "L'INVITE DE A LA UNE"
+      },
+      {
+        "time": "09:30",
+        "title": "A LA UNE - LE JOURNAL"
+      },
+      {
+        "time": "09:46",
+        "title": "REVUE DE PRESSE"
+      },
+      {
+        "time": "09:59",
+        "title": "PARLONS-EN - LE JOURNAL"
+      },
+      {
+        "time": "10:22",
+        "title": "L'INFO ECO"
+      },
+      {
+        "time": "10:30",
+        "title": "PARLONS-EN - LE JOURNAL"
+      },
+      {
+        "time": "10:42",
+        "title": "REVUE DE PRESSE"
+      },
+      {
+        "time": "10:47",
+        "title": "FOCUS"
+      },
+      {
+        "time": "10:52",
+        "title": "SPORTS"
+      },
+      {
+        "time": "11:00",
+        "title": "LE JOURNAL - LE DEBAT DE PARLONS-EN"
+      },
+      {
+        "time": "11:45",
+        "title": "FOCUS"
+      },
+      {
+        "time": "11:50",
+        "title": "SPORTS"
+      },
+      {
+        "time": "12:00",
+        "title": "PARLONS-EN - LE JOURNAL"
+      },
+      {
+        "time": "12:10",
+        "title": "ICI L'EUROPE 1 - ON VOUS ECOUTE"
+      },
+      {
+        "time": "12:30",
+        "title": "PARLONS-EN - BULLETIN"
+      },
+      {
+        "time": "12:39",
+        "title": "FACE A FACE"
+      },
+      {
+        "time": "13:00",
+        "title": "PARIS DIRECT - LE JOURNAL"
+      },
+      {
+        "time": "13:15",
+        "title": "A L'AFFICHE"
+      },
+      {
+        "time": "13:30",
+        "title": "PARIS DIRECT - BULLETIN"
+      },
+      {
+        "time": "13:45",
+        "title": "FOCUS"
+      },
+      {
+        "time": "13:50",
+        "title": "SPORTS"
+      },
+      {
+        "time": "13:59",
+        "title": "LE JOURNAL - L'INFO DU JOUR"
+      },
+      {
+        "time": "14:30",
+        "title": "PARIS DIRECT - LE JOURNAL"
+      },
+      {
+        "time": "14:54",
+        "title": "L'INSTANT MOBILE"
+      },
+      {
+        "time": "15:30",
+        "title": "LE JOURNAL - DERRIERE L'IMAGE"
+      },
+      {
+        "time": "15:45",
+        "title": "FOCUS"
+      },
+      {
+        "time": "15:50",
+        "title": "SPORTS"
+      },
+      {
+        "time": "16:00",
+        "title": "AUTOUR DU MONDE - LE JOURNAL"
+      },
+      {
+        "time": "16:30",
+        "title": "LE JOURNAL- LE RENDEZ-VOUS DE L'AFRIQUE"
+      },
+      {
+        "time": "16:45",
+        "title": "PAS 2 QUARTIER"
+      },
+      {
+        "time": "16:51",
+        "title": "LE COUP DE COEUR DU PDA"
+      },
+      {
+        "time": "17:00",
+        "title": "AUTOUR DU MONDE - LE JOURNAL"
+      },
+      {
+        "time": "17:30",
+        "title": "AUTOUR DU MONDE - LE JOURNAL"
+      },
+      {
+        "time": "17:40",
+        "title": "ELEMENT TERRE LA QUOTIDIENNE"
+      },
+      {
+        "time": "17:46",
+        "title": "A L'AFFICHE"
+      },
+      {
+        "time": "18:00",
+        "title": "AUTOUR DU MONDE - LE JOURNAL"
+      },
+      {
+        "time": "18:15",
+        "title": "LES OBSERVATEURS"
+      },
+      {
+        "time": "18:21",
+        "title": "FOCUS"
+      },
+      {
+        "time": "18:30",
+        "title": "AUX AVANT-POSTES"
+      },
+      {
+        "time": "18:59",
+        "title": "AU COEUR DE L'INFO - LE JOURNAL"
+      },
+      {
+        "time": "19:16",
+        "title": "QUESTIONS DIRECTES"
+      },
+      {
+        "time": "19:30",
+        "title": "AU COEUR DE L'INFO - LE JOURNAL"
+      },
+      {
+        "time": "19:46",
+        "title": "ECONOMIE SOIR"
+      },
+      {
+        "time": "19:51",
+        "title": "SPORTS"
+      },
+      {
+        "time": "20:00",
+        "title": "AU COEUR DE L'INFO - LE JOURNAL"
+      },
+      {
+        "time": "20:15",
+        "title": "LE DEBAT"
+      },
+      {
+        "time": "21:00",
+        "title": "L'ESSENTIEL - LE JOURNAL"
+      },
+      {
+        "time": "21:16",
+        "title": "ECONOMIE SOIR"
+      },
+      {
+        "time": "21:21",
+        "title": "SPORTS"
+      },
+      {
+        "time": "21:30",
+        "title": "LE JOURNAL - ON VA PLUS LOIN"
+      },
+      {
+        "time": "22:00",
+        "title": "L'ESSENTIEL - LE JOURNAL"
+      },
+      {
+        "time": "22:15",
+        "title": "INFO-INTOX"
+      },
+      {
+        "time": "22:20",
+        "title": "ELEMENT TERRE LA QUOTIDIENNE"
+      },
+      {
+        "time": "22:30",
+        "title": "L'ESSENTIEL - LE JOURNAL"
+      },
+      {
+        "time": "22:36",
+        "title": "LES CLES DE L'INFO"
+      },
+      {
+        "time": "22:44",
+        "title": "LE JOURNAL DE L'AFRIQUE"
+      },
+      {
+        "time": "23:00",
+        "title": "L'ACTU 360° - LE JOURNAL"
+      },
+      {
+        "time": "23:15",
+        "title": "ECONOMIE SOIR"
+      },
+      {
+        "time": "23:20",
+        "title": "INFO-INTOX"
+      },
+      {
+        "time": "23:30",
+        "title": "LE ZOOM - USA 2026"
+      },
+      {
+        "time": "23:44",
+        "title": "LE JOURNAL DE L'AFRIQUE"
+      },
+      {
+        "time": "00:00",
+        "title": "L'ACTU 360° - LE JOURNAL"
+      },
+      {
+        "time": "00:15",
+        "title": "ECONOMIE + INFO INTOX"
+      },
+      {
+        "time": "00:30",
+        "title": "L'ACTU 360° - LE JOURNAL"
+      },
+      {
+        "time": "00:39",
+        "title": "LES CLES DE L'INFO"
+      },
+      {
+        "time": "00:43",
+        "title": "SPORTS"
+      },
+      {
+        "time": "00:49",
+        "title": "LES UNES DE LA PRESSE"
+      },
+      {
+        "time": "00:51",
+        "title": "FOCUS"
+      },
+      {
+        "time": "01:00",
+        "title": "L'ACTU 360° - LE JOURNAL"
+      },
+      {
+        "time": "01:15",
+        "title": "LE DEBAT"
+      },
+      {
+        "time": "02:00",
+        "title": "L'EDITION NUIT - LE JOURNAL"
+      },
+      {
+        "time": "02:14",
+        "title": "LE JOURNAL DE L'AFRIQUE"
+      },
+      {
+        "time": "02:30",
+        "title": "L'EDITION NUIT - BULLETIN"
+      },
+      {
+        "time": "02:45",
+        "title": "A L'AFFICHE"
+      },
+      {
+        "time": "03:00",
+        "title": "L'EDITION NUIT - LE JOURNAL"
+      },
+      {
+        "time": "03:10",
+        "title": "ICI L'EUROPE 2 - ON EN DEBAT"
+      },
+      {
+        "time": "03:30",
+        "title": "L'EDITION NUIT - BULLETIN"
+      },
+      {
+        "time": "03:40",
+        "title": "FACE A FACE"
+      },
+      {
+        "time": "04:00",
+        "title": "L'EDITION NUIT - LE JOURNAL"
+      },
+      {
+        "time": "04:12",
+        "title": "LE DEBAT"
+      },
+      {
+        "time": "04:55",
+        "title": "L'INSTANT MOBILE"
+      },
+      {
+        "time": "05:00",
+        "title": "L'EDITION NUIT - LE JOURNAL"
+      },
+      {
+        "time": "05:10",
+        "title": "BILLET RETOUR"
+      },
+      {
+        "time": "05:30",
+        "title": "L'EDITION NUIT - BULLETIN"
+      },
+      {
+        "time": "05:40",
+        "title": "LEGENDES URBAINES"
+      },
+      {
+        "time": "06:00",
+        "title": "L'EDITION NUIT - LE JOURNAL"
+      },
+      {
+        "time": "06:10",
+        "title": "FACE A FACE"
+      },
+      {
+        "time": "06:30",
+        "title": "L'EDITION NUIT - BULLETIN"
+      },
+      {
+        "time": "06:40",
+        "title": "L'INSTANT MOBILE"
+      },
+      {
+        "time": "06:44",
+        "title": "LE JOURNAL DE L'AFRIQUE"
+      }
+    ],
+    "bloomberg-eu": [
+      {
+        "time": "07:00",
+        "title": "Bloomberg - The Opening Trade"
+      },
+      {
+        "time": "09:00",
+        "title": "The Pulse with Francine Lacqua"
+      },
+      {
+        "time": "10:00",
+        "title": "Bloomberg Brief"
+      },
+      {
+        "time": "11:00",
+        "title": "Bloomberg Surveillance"
+      },
+      {
+        "time": "16:00",
+        "title": "Bloomberg Tech"
+      },
+      {
+        "time": "17:00",
+        "title": "Bloomberg Crypto"
+      },
+      {
+        "time": "18:00",
+        "title": "Bloomberg - Balance of Power"
+      },
+      {
+        "time": "19:00",
+        "title": "Bloomberg Businessweek Daily"
+      },
+      {
+        "time": "20:00",
+        "title": "Bloomberg The Close"
+      },
+      {
+        "time": "22:00",
+        "title": "Bloomberg - Balance of Power"
+      },
+      {
+        "time": "23:00",
+        "title": "The Deal with Alex Rodriguez and Jason Kelly"
+      },
+      {
+        "time": "23:30",
+        "title": "The Deal with Alex Rodriguez and Jason Kelly"
+      },
+      {
+        "time": "00:00",
+        "title": "Bloomberg The Asia Trade"
+      },
+      {
+        "time": "02:00",
+        "title": "Bloomberg - The China Show"
+      },
+      {
+        "time": "04:00",
+        "title": "Insight with Haslinda Amin"
+      },
+      {
+        "time": "05:00",
+        "title": "Bloomberg Horizons Middle East & Africa"
+      },
+      {
+        "time": "06:00",
+        "title": "Bloomberg Daybreak - Europe"
+      }
+    ]
+  }
+}

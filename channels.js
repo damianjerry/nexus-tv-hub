@@ -22,17 +22,17 @@ const CHANNELS_DATA = [
     color: "#e11d48"
   },
   {
-    id: "viasat-epic-drama",
+    id: "moviesphere",
     number: "02",
-    name: "Viasat Epic Drama",
+    name: "MovieSphere HD",
     category: "filme",
     type: "hls",
-    badge: "SERIALE DE EPOCĂ",
+    badge: "HOLLYWOOD CINEMA",
     quality: "1080p HLS Direct",
-    description: "Drame de epocă, mister și producții istorice de televiziune la cel mai înalt nivel cinematografic european.",
-    hlsUrl: "http://88.212.7.14/live/test_epic_drama_atk_tv/playlist.m3u8",
-    logoText: "EPIC",
-    color: "#b91c1c"
+    description: "Cinema hollywoodian și internațional: blockbustere Lionsgate, filme de acțiune, thrillere și drame de referință.",
+    hlsUrl: "https://moviesphereuk-samsunguk.amagi.tv/playlist.m3u8",
+    logoText: "MSPH",
+    color: "#2563eb"
   },
   {
     id: "cinewow",
@@ -42,7 +42,7 @@ const CHANNELS_DATA = [
     type: "hls",
     badge: "DIVERTIȘMENT & FILM",
     quality: "576p HLS Direct",
-    description: "Blockbustere de acțiune, comedii celebre și cinema internațional pentru divertisment complet.",
+    description: "Comedii celebre, aventură și cinema pentru divertisment complet.",
     hlsUrl: "https://hls01ns.antenaplay.ro/hls/cinewow-sd/index.m3u8",
     logoText: "WOW",
     color: "#9333ea"
@@ -55,70 +55,31 @@ const CHANNELS_DATA = [
     type: "hls",
     badge: "CINEMA CLASIC",
     quality: "1080p HLS Direct",
-    description: "Epoca de aur a cinematografiei: filme clasice nemuritoare, actori legendari și seriale de patrimoniu.",
+    description: "Epoca de aur a cinematografiei: filme clasice nemuritoare, actori legendari și producții de patrimoniu.",
     hlsUrl: "https://hls02ns.antenaplay.ro/hls/nostalgia-hd/index.m3u8",
     logoText: "NOS",
     color: "#d97706"
   },
   {
-    id: "dust",
+    id: "artflix",
     number: "05",
-    name: "DUST Sci-Fi",
+    name: "ARTFLIX Movie Classics",
     category: "filme",
     type: "hls",
-    badge: "SCI-FI & VIITOR",
-    quality: "1080p HLS Master",
-    description: "Universul science-fiction: scurtmetraje SF inovatoare, viziuni futuriste și explorare tehnologică.",
-    hlsUrl: "https://dqi7ayt2o24fn.cloudfront.net/playlist.m3u8",
-    logoText: "DUST",
-    color: "#2563eb"
+    badge: "CINEMA DE AUTOR & CULT",
+    quality: "1080p HLS Direct",
+    description: "Capodopere ale cinematografiei mondiale, filme cult independente, clasice restaurate și capodopere noir.",
+    hlsUrl: "https://amogonetworx-artflix-1-nl.samsung.wurl.tv/playlist.m3u8",
+    logoText: "AFLX",
+    color: "#b45309"
   },
 
   // =========================================================================
   // 2. ISTORIE, NATURĂ, ȘTIINȚĂ & CULTURĂ (istorie)
   // =========================================================================
   {
-    id: "history-channel",
-    number: "06",
-    name: "History Channel",
-    category: "istorie",
-    type: "hls",
-    badge: "ISTORIE MONDIALĂ",
-    quality: "1080p HLS Direct",
-    description: "Documentare istorice majore, mistere ale civilizațiilor străvechi și evenimente care au schimbat omenirea.",
-    hlsUrl: "http://88.212.7.14/live/test_history/playlist.m3u8",
-    logoText: "HIST",
-    color: "#b45309"
-  },
-  {
-    id: "viasat-history",
-    number: "07",
-    name: "Viasat History",
-    category: "istorie",
-    type: "hls",
-    badge: "DOCUMENTAR ISTORIC",
-    quality: "1080p HLS Direct",
-    description: "Războaie mondiale, mari monarhii europene, secrete diplomatice și descoperiri arheologice revoluționare.",
-    hlsUrl: "http://88.212.7.14/live/test_viasat_history_atk_tv/playlist.m3u8",
-    logoText: "VHIS",
-    color: "#c2410c"
-  },
-  {
-    id: "spektrum",
-    number: "08",
-    name: "Spektrum",
-    category: "istorie",
-    type: "hls",
-    badge: "ȘTIINȚĂ & NATURĂ",
-    quality: "1080p HLS Direct",
-    description: "Știință aplicată, universul cosmic, megaproiecte tehnologice și cele mai spectaculoase habitate naturale.",
-    hlsUrl: "http://88.212.7.14/live/test_spektrum/playlist.m3u8",
-    logoText: "SPEK",
-    color: "#059669"
-  },
-  {
     id: "true-history",
-    number: "09",
+    number: "06",
     name: "True History",
     category: "istorie",
     type: "hls",
@@ -126,12 +87,13 @@ const CHANNELS_DATA = [
     quality: "1080p HLS Direct",
     description: "Documentare de arhivă, cronici necenzurate ale secolului XX și biografii ale marilor lideri mondiali.",
     hlsUrl: "https://linear-188.frequency.stream/dist/glewedtv/188/hls/master/playlist.m3u8",
+    disableSubtitles: true,
     logoText: "TRUE",
     color: "#4b5563"
   },
   {
     id: "travel-mix",
-    number: "10",
+    number: "07",
     name: "Travel Mix HD",
     category: "istorie",
     type: "hls",
@@ -144,7 +106,7 @@ const CHANNELS_DATA = [
   },
   {
     id: "nhk-world",
-    number: "11",
+    number: "08",
     name: "NHK World-Japan HD",
     category: "istorie",
     type: "hls",
@@ -157,7 +119,7 @@ const CHANNELS_DATA = [
   },
   {
     id: "arte",
-    number: "12",
+    number: "09",
     name: "ARTE European Culture",
     category: "istorie",
     type: "hls",
@@ -170,20 +132,14 @@ const CHANNELS_DATA = [
   },
   {
     id: "dw-documentary",
-    number: "13",
+    number: "10",
     name: "DW Documentary",
     category: "istorie",
-    type: "youtube",
+    type: "hls",
     badge: "INVESTIGAȚII GLOBALE",
-    quality: "1080p HD",
+    quality: "1080p 50fps Master",
     description: "Investigații jurnalistice premiate internațional despre economie mondială, megaproiecte și societate.",
-    youtube: {
-      playlistId: "UUW39zufHfsuGgpLviKh297Q",
-      videoId: "0ZDvKTJSpS4",
-      channelId: "UCW39zufHfsuGgpLviKh297Q",
-      handle: "@DWDocumentary",
-      liveUrl: "https://www.youtube.com/@DWDocumentary/videos"
-    },
+    hlsUrl: "https://dwamdstream104.akamaized.net/hls/live/2015530/dwstream104/master.m3u8",
     logoText: "DWD",
     color: "#0891b2"
   },
@@ -193,7 +149,7 @@ const CHANNELS_DATA = [
   // =========================================================================
   {
     id: "bloomberg-eu",
-    number: "14",
+    number: "11",
     name: "Bloomberg Television Europe",
     category: "finante",
     type: "hls",
@@ -206,7 +162,7 @@ const CHANNELS_DATA = [
   },
   {
     id: "bloomberg-originals",
-    number: "15",
+    number: "12",
     name: "Bloomberg Originals",
     category: "finante",
     type: "hls",
@@ -219,7 +175,7 @@ const CHANNELS_DATA = [
   },
   {
     id: "bloomberg-politics",
-    number: "16",
+    number: "13",
     name: "Bloomberg Politics",
     category: "finante",
     type: "hls",
@@ -232,7 +188,7 @@ const CHANNELS_DATA = [
   },
   {
     id: "aleph-business",
-    number: "17",
+    number: "14",
     name: "Aleph Business",
     category: "finante",
     type: "hls",
@@ -245,7 +201,7 @@ const CHANNELS_DATA = [
   },
   {
     id: "cna-business",
-    number: "18",
+    number: "15",
     name: "CNA Asia & World Business",
     category: "finante",
     type: "hls",
@@ -258,7 +214,7 @@ const CHANNELS_DATA = [
   },
   {
     id: "cheddar-news",
-    number: "19",
+    number: "16",
     name: "Cheddar News",
     category: "finante",
     type: "hls",
@@ -271,7 +227,7 @@ const CHANNELS_DATA = [
   },
   {
     id: "yahoo-finance",
-    number: "20",
+    number: "17",
     name: "Yahoo Finance Live",
     category: "finante",
     type: "hls",
@@ -279,11 +235,7 @@ const CHANNELS_DATA = [
     quality: "1080p HLS Direct",
     description: "Acoperire completă a clopoțelului de deschidere/închidere la NYSE, interviuri CEO, ETF-uri și acțiuni.",
     hlsUrl: "https://yahoo-samsung.amagi.tv/playlist.m3u8",
-    youtube: {
-      videoId: "KQp-e_XQnDE",
-      handle: "@YahooFinance",
-      channelId: "UCEAZeUIeJs0IjQiqTCdVSIg"
-    },
+    disableSubtitles: true,
     logoText: "YF",
     color: "#6001d2"
   },
@@ -293,7 +245,7 @@ const CHANNELS_DATA = [
   // =========================================================================
   {
     id: "euronews-en",
-    number: "21",
+    number: "18",
     name: "Euronews English",
     category: "stiri",
     type: "hls",
@@ -306,7 +258,7 @@ const CHANNELS_DATA = [
   },
   {
     id: "euronews-ro",
-    number: "22",
+    number: "19",
     name: "Euronews România",
     category: "stiri",
     type: "hls",
@@ -319,7 +271,7 @@ const CHANNELS_DATA = [
   },
   {
     id: "france24",
-    number: "23",
+    number: "20",
     name: "France 24 English",
     category: "stiri",
     type: "hls",
@@ -332,7 +284,7 @@ const CHANNELS_DATA = [
   },
   {
     id: "dw-news",
-    number: "24",
+    number: "21",
     name: "DW News (Deutsche Welle)",
     category: "stiri",
     type: "hls",
@@ -345,7 +297,7 @@ const CHANNELS_DATA = [
   },
   {
     id: "aljazeera",
-    number: "25",
+    number: "22",
     name: "Al Jazeera English",
     category: "stiri",
     type: "hls",
@@ -358,7 +310,7 @@ const CHANNELS_DATA = [
   },
   {
     id: "aleph-news",
-    number: "26",
+    number: "23",
     name: "Aleph News",
     category: "stiri",
     type: "hls",
@@ -371,7 +323,7 @@ const CHANNELS_DATA = [
   },
   {
     id: "court-tv",
-    number: "27",
+    number: "24",
     name: "Court TV",
     category: "stiri",
     type: "hls",
@@ -384,7 +336,7 @@ const CHANNELS_DATA = [
   },
   {
     id: "un-web-tv",
-    number: "28",
+    number: "25",
     name: "UN Web TV",
     category: "stiri",
     type: "hls",
@@ -397,18 +349,14 @@ const CHANNELS_DATA = [
   },
   {
     id: "sky-news",
-    number: "29",
+    number: "26",
     name: "Sky News International",
     category: "stiri",
-    type: "youtube",
+    type: "hls",
     badge: "GLOBAL NEWS",
-    quality: "1080p Live",
+    quality: "1080p HLS Direct",
     description: "Știri internaționale 24/7, dezbateri diplomatice, politică externă și acoperire specială a crizelor globale.",
-    youtube: {
-      videoId: "YJTi7VnQXIs",
-      handle: "@SkyNews",
-      channelId: "UCoMdktPbSTixAyNGwb-UYkQ"
-    },
+    hlsUrl: "https://skynewsau-live-premium.akamaized.net/hls/live/2105299/skynews/live.m3u8",
     logoText: "SKY",
     color: "#e61b1b"
   },
@@ -418,7 +366,7 @@ const CHANNELS_DATA = [
   // =========================================================================
   {
     id: "tvr-info",
-    number: "30",
+    number: "27",
     name: "TVR Info HD",
     category: "romania",
     type: "hls",
@@ -431,7 +379,7 @@ const CHANNELS_DATA = [
   },
   {
     id: "tvr-1",
-    number: "31",
+    number: "28",
     name: "TVR 1 HD",
     category: "romania",
     type: "hls",
@@ -444,7 +392,7 @@ const CHANNELS_DATA = [
   },
   {
     id: "tvr-2",
-    number: "32",
+    number: "29",
     name: "TVR 2 HD",
     category: "romania",
     type: "hls",
@@ -457,7 +405,7 @@ const CHANNELS_DATA = [
   },
   {
     id: "tvr-cultural",
-    number: "33",
+    number: "30",
     name: "TVR Cultural HD",
     category: "romania",
     type: "hls",
@@ -470,7 +418,7 @@ const CHANNELS_DATA = [
   },
   {
     id: "digi24",
-    number: "34",
+    number: "31",
     name: "Digi 24 HD",
     category: "romania",
     type: "hls",
@@ -487,7 +435,7 @@ const CHANNELS_DATA = [
   // =========================================================================
   {
     id: "ebs",
-    number: "35",
+    number: "32",
     name: "EbS - Comisia Europeană",
     category: "evenimente",
     type: "hls",
@@ -502,7 +450,7 @@ const CHANNELS_DATA = [
   },
   {
     id: "ebs-plus",
-    number: "36",
+    number: "33",
     name: "EbS+ - Parlamentul European",
     category: "evenimente",
     type: "hls",
@@ -517,7 +465,7 @@ const CHANNELS_DATA = [
   },
   {
     id: "bnr",
-    number: "37",
+    number: "34",
     name: "Banca Națională a României",
     category: "evenimente",
     type: "youtube",
@@ -526,6 +474,8 @@ const CHANNELS_DATA = [
     isEventStream: true,
     isEventOnly: true,
     description: "Conferințe de politică monetară, decizii de dobândă de referință și rapoarte trimestriale asupra inflației.",
+    webPortal: "https://www.bnr.ro",
+    portalDomain: "bnr.ro",
     youtube: {
       channelId: "UC9rLa4wmt-V_ozSV0Toj9Yg",
       handle: "@bnrro",
@@ -536,7 +486,7 @@ const CHANNELS_DATA = [
   },
   {
     id: "cdep",
-    number: "38",
+    number: "35",
     name: "Camera Deputaților (România)",
     category: "evenimente",
     type: "youtube",
@@ -545,18 +495,19 @@ const CHANNELS_DATA = [
     isEventStream: true,
     isEventOnly: true,
     description: "Transmisiunile oficiale din plenul Camerei Deputaților și din comisiile de buget-finanțe și juridice.",
+    webPortal: "https://www.cdep.ro",
+    portalDomain: "cdep.ro",
     youtube: {
       channelId: "UC7XoaKakuGfIHqclt962SqQ",
       handle: "@camdeputatilor",
       liveUrl: "https://www.youtube.com/@camdeputatilor/streams"
     },
-    webPortal: "https://www.cdep.ro",
     logoText: "CDEP",
     color: "#1e3a8a"
   },
   {
     id: "senat",
-    number: "39",
+    number: "36",
     name: "Senatul României",
     category: "evenimente",
     type: "youtube",
@@ -565,18 +516,19 @@ const CHANNELS_DATA = [
     isEventStream: true,
     isEventOnly: true,
     description: "Ședințele oficiale de plen ale Senatului României, dezbateri legislative și voturi pe legi organice.",
+    webPortal: "https://www.senat.ro",
+    portalDomain: "senat.ro",
     youtube: {
       channelId: "UCpZswGPkx4fBwaZ_U5scXDw",
       handle: "@SenatulRomaniei",
       liveUrl: "https://www.youtube.com/@SenatulRomaniei/streams"
     },
-    webPortal: "https://www.senat.ro",
     logoText: "SEN",
     color: "#1e40af"
   },
   {
     id: "gov-ro",
-    number: "40",
+    number: "37",
     name: "Guvernul României",
     category: "evenimente",
     type: "youtube",
@@ -585,12 +537,13 @@ const CHANNELS_DATA = [
     isEventStream: true,
     isEventOnly: true,
     description: "Briefingurile oficiale după ședințele de guvern, conferințele ministerelor și ordonanțele de urgență.",
+    webPortal: "https://gov.ro",
+    portalDomain: "gov.ro",
     youtube: {
       channelId: "UCnlob-87h0ZKBEwel_Xiw5A",
       handle: "@guvernulromaniei",
       liveUrl: "https://www.youtube.com/@guvernulromaniei/streams"
     },
-    webPortal: "https://gov.ro",
     logoText: "GOV",
     color: "#0369a1"
   }

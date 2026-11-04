@@ -74,6 +74,19 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // EPG JSON Data Endpoint: /api/epg
+  if (parsedUrl.pathname === "/api/epg") {
+    const epgPath = path.join(PUBLIC_DIR, "epg_real.json");
+    if (fs.existsSync(epgPath)) {
+      res.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+      fs.createReadStream(epgPath).pipe(res);
+    } else {
+      res.writeHead(404, { "Content-Type": "text/plain" });
+      res.end("EPG data not found");
+    }
+    return;
+  }
+
   // Static File Serving
   let filePath = path.join(PUBLIC_DIR, parsedUrl.pathname === "/" ? "index.html" : parsedUrl.pathname);
 

@@ -16,6 +16,7 @@ zip -r "$OUTPUT_WGT" \
     index.html \
     styles.css \
     channels.js \
+    epg_real.js \
     epg.js \
     app.js \
     hls.min.js
