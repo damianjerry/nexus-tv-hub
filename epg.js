@@ -413,8 +413,11 @@ const EPG_DATA = (function () {
     };
   }
 
+  const PX_PER_MINUTE = 8;
+  const TIMELINE_HOURS = 6;
+
   // Generate time intervals for timeline headers (e.g. 30 min slices around current time)
-  function getTimelineIntervals(now = new Date(), hoursAhead = 4, intervalMinutes = 30) {
+  function getTimelineIntervals(now = new Date(), hoursAhead = TIMELINE_HOURS, intervalMinutes = 30) {
     const startHour = Math.max(0, now.getHours() - 1);
     const intervals = [];
     const base = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHour, 0, 0, 0);
@@ -433,11 +436,52 @@ const EPG_DATA = (function () {
     return intervals;
   }
 
+  // Get exactly the visible shows for the timeline viewport with coordinates
+  function getVisibleShows(channelId, now = new Date()) {
+    const startHour = Math.max(0, now.getHours() - 1);
+    const baseTimelineStartMs = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHour, 0, 0, 0).getTime();
+    const baseTimelineEndMs = baseTimelineStartMs + TIMELINE_HOURS * 3600 * 1000;
+
+    const schedule = generateDaySchedule(channelId, now);
+    const nowMs = now.getTime();
+
+    const visible = schedule.filter(s => s.endMs > baseTimelineStartMs && s.startMs < baseTimelineEndMs);
+
+    return visible.map(prog => {
+      const visibleStartMs = Math.max(prog.startMs, baseTimelineStartMs);
+      const visibleEndMs = Math.min(prog.endMs, baseTimelineEndMs);
+      const leftPx = Math.round(((visibleStartMs - baseTimelineStartMs) / 60000) * PX_PER_MINUTE);
+      const widthPx = Math.max(80, Math.round(((visibleEndMs - visibleStartMs) / 60000) * PX_PER_MINUTE) - 4);
+      const isLiveNow = nowMs >= prog.startMs && nowMs < prog.endMs;
+
+      let progressPercent = 0;
+      let remainingMinutes = 0;
+      if (isLiveNow) {
+        const elapsed = Math.max(0, nowMs - prog.startMs);
+        const total = prog.endMs - prog.startMs;
+        progressPercent = Math.min(100, Math.max(0, Math.round((elapsed / total) * 100)));
+        remainingMinutes = Math.max(0, Math.round((prog.endMs - nowMs) / 60000));
+      }
+
+      return {
+        ...prog,
+        leftPx,
+        widthPx,
+        isLiveNow,
+        progressPercent,
+        remainingMinutes
+      };
+    });
+  }
+
   return {
+    PX_PER_MINUTE,
+    TIMELINE_HOURS,
     generateDaySchedule,
     getCurrentShow,
     getNextShow,
-    getTimelineIntervals
+    getTimelineIntervals,
+    getVisibleShows
   };
 })();
 

@@ -178,6 +178,8 @@ const CHANNELS_DATA = [
     quality: "1080p HD",
     description: "Investigații jurnalistice premiate internațional despre economie mondială, megaproiecte și societate.",
     youtube: {
+      playlistId: "UUW39zufHfsuGgpLviKh297Q",
+      videoId: "0ZDvKTJSpS4",
       channelId: "UCW39zufHfsuGgpLviKh297Q",
       handle: "@DWDocumentary",
       liveUrl: "https://www.youtube.com/@DWDocumentary/videos"
@@ -272,10 +274,11 @@ const CHANNELS_DATA = [
     number: "20",
     name: "Yahoo Finance Live",
     category: "finante",
-    type: "youtube",
+    type: "hls",
     badge: "WALL STREET",
-    quality: "1080p Live",
+    quality: "1080p HLS Direct",
     description: "Acoperire completă a clopoțelului de deschidere/închidere la NYSE, interviuri CEO, ETF-uri și acțiuni.",
+    hlsUrl: "https://yahoo-samsung.amagi.tv/playlist.m3u8",
     youtube: {
       videoId: "KQp-e_XQnDE",
       handle: "@YahooFinance",
@@ -402,7 +405,7 @@ const CHANNELS_DATA = [
     quality: "1080p Live",
     description: "Știri internaționale 24/7, dezbateri diplomatice, politică externă și acoperire specială a crizelor globale.",
     youtube: {
-      videoId: "WUTDiO_fXdE",
+      videoId: "YJTi7VnQXIs",
       handle: "@SkyNews",
       channelId: "UCoMdktPbSTixAyNGwb-UYkQ"
     },
@@ -491,6 +494,7 @@ const CHANNELS_DATA = [
     badge: "BRUXELLES DIRECT",
     quality: "1080p HLS Direct",
     isEventStream: true,
+    is24h: true,
     description: "Europe by Satellite: conferințele de presă oficiale ale Comisiei Europene și deciziile Consiliului UE.",
     hlsUrl: "https://streams.prd.commavservices.eu/live/ebs/index.m3u8",
     logoText: "EbS",
@@ -505,6 +509,7 @@ const CHANNELS_DATA = [
     badge: "LEGISLAȚIE UE",
     quality: "1080p HLS Direct",
     isEventStream: true,
+    is24h: true,
     description: "Dezbaterile în plenul Parlamentului European de la Strasbourg/Bruxelles și audierile comisiilor parlamentare.",
     hlsUrl: "https://streams.prd.commavservices.eu/live/ebsplus/index.m3u8",
     logoText: "EbS+",
@@ -519,6 +524,7 @@ const CHANNELS_DATA = [
     badge: "BANCA CENTRALĂ",
     quality: "Evenimente Live",
     isEventStream: true,
+    isEventOnly: true,
     description: "Conferințe de politică monetară, decizii de dobândă de referință și rapoarte trimestriale asupra inflației.",
     youtube: {
       channelId: "UC9rLa4wmt-V_ozSV0Toj9Yg",
@@ -537,6 +543,7 @@ const CHANNELS_DATA = [
     badge: "PARLAMENTUL ROMÂNIEI",
     quality: "Plen & Comisii Live",
     isEventStream: true,
+    isEventOnly: true,
     description: "Transmisiunile oficiale din plenul Camerei Deputaților și din comisiile de buget-finanțe și juridice.",
     youtube: {
       channelId: "UC7XoaKakuGfIHqclt962SqQ",
@@ -556,6 +563,7 @@ const CHANNELS_DATA = [
     badge: "SENATUL ROMÂNIEI",
     quality: "Plen Oficial Live",
     isEventStream: true,
+    isEventOnly: true,
     description: "Ședințele oficiale de plen ale Senatului României, dezbateri legislative și voturi pe legi organice.",
     youtube: {
       channelId: "UCpZswGPkx4fBwaZ_U5scXDw",
@@ -575,6 +583,7 @@ const CHANNELS_DATA = [
     badge: "PALATUL VICTORIA",
     quality: "Briefinguri Live",
     isEventStream: true,
+    isEventOnly: true,
     description: "Briefingurile oficiale după ședințele de guvern, conferințele ministerelor și ordonanțele de urgență.",
     youtube: {
       channelId: "UCnlob-87h0ZKBEwel_Xiw5A",

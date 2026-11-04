@@ -29,7 +29,8 @@
     liveToastTimer: null,
     activeLiveEventChannel: null,
     hasNotifiedChannels: new Set(),
-    timelineBaseHour: null
+    timelineBaseHour: null,
+    currentInspectedTimeMs: null
   };
 
   // DOM Cache
@@ -191,11 +192,14 @@
     const now = new Date();
     const channels = getFilteredChannels();
 
-    // 1. Render Timeline Ruler across top
     const startHour = Math.max(0, now.getHours() - 1);
     state.timelineBaseHour = startHour;
-    const intervals = EPG_DATA.getTimelineIntervals(now, 5, 30);
 
+    // 1. Render Timeline Ruler across top
+    const intervals = EPG_DATA.getTimelineIntervals(now, EPG_DATA.TIMELINE_HOURS, 30);
+    const rulerTotalWidthPx = intervals.length * 240;
+
+    dom.epgTimeRuler.style.width = `${rulerTotalWidthPx}px`;
     dom.epgTimeRuler.innerHTML = "";
     intervals.forEach(int => {
       const slot = document.createElement("div");
@@ -206,7 +210,6 @@
 
     // 2. Render Channel Rows & Program Blocks
     dom.epgChannelsRows.innerHTML = "";
-    const baseTimelineStartMs = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHour, 0, 0, 0).getTime();
 
     channels.forEach((ch, rowIdx) => {
       const row = document.createElement("div");
@@ -236,7 +239,7 @@
       cell.addEventListener("click", () => {
         focusChannelRow(rowIdx);
         playChannel(ch, true);
-        hideGuide();
+        hideGuide(false);
       });
 
       row.appendChild(cell);
@@ -244,29 +247,25 @@
       // Program Timeline Track
       const track = document.createElement("div");
       track.className = "epg-programs-track";
+      track.style.width = `${rulerTotalWidthPx}px`;
 
-      const schedule = EPG_DATA.generateDaySchedule(ch.id, now);
-      // Filter programs that overlap with current timeline viewport
-      const visibleShows = schedule.filter(s => s.endMs >= baseTimelineStartMs && s.startMs <= baseTimelineStartMs + 6 * 3600 * 1000);
+      const visibleShows = EPG_DATA.getVisibleShows(ch.id, now);
 
       visibleShows.forEach((prog, progIdx) => {
         const card = document.createElement("div");
-        const isLiveNow = now.getTime() >= prog.startMs && now.getTime() < prog.endMs;
-
-        // Card width: approx 4.8px per minute
-        const cardWidth = Math.max(150, Math.round(prog.durationMinutes * 4.8));
-        card.style.width = `${cardWidth}px`;
-        card.className = `epg-program-card ${isLiveNow ? 'is-live-show' : ''} ${rowIdx === state.focusedRowIndex && progIdx === state.focusedProgIndex ? 'focused' : ''}`;
+        card.style.left = `${prog.leftPx}px`;
+        card.style.width = `${prog.widthPx}px`;
+        card.className = `epg-program-card ${prog.isLiveNow ? 'is-live-show' : ''} ${rowIdx === state.focusedRowIndex && progIdx === state.focusedProgIndex ? 'focused' : ''}`;
         card.dataset.progIdx = progIdx;
+        card._progData = prog;
 
-        let liveBadgeHtml = isLiveNow ? `<span class="epg-live-badge-mini">LIVE</span>` : "";
+        let liveBadgeHtml = prog.isLiveNow ? `<span class="epg-live-badge-mini">LIVE</span>` : "";
         let progressHtml = "";
 
-        if (isLiveNow) {
-          const currentInfo = EPG_DATA.getCurrentShow(ch.id, now);
+        if (prog.isLiveNow) {
           progressHtml = `
             <div class="epg-prog-progress-bar">
-              <div class="epg-prog-progress-fill" style="width: ${currentInfo.progressPercent}%;"></div>
+              <div class="epg-prog-progress-fill" style="width: ${prog.progressPercent}%;"></div>
             </div>
           `;
         }
@@ -284,7 +283,7 @@
           e.stopPropagation();
           focusProgramCard(rowIdx, progIdx);
           playChannel(ch, true);
-          hideGuide();
+          hideGuide(false);
         });
 
         track.appendChild(card);
@@ -300,13 +299,11 @@
   function updateNowMarkerPosition(now) {
     if (!dom.epgNowMarker || state.timelineBaseHour === null) return;
     const baseHour = state.timelineBaseHour;
-    const currentHour = now.getHours();
-    const currentMin = now.getMinutes();
+    const baseTimelineStartMs = new Date(now.getFullYear(), now.getMonth(), now.getDate(), baseHour, 0, 0, 0).getTime();
+    const PX_PER_MIN = EPG_DATA.PX_PER_MINUTE || 8;
 
-    const hoursDiff = currentHour - baseHour;
-    // Each 30 mins = 240px slot width => 8px per minute
-    const minutesFromBase = hoursDiff * 60 + currentMin;
-    const markerLeftPx = 290 + Math.max(0, minutesFromBase * 8);
+    const elapsedMs = Math.max(0, now.getTime() - baseTimelineStartMs);
+    const markerLeftPx = 290 + (elapsedMs / 60000) * PX_PER_MIN;
 
     dom.epgNowMarker.style.left = `${markerLeftPx}px`;
   }
@@ -335,12 +332,33 @@
       }
     });
 
-    // Find the currently airing program in this row and focus it
-    const ch = channels[rowIndex];
-    if (ch) {
-      focusProgramCard(rowIndex, 0, false);
-      updateInspectorWithCurrentShow(ch);
+    const targetRow = rows[rowIndex];
+    if (!targetRow) return;
+
+    const cards = targetRow.querySelectorAll(".epg-program-card");
+    if (cards.length === 0) return;
+
+    // Pick program: match inspected time if exists, or live show, or default to 0
+    let targetProgIdx = -1;
+    if (state.currentInspectedTimeMs) {
+      cards.forEach((c, i) => {
+        if (c._progData && state.currentInspectedTimeMs >= c._progData.startMs && state.currentInspectedTimeMs < c._progData.endMs) {
+          targetProgIdx = i;
+        }
+      });
     }
+
+    if (targetProgIdx === -1) {
+      cards.forEach((c, i) => {
+        if (c._progData && c._progData.isLiveNow) {
+          targetProgIdx = i;
+        }
+      });
+    }
+
+    if (targetProgIdx === -1) targetProgIdx = 0;
+
+    focusProgramCard(rowIndex, targetProgIdx, scroll);
   }
 
   function focusProgramCard(rowIdx, progIdx, scroll = true) {
@@ -356,24 +374,35 @@
 
     state.focusedProgIndex = progIdx;
 
-    // Remove focus from all cards across all rows
     dom.epgChannelsRows.querySelectorAll(".epg-program-card.focused").forEach(c => c.classList.remove("focused"));
 
     const targetCard = cards[progIdx];
     if (targetCard) {
       targetCard.classList.add("focused");
-      if (scroll) {
-        targetCard.scrollIntoView({ behavior: "smooth", inline: "nearest" });
-      }
-    }
 
-    const channels = getFilteredChannels();
-    const ch = channels[rowIdx];
-    if (ch) {
-      const now = new Date();
-      const schedule = EPG_DATA.generateDaySchedule(ch.id, now);
-      const prog = schedule[progIdx] || EPG_DATA.getCurrentShow(ch.id, now);
-      updateInspectorWithShow(ch, prog);
+      if (targetCard._progData) {
+        state.currentInspectedTimeMs = targetCard._progData.startMs + (targetCard._progData.endMs - targetCard._progData.startMs) / 2;
+
+        if (scroll && dom.epgGridContainer) {
+          const container = dom.epgGridContainer;
+          const cardLeft = 290 + targetCard._progData.leftPx;
+          const cardRight = cardLeft + targetCard._progData.widthPx;
+          const viewLeft = container.scrollLeft + 290;
+          const viewRight = container.scrollLeft + container.clientWidth - 40;
+
+          if (cardLeft < viewLeft) {
+            container.scrollTo({ left: Math.max(0, cardLeft - 320), behavior: "smooth" });
+          } else if (cardRight > viewRight) {
+            container.scrollTo({ left: cardRight - container.clientWidth + 60, behavior: "smooth" });
+          }
+        }
+
+        const channels = getFilteredChannels();
+        const ch = channels[rowIdx];
+        if (ch) {
+          updateInspectorWithShow(ch, targetCard._progData);
+        }
+      }
     }
   }
 
@@ -393,13 +422,15 @@
     if (dom.inspChName) dom.inspChName.textContent = ch.name;
     if (dom.inspCatTag) dom.inspCatTag.textContent = ch.badge;
     if (dom.inspStatusPill) {
-      dom.inspStatusPill.textContent = show.isLive ? "● LIVE ACUM" : "● PROGRAMAT";
-      dom.inspStatusPill.style.color = show.isLive ? "var(--accent-emerald)" : "var(--text-muted)";
+      dom.inspStatusPill.textContent = (show.isLiveNow || show.isLive) ? "● LIVE ACUM" : "● PROGRAMAT";
+      dom.inspStatusPill.style.color = (show.isLiveNow || show.isLive) ? "var(--accent-emerald)" : "var(--text-muted)";
     }
     if (dom.inspTitle) dom.inspTitle.textContent = show.title;
     if (dom.inspTime) dom.inspTime.textContent = `${show.startTimeStr} - ${show.endTimeStr}`;
     if (dom.inspProgressText) {
-      dom.inspProgressText.textContent = show.isLive ? `A mai rămas: ${show.remainingMinutes || 30} min` : `Durată: ${show.durationMinutes} min`;
+      dom.inspProgressText.textContent = (show.isLiveNow || show.isLive)
+        ? `A mai rămas: ${show.remainingMinutes || 30} min`
+        : `Durată: ${show.durationMinutes} min`;
     }
     if (dom.inspDesc) dom.inspDesc.textContent = show.desc || ch.description;
   }
@@ -448,7 +479,7 @@
     }
   }
 
-  // Native & Hls.js Direct Stream Player (Fixed Unmute Behavior)
+  // Native & Hls.js Direct Stream Player (Fixed Unmute Behavior & Auto-Fallback)
   function playHls(url) {
     dom.hlsVideo.style.display = "block";
     dom.hlsVideo.muted = false;
@@ -476,6 +507,26 @@
           }
         });
       });
+
+      hls.on(Hls.Events.ERROR, (event, data) => {
+        if (data.fatal) {
+          switch (data.type) {
+            case Hls.ErrorTypes.NETWORK_ERROR:
+              hls.startLoad();
+              break;
+            case Hls.ErrorTypes.MEDIA_ERROR:
+              hls.recoverMediaError();
+              break;
+            default:
+              hls.destroy();
+              if (state.currentChannel?.youtube) {
+                console.log("[NEXUS] HLS fallback to YouTube for channel:", state.currentChannel.name);
+                playYouTubeClean(state.currentChannel);
+              }
+              break;
+          }
+        }
+      });
     } else if (dom.hlsVideo.canPlayType("application/vnd.apple.mpegurl")) {
       dom.hlsVideo.src = url;
       dom.hlsVideo.addEventListener("loadedmetadata", () => {
@@ -491,24 +542,27 @@
     }
   }
 
-  // Clean YouTube Live Player (Strict Referrer & Frame-safe Handshake)
+  // Clean YouTube Live Player (Strict Frame-safe Handshake)
   function playYouTubeClean(channel) {
     dom.ytCropStage.style.display = "block";
 
     const videoId = channel.youtube?.videoId || "";
+    const playlistId = channel.youtube?.playlistId || "";
     let src = "";
 
     if (videoId) {
-      src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&mute=0&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&playsinline=1&enablejsapi=1&disablekb=1&fs=0&origin=https://www.youtube.com&widget_referrer=https://www.youtube.com`;
+      src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&mute=0&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&playsinline=1&enablejsapi=1&disablekb=1&fs=0`;
+    } else if (playlistId) {
+      src = `https://www.youtube-nocookie.com/embed/videoseries?list=${playlistId}&autoplay=1&mute=0&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&playsinline=1&enablejsapi=1&disablekb=1&fs=0`;
     } else if (channel.youtube?.channelId) {
-      src = `https://www.youtube-nocookie.com/embed/live_stream?channel=${channel.youtube.channelId}&autoplay=1&mute=0&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&playsinline=1&disablekb=1&fs=0&origin=https://www.youtube.com&widget_referrer=https://www.youtube.com`;
+      const uploadsList = `UU${channel.youtube.channelId.substring(2)}`;
+      src = `https://www.youtube-nocookie.com/embed/videoseries?list=${uploadsList}&autoplay=1&mute=0&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&playsinline=1&enablejsapi=1&disablekb=1&fs=0`;
     }
 
     dom.ytPlayerTarget.innerHTML = `
       <iframe 
         src="${src}" 
         title="${channel.name}"
-        referrerpolicy="strict-origin-when-cross-origin"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
         allowfullscreen>
       </iframe>
@@ -529,12 +583,11 @@
 
   /**
    * Opens TV Guide overlay.
-   * REQUIREMENT 6: ALWAYS opens focused on the currently playing channel!
+   * REQUIREMENT 6: ALWAYS opens focused on the currently playing channel & live show!
    */
   function showGuide() {
     state.guideVisible = true;
-    state.osdVisible = false;
-    if (dom.osdBanner) dom.osdBanner.classList.add("hidden");
+    hideOsdBanner();
 
     // Ensure currently playing channel is visible in filtered category
     if (state.currentChannel) {
@@ -549,25 +602,34 @@
     renderEpgGrid();
     dom.guideOverlay.classList.remove("hidden");
 
-    // Focus exactly the currently playing channel row
+    // Center horizontal timeline on the LIVE time
+    const now = new Date();
+    const startHour = Math.max(0, now.getHours() - 1);
+    const baseTimelineStartMs = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHour, 0, 0, 0).getTime();
+    const PX_PER_MIN = EPG_DATA.PX_PER_MINUTE || 8;
+    const nowOffset = ((now.getTime() - baseTimelineStartMs) / 60000) * PX_PER_MIN;
+    if (dom.epgGridContainer) {
+      dom.epgGridContainer.scrollLeft = Math.max(0, nowOffset - 300);
+    }
+
+    // Reset inspected time to current time
+    state.currentInspectedTimeMs = now.getTime();
+
+    // Focus exactly the currently playing channel row and live show
     if (state.currentChannel) {
       const channels = getFilteredChannels();
       const currIdx = channels.findIndex(c => c.id === state.currentChannel.id);
-      if (currIdx !== -1) {
-        focusChannelRow(currIdx, true);
-      } else {
-        focusChannelRow(0, true);
-      }
+      focusChannelRow(currIdx !== -1 ? currIdx : 0, true);
     } else {
       focusChannelRow(0, true);
     }
   }
 
-  function hideGuide() {
+  function hideGuide(showOsd = false) {
     state.guideVisible = false;
     dom.guideOverlay.classList.add("hidden");
     unlockAudio();
-    if (state.currentChannel) {
+    if (showOsd && state.currentChannel) {
       showOsdBanner(state.currentChannel);
     }
   }
@@ -642,26 +704,37 @@
     const eventChannels = CHANNELS_DATA.filter(c => c.isEventStream);
 
     eventChannels.forEach(ch => {
-      if (ch.type === "hls") {
-        // HLS stream live check
-        fetch(ch.hlsUrl, { method: "HEAD", cache: "no-store" })
-          .then(res => {
-            if (res.ok) {
-              setEventChannelLive(ch);
-            }
-          })
-          .catch(() => {});
-      } else if (ch.type.startsWith("youtube") && ch.youtube?.handle) {
-        // YouTube live stream detection
+      if (ch.type.startsWith("youtube") && ch.youtube?.handle && ch.isEventOnly) {
+        // YouTube live stream detection (Only true live streams have canonical watch?v=)
         const liveCheckUrl = `https://www.youtube.com/${ch.youtube.handle}/live`;
         fetch(liveCheckUrl, { method: "GET", cache: "no-store" })
           .then(res => res.text())
           .then(html => {
-            if (html.includes('"isLive":true') || html.includes('"isLiveBroadcast":true') || html.includes('watch?v=')) {
+            const canonicalMatch = html.match(/<link\s+rel=["']canonical["']\s+href=["']https:\/\/www\.youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)["']/i);
+            const isLiveBroadcast = html.includes('"isLive":true') || html.includes('"isLiveBroadcast":true');
+
+            if (canonicalMatch && isLiveBroadcast) {
+              const liveVideoId = canonicalMatch[1];
+              ch.youtube.videoId = liveVideoId;
               setEventChannelLive(ch);
+            } else {
+              ch.isLiveNow = false;
             }
           })
           .catch(() => {});
+      } else if (ch.type === "hls" && ch.isEventOnly) {
+        // Only check event-only HLS feeds (do not false-alert for 24/7 channels like EbS)
+        fetch(ch.hlsUrl, { method: "HEAD", cache: "no-store" })
+          .then(res => {
+            if (res.ok) {
+              setEventChannelLive(ch);
+            } else {
+              ch.isLiveNow = false;
+            }
+          })
+          .catch(() => {
+            ch.isLiveNow = false;
+          });
       }
     });
   }
@@ -718,7 +791,7 @@
       }
     });
 
-    dom.btnCloseGuide.addEventListener("click", hideGuide);
+    dom.btnCloseGuide.addEventListener("click", () => hideGuide(false));
     dom.unmutePrompt.addEventListener("click", unlockAudio);
 
     if (dom.liveEventToast) {
@@ -735,12 +808,24 @@
    * REQUIREMENT 5: Remote OK key logic:
    * - 1st press: shows OSD Info Banner
    * - 2nd press (while OSD is visible): opens the TV Guide
+   * - When in TV Guide: OK tunes to selected channel
    */
   function handleOkKeyPress() {
     // If Live Event Toast is showing, OK immediately tunes to it
     if (state.activeLiveEventChannel) {
       playChannel(state.activeLiveEventChannel, true);
       dismissLiveEventToast();
+      return;
+    }
+
+    if (state.guideVisible) {
+      // If inside guide, OK selects the highlighted channel
+      const channels = getFilteredChannels();
+      const targetChannel = channels[state.focusedRowIndex];
+      if (targetChannel) {
+        playChannel(targetChannel, true);
+        hideGuide(false);
+      }
       return;
     }
 
@@ -765,7 +850,7 @@
     // Return key: 10009 on Samsung Tizen
     if (keyCode === 10009 || key === "Escape" || key === "Backspace") {
       if (state.guideVisible) {
-        hideGuide();
+        hideGuide(false); // Clean return to video, no OSD banner popup
       } else if (state.osdVisible) {
         hideOsdBanner();
       } else if (state.activeLiveEventChannel) {
@@ -800,19 +885,13 @@
         case "ArrowLeft":
           if (state.focusedProgIndex > 0) {
             focusProgramCard(state.focusedRowIndex, state.focusedProgIndex - 1);
-          } else {
-            // Cycle category to the left
-            cycleCategory(-1);
           }
           e.preventDefault();
           break;
 
         case "Enter":
         case " ":
-          if (channels[state.focusedRowIndex]) {
-            playChannel(channels[state.focusedRowIndex], true);
-            hideGuide();
-          }
+          handleOkKeyPress();
           e.preventDefault();
           break;
 

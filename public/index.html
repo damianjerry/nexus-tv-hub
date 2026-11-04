@@ -69,16 +69,16 @@
     <!-- Linear EPG Timeline Grid -->
     <div class="epg-main-viewport">
       
-      <!-- Timeline Header: Channel Label + Time Slices Ruler -->
-      <div class="epg-timeline-header-wrap">
-        <div class="epg-channel-header-col">CANAL TV</div>
-        <div class="epg-time-ruler" id="epg-time-ruler">
-          <!-- Dynamically populated time slots (e.g. 14:00, 14:30, 15:00...) -->
-        </div>
-      </div>
-
-      <!-- Scrollable Grid Body (Channel Rows & Program Cards) -->
+      <!-- Scrollable Grid Body (Header + Channel Rows & Program Cards) -->
       <div class="epg-grid-scrollable" id="epg-grid-container">
+        <!-- Timeline Header: Channel Label + Time Slices Ruler -->
+        <div class="epg-timeline-header-wrap">
+          <div class="epg-channel-header-col">CANAL TV</div>
+          <div class="epg-time-ruler" id="epg-time-ruler">
+            <!-- Dynamically populated time slots (e.g. 14:00, 14:30, 15:00...) -->
+          </div>
+        </div>
+
         <!-- Red/Amber Vertical Line showing Current Minute -->
         <div class="epg-now-marker" id="epg-now-marker">
           <div class="epg-now-label">ACUM</div>

@@ -323,12 +323,14 @@ body, html {
 .epg-timeline-header-wrap {
   display: flex;
   height: 48px;
-  background: rgba(16, 22, 34, 0.95);
+  background: rgba(16, 22, 34, 0.98);
   border-bottom: 1.5px solid var(--border-subtle);
   position: sticky;
   top: 0;
   z-index: 25;
   flex-shrink: 0;
+  width: max-content;
+  min-width: 100%;
 }
 
 .epg-channel-header-col {
@@ -343,14 +345,15 @@ body, html {
   color: var(--text-muted);
   border-right: 1.5px solid var(--border-subtle);
   background: rgba(16, 22, 34, 0.98);
+  position: sticky;
+  left: 0;
   z-index: 30;
 }
 
 .epg-time-ruler {
   display: flex;
-  flex-grow: 1;
-  overflow: hidden;
   position: relative;
+  flex-shrink: 0;
 }
 
 .epg-time-slot {
@@ -551,15 +554,15 @@ body, html {
 
 /* Horizontal Program Cards Track */
 .epg-programs-track {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 4px 10px;
   position: relative;
+  height: 74px;
+  flex-shrink: 0;
 }
 
 /* Program Card Block */
 .epg-program-card {
+  position: absolute;
+  top: 5px;
   height: 64px;
   background: var(--bg-card);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -569,8 +572,8 @@ body, html {
   flex-direction: column;
   justify-content: center;
   cursor: pointer;
-  position: relative;
   overflow: hidden;
+  box-sizing: border-box;
   transition: transform 140ms ease, background-color 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
   flex-shrink: 0;
 }
