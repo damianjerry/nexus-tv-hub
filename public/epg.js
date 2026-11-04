@@ -147,132 +147,179 @@ const EPG_DATA = (function () {
   };
 
   /**
-   * Helper: parses an HH:MM string into a millisecond timestamp on a given date.
+   * Helper: calculates Bucharest offset in milliseconds for a given date.
+   * Romania operates on UTC+2 in winter (EET) and UTC+3 in summer (EEST).
    */
-  function parseTimeToMs(timeStr, baseDate) {
-    const parts = timeStr.split(":");
-    const hours = parseInt(parts[0], 10);
-    const minutes = parseInt(parts[1], 10);
-    return new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate(), hours, minutes, 0, 0).getTime();
+  function getBucharestOffsetMs(date = new Date()) {
+    const utcDate = new Date(date.toLocaleString("en-US", { timeZone: "UTC" }));
+    const roDate = new Date(date.toLocaleString("en-US", { timeZone: "Europe/Bucharest" }));
+    return roDate.getTime() - utcDate.getTime();
+  }
+
+  /**
+   * Helper: extracts calendar date parts in Europe/Bucharest timezone.
+   */
+  function getBucharestDateParts(date = new Date()) {
+    const formatter = new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Europe/Bucharest",
+      year: "numeric", month: "2-digit", day: "2-digit",
+      hour: "2-digit", minute: "2-digit", second: "2-digit",
+      hour12: false
+    });
+    const parts = formatter.formatToParts(date);
+    const p = {};
+    for (const { type, value } of parts) {
+      if (type !== "literal") p[type] = parseInt(value, 10);
+    }
+    return p;
+  }
+
+  /**
+   * Helper: parses an HH:MM string into a millisecond timestamp on a given date in Europe/Bucharest.
+   */
+  function parseTimeToMs(timeStr, baseDate = new Date(), dayDelta = 0) {
+    const p = getBucharestDateParts(baseDate);
+    const [hours, minutes] = timeStr.split(":").map(n => parseInt(n, 10));
+    const offsetMs = getBucharestOffsetMs(baseDate);
+    return Date.UTC(p.year, p.month - 1, p.day + dayDelta, hours, minutes, 0, 0) - offsetMs;
+  }
+
+  function getBucharestHour(now = new Date()) {
+    return getBucharestDateParts(now).hour;
+  }
+
+  function getBaseTimelineStartMs(now = new Date()) {
+    const p = getBucharestDateParts(now);
+    const offsetMs = getBucharestOffsetMs(now);
+    const startHour = Math.max(0, p.hour - 1);
+    return Date.UTC(p.year, p.month - 1, p.day, startHour, 0, 0, 0) - offsetMs;
   }
 
   /**
    * Generates a complete, gapless 24-hour schedule for channelId.
    * Prioritizes REAL_EPG_SCHEDULES if present, and falls back seamlessly to CHANNEL_TEMPLATES.
+   * Maps early morning shows (time < "07:00") directly to 00:00 - 07:00 of the viewing day.
    */
   function generateDaySchedule(channelId, date = new Date()) {
-    const y = date.getFullYear();
-    const m = date.getMonth();
-    const d = date.getDate();
+    const p = getBucharestDateParts(date);
+    const offsetMs = getBucharestOffsetMs(date);
+    const midnightMs = Date.UTC(p.year, p.month - 1, p.day, 0, 0, 0, 0) - offsetMs;
 
     // Check if real scraped EPG exists for this channel
     const realShows = (typeof REAL_EPG_SCHEDULES !== "undefined" && REAL_EPG_SCHEDULES[channelId]) || null;
 
     if (realShows && Array.isArray(realShows) && realShows.length > 0) {
-      const schedule = [];
-      const midnightMs = new Date(y, m, d, 0, 0, 0, 0).getTime();
-      const endOfDayMs = new Date(y, m, d, 23, 59, 59, 999).getTime();
+      // Find wrap index where late night / early morning shows start (time drops e.g. 23:45 -> 01:58)
+      const wrapIdx = realShows.findIndex((s, idx) => idx > 0 && s.time < realShows[idx - 1].time);
+      const dayShows = wrapIdx !== -1 ? realShows.slice(0, wrapIdx) : realShows;
+      const nightShows = wrapIdx !== -1 ? realShows.slice(wrapIdx) : [];
 
-      // Convert raw real shows to structured timeline intervals
-      let dayOffsetMs = 0;
-      let prevRawMinutes = -1;
+      const rawItems = [];
 
-      for (let i = 0; i < realShows.length; i++) {
-        const item = realShows[i];
-        const [h, m] = item.time.split(":").map(n => parseInt(n, 10));
-        const rawMinutes = h * 60 + m;
-
-        if (prevRawMinutes !== -1 && rawMinutes < prevRawMinutes) {
-          dayOffsetMs += 24 * 3600 * 1000;
-        }
-        prevRawMinutes = rawMinutes;
-
-        const startMs = parseTimeToMs(item.time, date) + dayOffsetMs;
-
-        // Determine endMs based on next item or default
-        let endMs;
-        if (i + 1 < realShows.length) {
-          const nextItem = realShows[i + 1];
-          const [nh, nm] = nextItem.time.split(":").map(n => parseInt(n, 10));
-          const nextRawMinutes = nh * 60 + nm;
-          const nextOffset = dayOffsetMs + (nextRawMinutes < rawMinutes ? 24 * 3600 * 1000 : 0);
-          endMs = parseTimeToMs(nextItem.time, date) + nextOffset;
-        } else {
-          // Last show of the day
-          endMs = startMs + 90 * 60 * 1000;
+      // 1. Map early morning shows (time < "07:00") to 00:00 - 07:00 of viewing day (dayDelta = 0)
+      if (nightShows.length > 0) {
+        const firstNightMs = parseTimeToMs(nightShows[0].time, date, 0);
+        if (firstNightMs > midnightMs) {
+          // Carry-over show from late previous night
+          const carryOverShow = dayShows[dayShows.length - 1];
+          rawItems.push({
+            title: carryOverShow ? carryOverShow.title : nightShows[0].title,
+            desc: carryOverShow?.desc || `Program oficial de noapte ${channelId.toUpperCase()}`,
+            startMs: midnightMs,
+            endMs: firstNightMs
+          });
         }
 
-        const durationMinutes = Math.max(15, Math.round((endMs - startMs) / 60000));
-        const startDate = new Date(startMs);
-        const endDate = new Date(endMs);
-
-        schedule.push({
-          id: `${channelId}-${startMs}`,
-          channelId: channelId,
-          title: item.title,
-          desc: item.desc || `Program oficial transmis de ${channelId.toUpperCase()}`,
-          durationMinutes: durationMinutes,
-          startMs: startMs,
-          endMs: endMs,
-          startDate: startDate,
-          endDate: endDate,
-          startTimeStr: startDate.toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" }),
-          endTimeStr: endDate.toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" }),
-          timeSpanStr: `${startDate.toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" })} - ${endDate.toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" })}`
-        });
-      }
-
-      // Check if first show starts after midnight (e.g. at 07:25), fill gap (00:00 - first show)
-      if (schedule.length > 0 && schedule[0].startMs > midnightMs) {
-        const gapEndMs = schedule[0].startMs;
-        const gapStartMs = midnightMs;
-        const dur = Math.round((gapEndMs - gapStartMs) / 60000);
-        const sD = new Date(gapStartMs);
-        const eD = new Date(gapEndMs);
-        schedule.unshift({
-          id: `${channelId}-${gapStartMs}`,
-          channelId: channelId,
-          title: "Program Nocturn & Retrospectivă",
-          desc: "Sinteze, documentare și reluări din arhiva de noapte a canalului.",
-          durationMinutes: dur,
-          startMs: gapStartMs,
-          endMs: gapEndMs,
-          startDate: sD,
-          endDate: eD,
-          startTimeStr: sD.toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" }),
-          endTimeStr: eD.toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" }),
-          timeSpanStr: `${sD.toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" })} - ${eD.toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" })}`
-        });
-      }
-
-      // Check if last show ends before next day, fill remainder of timeline
-      if (schedule.length > 0) {
-        const lastShow = schedule[schedule.length - 1];
-        const nextMorningMs = midnightMs + 28 * 3600 * 1000;
-        if (lastShow.endMs < nextMorningMs) {
-          const gapStartMs = lastShow.endMs;
-          const gapEndMs = nextMorningMs;
-          const dur = Math.round((gapEndMs - gapStartMs) / 60000);
-          const sD = new Date(gapStartMs);
-          const eD = new Date(gapEndMs);
-          schedule.push({
-            id: `${channelId}-${gapStartMs}`,
-            channelId: channelId,
-            title: "Program Nocturn & Retrospectivă",
-            desc: "Sinteze, documentare și reluări din arhiva de noapte a canalului.",
-            durationMinutes: dur,
-            startMs: gapStartMs,
-            endMs: gapEndMs,
-            startDate: sD,
-            endDate: eD,
-            startTimeStr: sD.toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" }),
-            endTimeStr: eD.toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" }),
-            timeSpanStr: `${sD.toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" })} - ${eD.toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" })}`
+        for (let i = 0; i < nightShows.length; i++) {
+          const curr = nightShows[i];
+          const startMs = parseTimeToMs(curr.time, date, 0);
+          let endMs;
+          if (i + 1 < nightShows.length) {
+            endMs = parseTimeToMs(nightShows[i + 1].time, date, 0);
+          } else {
+            endMs = dayShows.length > 0 ? parseTimeToMs(dayShows[0].time, date, 0) : startMs + 60 * 60 * 1000;
+          }
+          rawItems.push({
+            title: curr.title,
+            desc: curr.desc || `Program oficial transmis de ${channelId.toUpperCase()}`,
+            startMs,
+            endMs
           });
         }
       }
 
-      return schedule;
+      // 2. Map daytime and evening shows (dayDelta = 0)
+      for (let i = 0; i < dayShows.length; i++) {
+        const curr = dayShows[i];
+        const startMs = parseTimeToMs(curr.time, date, 0);
+        let endMs;
+        if (i + 1 < dayShows.length) {
+          endMs = parseTimeToMs(dayShows[i + 1].time, date, 0);
+        } else {
+          endMs = nightShows.length > 0 ? parseTimeToMs(nightShows[0].time, date, 1) : startMs + 90 * 60 * 1000;
+        }
+        rawItems.push({
+          title: curr.title,
+          desc: curr.desc || `Program oficial transmis de ${channelId.toUpperCase()}`,
+          startMs,
+          endMs
+        });
+      }
+
+      // 3. Extend timeline into the next night / morning (dayDelta = 1) for late exploration (up to 28h)
+      if (nightShows.length > 0) {
+        for (let i = 0; i < nightShows.length; i++) {
+          const curr = nightShows[i];
+          const startMs = parseTimeToMs(curr.time, date, 1);
+          let endMs;
+          if (i + 1 < nightShows.length) {
+            endMs = parseTimeToMs(nightShows[i + 1].time, date, 1);
+          } else {
+            endMs = dayShows.length > 0 ? parseTimeToMs(dayShows[0].time, date, 1) : startMs + 60 * 60 * 1000;
+          }
+          rawItems.push({
+            title: curr.title,
+            desc: curr.desc || `Program oficial transmis de ${channelId.toUpperCase()}`,
+            startMs,
+            endMs
+          });
+        }
+      }
+
+      // If dayShows had no wrapIdx, ensure it starts from midnight
+      if (rawItems.length > 0 && rawItems[0].startMs > midnightMs) {
+        const gapEnd = rawItems[0].startMs;
+        rawItems.unshift({
+          title: rawItems[rawItems.length - 1].title,
+          desc: `Program oficial transmis de ${channelId.toUpperCase()}`,
+          startMs: midnightMs,
+          endMs: gapEnd
+        });
+      }
+
+      // Format schedule entries with time strings in Europe/Bucharest
+      return rawItems.map(item => {
+        const durationMinutes = Math.max(1, Math.round((item.endMs - item.startMs) / 60000));
+        const startDate = new Date(item.startMs);
+        const endDate = new Date(item.endMs);
+        const startTimeStr = startDate.toLocaleTimeString("ro-RO", { timeZone: "Europe/Bucharest", hour: "2-digit", minute: "2-digit" });
+        const endTimeStr = endDate.toLocaleTimeString("ro-RO", { timeZone: "Europe/Bucharest", hour: "2-digit", minute: "2-digit" });
+
+        return {
+          id: `${channelId}-${item.startMs}`,
+          channelId: channelId,
+          title: item.title,
+          desc: item.desc,
+          durationMinutes: durationMinutes,
+          startMs: item.startMs,
+          endMs: item.endMs,
+          startDate: startDate,
+          endDate: endDate,
+          startTimeStr: startTimeStr,
+          endTimeStr: endTimeStr,
+          timeSpanStr: `${startTimeStr} - ${endTimeStr}`
+        };
+      });
     }
 
     // Fallback: Generate algorithmic schedule from CHANNEL_TEMPLATES
@@ -283,14 +330,14 @@ const EPG_DATA = (function () {
       { t: "Jurnalul Orei: Actualitatea la Minut", d: 60, desc: "Sinteza celor mai importante evenimente orare." }
     ];
 
-    let cursor = new Date(y, m, d, 0, 0, 0, 0).getTime();
-    const endOfDay = new Date(y, m, d, 23, 59, 59, 999).getTime();
+    let cursor = midnightMs;
+    const endOfTimeline = midnightMs + 28 * 3600 * 1000;
 
     const schedule = [];
-    const seed = (channelId.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0) + d) % templates.length;
+    const seed = (channelId.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0) + p.day) % templates.length;
     let tIdx = seed;
 
-    while (cursor <= endOfDay) {
+    while (cursor < endOfTimeline) {
       const t = templates[tIdx % templates.length];
       const startMs = cursor;
       const durationMs = t.d * 60 * 1000;
@@ -299,8 +346,8 @@ const EPG_DATA = (function () {
       const startDate = new Date(startMs);
       const endDate = new Date(endMs);
 
-      const startTimeStr = startDate.toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" });
-      const endTimeStr = endDate.toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" });
+      const startTimeStr = startDate.toLocaleTimeString("ro-RO", { timeZone: "Europe/Bucharest", hour: "2-digit", minute: "2-digit" });
+      const endTimeStr = endDate.toLocaleTimeString("ro-RO", { timeZone: "Europe/Bucharest", hour: "2-digit", minute: "2-digit" });
 
       schedule.push({
         id: `${channelId}-${startMs}`,
@@ -371,10 +418,10 @@ const EPG_DATA = (function () {
     }
 
     return {
-      title: "Urmează: Program de Noapte",
-      desc: "Sinteze și reluări",
-      startTimeStr: "00:00",
-      endTimeStr: "06:00",
+      title: "Urmează: Program Oficial",
+      desc: "Emisiuni și sinteze",
+      startTimeStr: "--:--",
+      endTimeStr: "--:--",
       timeSpanStr: "Urmează"
     };
   }
@@ -384,18 +431,22 @@ const EPG_DATA = (function () {
 
   // Generate time intervals for timeline headers (e.g. 30 min slices around current time)
   function getTimelineIntervals(now = new Date(), hoursAhead = TIMELINE_HOURS, intervalMinutes = 30) {
-    const startHour = Math.max(0, now.getHours() - 1);
-    const intervals = [];
-    const base = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHour, 0, 0, 0);
+    const p = getBucharestDateParts(now);
+    const offsetMs = getBucharestOffsetMs(now);
+    const startHour = Math.max(0, p.hour - 1);
+    const baseMs = Date.UTC(p.year, p.month - 1, p.day, startHour, 0, 0, 0) - offsetMs;
 
+    const intervals = [];
     const totalSteps = (hoursAhead + 1) * (60 / intervalMinutes);
     for (let i = 0; i < totalSteps; i++) {
-      const slotTime = new Date(base.getTime() + i * intervalMinutes * 60 * 1000);
-      const timeStr = slotTime.toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" });
+      const slotMs = baseMs + i * intervalMinutes * 60 * 1000;
+      const slotDate = new Date(slotMs);
+      const timeStr = slotDate.toLocaleTimeString("ro-RO", { timeZone: "Europe/Bucharest", hour: "2-digit", minute: "2-digit" });
+      const slotHour = getBucharestDateParts(slotDate).hour;
       intervals.push({
-        timeMs: slotTime.getTime(),
+        timeMs: slotMs,
         timeStr: timeStr,
-        isCurrentHour: slotTime.getHours() === now.getHours()
+        isCurrentHour: slotHour === p.hour
       });
     }
 
@@ -404,8 +455,10 @@ const EPG_DATA = (function () {
 
   // Get exactly the visible shows for the timeline viewport with coordinates
   function getVisibleShows(channelId, now = new Date()) {
-    const startHour = Math.max(0, now.getHours() - 1);
-    const baseTimelineStartMs = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHour, 0, 0, 0).getTime();
+    const p = getBucharestDateParts(now);
+    const offsetMs = getBucharestOffsetMs(now);
+    const startHour = Math.max(0, p.hour - 1);
+    const baseTimelineStartMs = Date.UTC(p.year, p.month - 1, p.day, startHour, 0, 0, 0) - offsetMs;
     const baseTimelineEndMs = baseTimelineStartMs + TIMELINE_HOURS * 3600 * 1000;
 
     const schedule = generateDaySchedule(channelId, now);
@@ -447,7 +500,11 @@ const EPG_DATA = (function () {
     getCurrentShow,
     getNextShow,
     getTimelineIntervals,
-    getVisibleShows
+    getVisibleShows,
+    getBucharestDateParts,
+    getBucharestOffsetMs,
+    getBucharestHour,
+    getBaseTimelineStartMs
   };
 })();
 

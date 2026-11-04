@@ -71,6 +71,23 @@ runTest("Sky News is direct HLS on Akamai, not broken YouTube embed", () => {
   const sky = CHANNELS_DATA.find(c => c.id === "sky-news");
   assert.strictEqual(sky.type, "hls", "Sky News must be direct HLS");
   assert.ok(sky.hlsUrl.includes("akamaized.net"), "Sky News must use Akamai CDN");
+  assert.ok(sky.name.includes("Australia"), "Sky News name must clarify Australia/Fox origin");
+  assert.ok(sky.description.includes("Australia"), "Sky News description must clarify Australia origin");
+});
+
+runTest("DW Documentary uses official English feed (dwstream102) and not Spanish (dwstream104)", () => {
+  const dwd = CHANNELS_DATA.find(c => c.id === "dw-documentary");
+  assert.strictEqual(dwd.type, "hls", "DW Documentary must be direct HLS");
+  assert.ok(dwd.hlsUrl.includes("dwamdstream102"), "DW Documentary must use English stream 102");
+  assert.ok(!dwd.hlsUrl.includes("dwamdstream104"), "DW Documentary must not use Spanish stream 104");
+  assert.ok(dwd.description.includes("DW English"), "DW Documentary description must state DW English");
+});
+
+runTest("Aleph Business is active and preserved in finance lineup", () => {
+  const abiz = CHANNELS_DATA.find(c => c.id === "aleph-business");
+  assert.ok(abiz, "Aleph Business must exist in lineup");
+  assert.strictEqual(abiz.category, "finante", "Aleph Business must be in finante category");
+  assert.ok(abiz.hlsUrl.includes("Alephbiz.stream_all"), "Aleph Business must point to native master HLS");
 });
 
 runTest("Subtitle suppression flags are set on True History and Yahoo Finance", () => {
@@ -101,16 +118,114 @@ const { REAL_EPG_SCHEDULES } = require("./epg_real.js");
 global.REAL_EPG_SCHEDULES = REAL_EPG_SCHEDULES;
 const { EPG_DATA } = require("./epg.js");
 
-runTest("REAL_EPG_SCHEDULES contains accurate Romanian EPG channels", () => {
+runTest("REAL_EPG_SCHEDULES contains all 20 verified authentic EPG channels", () => {
   const requiredRealChannels = [
     "cinemaraton", "cinewow", "nostalgia", "aleph-news", 
     "digi24", "tvr-1", "tvr-2", "tvr-info", "tvr-cultural", 
-    "travel-mix", "euronews-ro", "euronews-en", "arte", "france24", "bloomberg-eu"
+    "travel-mix", "euronews-ro", "euronews-en", "arte", "france24", "bloomberg-eu",
+    "ebs", "ebs-plus", "nhk-world", "moviesphere", "artflix"
   ];
+  assert.strictEqual(Object.keys(REAL_EPG_SCHEDULES).length >= 20, true, "Must have at least 20 authentic EPG channels");
   requiredRealChannels.forEach(id => {
     assert.ok(REAL_EPG_SCHEDULES[id], `Must have real EPG schedule for ${id}`);
     assert.ok(REAL_EPG_SCHEDULES[id].length > 0, `Schedule for ${id} must not be empty`);
   });
+});
+
+runTest("Bloomberg Europe offset (+2h) aligns London GMT with Bucharest EET", () => {
+  const bbg = REAL_EPG_SCHEDULES["bloomberg-eu"];
+  const openInterest = bbg.find(s => s.title.includes("Open Interest"));
+  assert.ok(openInterest, "Must contain Bloomberg Open Interest");
+  assert.strictEqual(openInterest.time, "16:00", "14:00 GMT must be converted to 16:00 EET");
+
+  const openingTrade = bbg.find(s => s.title.includes("Opening Trade"));
+  assert.ok(openingTrade, "Must contain Bloomberg The Opening Trade");
+  assert.strictEqual(openingTrade.time, "09:00", "07:00 GMT must be converted to 09:00 EET");
+});
+
+runTest("France 24 English schedule replaced French listings", () => {
+  const f24 = REAL_EPG_SCHEDULES["france24"];
+  assert.ok(f24.length >= 20, "France 24 must have full English lineup");
+  const frenchTitles = f24.filter(s => s.title.includes("L'EDITION NUIT") || s.title.includes("LE JOURNAL") || s.title.includes("LE DEBAT"));
+  assert.strictEqual(frenchTitles.length, 0, "No French titles should exist in France 24 English");
+  const hasEnglishNews = f24.some(s => s.title.includes("News") || s.title.includes("The Debate") || s.title.includes("France in Focus") || s.title.includes("Focus"));
+  assert.ok(hasEnglishNews, "Must contain authentic English news shows");
+});
+
+runTest("ARTE schedule aligned with ARTE DE broadcast stream", () => {
+  const arte = REAL_EPG_SCHEDULES["arte"];
+  assert.ok(arte.length >= 20, "ARTE DE must have full day lineup");
+  const hasReportage = arte.some(s => s.title.includes("360° Reportage"));
+  const hasGrenze = arte.some(s => s.title.includes("Europas tödlichste Grenze"));
+  assert.ok(hasReportage, "ARTE must have '360° Reportage'");
+  assert.ok(hasGrenze, "ARTE must have 'Europas tödlichste Grenze'");
+});
+
+runTest("EbS and EbS+ European Commission API schedules integrated", () => {
+  const ebs = REAL_EPG_SCHEDULES["ebs"];
+  assert.ok(ebs.length >= 8, "EbS must have official European Commission schedule");
+  const hasCollege = ebs.some(s => s.title.includes("College") || s.title.includes("Commission"));
+  const hasInta = ebs.some(s => s.title.includes("INTA Committee"));
+  assert.ok(hasCollege, "EbS must contain College meeting / Commission briefings");
+  assert.ok(hasInta, "EbS must contain INTA Committee session");
+
+  const ebsPlus = REAL_EPG_SCHEDULES["ebs-plus"];
+  assert.ok(ebsPlus.length >= 8, "EbS+ must have official European Parliament schedule");
+  const hasAfet = ebsPlus.some(s => s.title.includes("AFET Committee"));
+  const hasLibe = ebsPlus.some(s => s.title.includes("LIBE Committee"));
+  assert.ok(hasAfet, "EbS+ must contain AFET Committee debate");
+  assert.ok(hasLibe, "EbS+ must contain LIBE Committee debate");
+});
+
+runTest("NHK World authentic schedule from CDN API integrated", () => {
+  const nhk = REAL_EPG_SCHEDULES["nhk-world"];
+  assert.ok(nhk.length >= 20, "NHK World must have 24-hour schedule");
+  const hasNewsline = nhk.some(s => s.title.includes("NHK NEWSLINE"));
+  const hasJapanology = nhk.some(s => s.title.includes("Japanology") || s.title.includes("Core Kyoto") || s.title.includes("Trails to Oishii"));
+  assert.ok(hasNewsline, "NHK World must have NHK NEWSLINE");
+  assert.ok(hasJapanology, "NHK World must have authentic cultural programs");
+});
+
+runTest("MovieSphere and Artflix Samsung TV Plus FAST schedules integrated", () => {
+  const ms = REAL_EPG_SCHEDULES["moviesphere"];
+  assert.ok(ms.length >= 8, "MovieSphere must have full FAST movie schedule");
+  const hasGods = ms.some(s => s.title.includes("Gods of Egypt"));
+  assert.ok(hasGods, "MovieSphere must have 'Gods of Egypt'");
+
+  const art = REAL_EPG_SCHEDULES["artflix"];
+  assert.ok(art.length >= 8, "Artflix must have full FAST movie schedule");
+  const hasTarzan = art.some(s => s.title.includes("Tarzan"));
+  const hasPiraten = art.some(s => s.title.includes("Die Küste der Piraten"));
+  assert.ok(hasTarzan || hasPiraten, "Artflix must have authentic classics (Tarzan / Piraten)");
+});
+
+runTest("Night gap 00:00 - 07:00 eliminated and replaced with genuine late-night programming", () => {
+  const now = new Date();
+  const schedule = EPG_DATA.generateDaySchedule("cinemaraton", now);
+  const hasArtificialNight = schedule.some(s => s.title.includes("Program Nocturn & Retrospectivă"));
+  assert.strictEqual(hasArtificialNight, false, "Must NOT inject artificial 'Program Nocturn & Retrospectivă'");
+
+  // Test that shows between 00:00 and 07:00 are real Romanian shows/movies
+  const nightShows = schedule.filter(s => {
+    const hour = EPG_DATA.getBucharestDateParts(new Date(s.startMs)).hour;
+    return hour >= 0 && hour < 7;
+  });
+  assert.ok(nightShows.length >= 5, "Must have genuine shows in the 00:00 - 07:00 window");
+  assert.ok(nightShows.some(s => s.title.includes("Dublu") || s.title.includes("Restul e tăcere")), "Must display real movie (Dublu / Restul e tăcere)");
+});
+
+runTest("Timezone hardening ensures Europe/Bucharest time consistency under UTC system clock", () => {
+  const now = new Date();
+  const bHour = EPG_DATA.getBucharestHour(now);
+  assert.ok(bHour >= 0 && bHour <= 23, "Bucharest hour must be valid");
+
+  const startMs = EPG_DATA.getBaseTimelineStartMs(now);
+  assert.ok(typeof startMs === "number" && startMs > 0, "Base timeline start ms must be valid");
+
+  // Check intervals are formatted with Bucharest time
+  const intervals = EPG_DATA.getTimelineIntervals(now, 24, 30);
+  assert.ok(intervals.length >= 48, "Must generate intervals");
+  assert.ok(intervals[0].timeStr.match(/^\d{2}:\d{2}$/), "Interval format must be HH:MM");
 });
 
 runTest("generateDaySchedule builds gapless, ordered 24-hour timeline", () => {

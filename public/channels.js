@@ -138,8 +138,8 @@ const CHANNELS_DATA = [
     type: "hls",
     badge: "INVESTIGAȚII GLOBALE",
     quality: "1080p 50fps Master",
-    description: "Investigații jurnalistice premiate internațional despre economie mondială, megaproiecte și societate.",
-    hlsUrl: "https://dwamdstream104.akamaized.net/hls/live/2015530/dwstream104/master.m3u8",
+    description: "Investigații jurnalistice premiate internațional despre economie mondială, megaproiecte și societate (DW English).",
+    hlsUrl: "https://dwamdstream102.akamaized.net/hls/live/2015525/dwstream102/master.m3u8",
     logoText: "DWD",
     color: "#0891b2"
   },
@@ -350,12 +350,12 @@ const CHANNELS_DATA = [
   {
     id: "sky-news",
     number: "26",
-    name: "Sky News International",
+    name: "Sky News Australia & Fox News",
     category: "stiri",
     type: "hls",
-    badge: "GLOBAL NEWS",
+    badge: "AUSTRALIA & GLOBAL",
     quality: "1080p HLS Direct",
-    description: "Știri internaționale 24/7, dezbateri diplomatice, politică externă și acoperire specială a crizelor globale.",
+    description: "Știri internaționale 24/7, dezbateri politice globale, preluări în direct Fox News SUA și analize din Pacific (Sky News Australia).",
     hlsUrl: "https://skynewsau-live-premium.akamaized.net/hls/live/2105299/skynews/live.m3u8",
     logoText: "SKY",
     color: "#e61b1b"

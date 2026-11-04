@@ -1551,616 +1551,1054 @@
     ],
     "arte": [
       {
-        "time": "07:50",
+        "time": "07:00",
+        "title": "360° Reportage"
+      },
+      {
+        "time": "07:55",
         "title": "Küchen der Welt"
       },
       {
-        "time": "08:20",
+        "time": "08:25",
         "title": "Stadt Land Kunst"
       },
       {
-        "time": "09:05",
-        "title": "Stadt Land Kunst"
+        "time": "09:10",
+        "title": "Das geheime Leben der Bäume"
       },
       {
-        "time": "09:55",
-        "title": "Irischer Kompass"
+        "time": "10:05",
+        "title": "Re: Der Traum vom eigenen Haus"
       },
       {
-        "time": "10:35",
-        "title": "Irischer Kompass"
+        "time": "10:40",
+        "title": "Xenius: Die Wissensjäger"
       },
       {
-        "time": "11:20",
-        "title": "Irischer Kompass"
+        "time": "11:10",
+        "title": "Im Bann der Arktis"
       },
       {
         "time": "12:05",
-        "title": "Irischer Kompass"
+        "title": "Journal Junior"
       },
       {
-        "time": "12:55",
-        "title": "Küchen der Welt"
+        "time": "12:15",
+        "title": "Re: Europas neue Wälder"
       },
       {
-        "time": "13:25",
-        "title": "Stadt Land Kunst"
+        "time": "12:50",
+        "title": "Stadt Land Kunst Spezial"
       },
       {
-        "time": "14:10",
-        "title": "Stadt Land Kunst"
+        "time": "13:40",
+        "title": "Magische Fjorde Norwegens"
       },
       {
-        "time": "15:00",
-        "title": "Nahschuss"
+        "time": "14:35",
+        "title": "Wilde Inseln: Sansibar"
       },
       {
-        "time": "17:10",
-        "title": "Die gefährlichsten Bahnstrecken der Welt"
+        "time": "15:30",
+        "title": "Im Lauf der Zeit: Metropolen"
       },
       {
-        "time": "17:55",
-        "title": "Die gefährlichsten Bahnstrecken der Welt"
+        "time": "16:25",
+        "title": "Die Donau: Vom Schwarzwald zum Schwarzen Meer"
       },
       {
-        "time": "18:40",
-        "title": "Zauber der Korallenriffe"
+        "time": "17:20",
+        "title": "Insekten - Die Meister der Anpassung"
       },
       {
-        "time": "19:35",
-        "title": "Seychellen – Archipel der Smaragde"
+        "time": "18:15",
+        "title": "Wunder der Natur: Vulkane"
       },
       {
-        "time": "20:20",
-        "title": "ARTE Journal"
+        "time": "19:10",
+        "title": "ARTE Journal (Nachrichten)"
       },
       {
-        "time": "20:40",
-        "title": "Re: Türkei: Straßenhunde im Visier"
+        "time": "19:40",
+        "title": "Re: Kampf um seltene Erden"
+      },
+      {
+        "time": "20:15",
+        "title": "Karambolage: Deutschland und Frankreich"
+      },
+      {
+        "time": "20:25",
+        "title": "Faszination Erde: Wüsten"
       },
       {
         "time": "21:15",
-        "title": "Alles außer gewöhnlich"
+        "title": "Das Gesetz des Meeres (Spielfilm)"
       },
       {
-        "time": "23:00",
-        "title": "YMCA – Die Erfindung der Village People"
+        "time": "22:45",
+        "title": "Tracks: Popkultur & Kunst"
       },
       {
-        "time": "23:55",
-        "title": "\"Disco sucks!\" – Amerikas erster Kulturkampf"
+        "time": "23:40",
+        "title": "ARTE Lounge: Klassik & Jazz"
       },
       {
-        "time": "00:49",
-        "title": "Music Queer"
+        "time": "00:45",
+        "title": "Kurzschluss: Das Kurzfilmmagazin"
       },
       {
-        "time": "00:55",
-        "title": "Als ob die Erde sie verschluckt hätte"
+        "time": "01:40",
+        "title": "Das Phänomen der Gezeiten"
       },
       {
-        "time": "01:10",
-        "title": "You & Me"
+        "time": "02:35",
+        "title": "Europas Urwälder"
       },
       {
-        "time": "01:35",
-        "title": "You & Me"
+        "time": "03:30",
+        "title": "Meisterwerke der Gotik"
       },
       {
-        "time": "02:00",
-        "title": "You & Me"
+        "time": "04:25",
+        "title": "Die Alpen von oben"
       },
       {
-        "time": "02:25",
-        "title": "You & Me"
+        "time": "05:15",
+        "title": "ARTE Journal (Wiederholung)"
       },
       {
-        "time": "02:50",
-        "title": "You & Me"
-      },
-      {
-        "time": "03:15",
-        "title": "You & Me"
-      },
-      {
-        "time": "03:40",
-        "title": "Die gefährlichsten Bahnstrecken der Welt"
-      },
-      {
-        "time": "04:28",
-        "title": "Karambolage"
-      },
-      {
-        "time": "04:35",
-        "title": "Verdammte Katze!"
-      },
-      {
-        "time": "04:50",
-        "title": "28 Minuten"
+        "time": "06:05",
+        "title": "Europas tödlichste Grenze"
       }
     ],
     "france24": [
       {
         "time": "07:00",
-        "title": "A LA UNE - LE JOURNAL"
+        "title": "France 24 Morning News Live"
       },
       {
-        "time": "07:22",
-        "title": "FOCUS"
+        "time": "07:15",
+        "title": "Business & Markets"
       },
       {
         "time": "07:30",
-        "title": "A LA UNE - BULLETIN"
+        "title": "World News Headlines"
       },
       {
-        "time": "07:51",
-        "title": "SPORTS"
+        "time": "07:45",
+        "title": "Press Review"
       },
       {
         "time": "08:00",
-        "title": "A LA UNE - LE JOURNAL"
+        "title": "The Morning News"
       },
       {
-        "time": "08:16",
-        "title": "REVUE DE PRESSE"
-      },
-      {
-        "time": "08:21",
-        "title": "REPORTAGE F24"
+        "time": "08:15",
+        "title": "Business & Economy"
       },
       {
         "time": "08:30",
-        "title": "A LA UNE - LE JOURNAL"
+        "title": "World News Headlines"
       },
       {
-        "time": "08:46",
-        "title": "L'INFO ECO"
-      },
-      {
-        "time": "08:51",
-        "title": "FOCUS"
+        "time": "08:45",
+        "title": "Focus: International Investigations"
       },
       {
         "time": "09:00",
-        "title": "A LA UNE - LE JOURNAL"
+        "title": "The Morning News"
       },
       {
         "time": "09:15",
-        "title": "L'INVITE DE A LA UNE"
+        "title": "Talking Europe: Brussels Analysis"
       },
       {
         "time": "09:30",
-        "title": "A LA UNE - LE JOURNAL"
+        "title": "World News Headlines"
       },
       {
-        "time": "09:46",
-        "title": "REVUE DE PRESSE"
+        "time": "09:45",
+        "title": "Truth or Fake: Fact-Checking"
       },
       {
-        "time": "09:59",
-        "title": "PARLONS-EN - LE JOURNAL"
+        "time": "10:00",
+        "title": "France 24 Live News"
       },
       {
-        "time": "10:22",
-        "title": "L'INFO ECO"
+        "time": "10:15",
+        "title": "Perspective: In-Depth Interview"
       },
       {
         "time": "10:30",
-        "title": "PARLONS-EN - LE JOURNAL"
+        "title": "World News Headlines"
       },
       {
-        "time": "10:42",
-        "title": "REVUE DE PRESSE"
-      },
-      {
-        "time": "10:47",
-        "title": "FOCUS"
-      },
-      {
-        "time": "10:52",
-        "title": "SPORTS"
+        "time": "10:45",
+        "title": "Tech 24: Innovations & AI"
       },
       {
         "time": "11:00",
-        "title": "LE JOURNAL - LE DEBAT DE PARLONS-EN"
+        "title": "France 24 Live News"
+      },
+      {
+        "time": "11:15",
+        "title": "Arts24: Culture & Cinema"
+      },
+      {
+        "time": "11:30",
+        "title": "World News Headlines"
       },
       {
         "time": "11:45",
-        "title": "FOCUS"
-      },
-      {
-        "time": "11:50",
-        "title": "SPORTS"
+        "title": "Middle East Matters"
       },
       {
         "time": "12:00",
-        "title": "PARLONS-EN - LE JOURNAL"
+        "title": "Midday News Live"
       },
       {
-        "time": "12:10",
-        "title": "ICI L'EUROPE 1 - ON VOUS ECOUTE"
-      },
-      {
-        "time": "12:30",
-        "title": "PARLONS-EN - BULLETIN"
-      },
-      {
-        "time": "12:39",
-        "title": "FACE A FACE"
+        "time": "12:15",
+        "title": "The Debate: Global Politics"
       },
       {
         "time": "13:00",
-        "title": "PARIS DIRECT - LE JOURNAL"
+        "title": "Midday News Live"
       },
       {
         "time": "13:15",
-        "title": "A L'AFFICHE"
+        "title": "Focus: International Dispatch"
       },
       {
         "time": "13:30",
-        "title": "PARIS DIRECT - BULLETIN"
+        "title": "World News Headlines"
       },
       {
         "time": "13:45",
-        "title": "FOCUS"
+        "title": "Eye on Africa: Politics & Society"
       },
       {
-        "time": "13:50",
-        "title": "SPORTS"
+        "time": "14:00",
+        "title": "Afternoon News Live"
       },
       {
-        "time": "13:59",
-        "title": "LE JOURNAL - L'INFO DU JOUR"
+        "time": "14:15",
+        "title": "Reporters: Investigative Journalism"
       },
       {
         "time": "14:30",
-        "title": "PARIS DIRECT - LE JOURNAL"
+        "title": "World News Headlines"
       },
       {
-        "time": "14:54",
-        "title": "L'INSTANT MOBILE"
+        "time": "14:45",
+        "title": "Business & Markets Wrap"
       },
       {
         "time": "15:00",
-        "title": "LE JOURNAL - LE CLUB PARIS DIRECT"
+        "title": "Afternoon News Live"
+      },
+      {
+        "time": "15:15",
+        "title": "Talking Europe: Policy Debates"
       },
       {
         "time": "15:30",
-        "title": "LE JOURNAL - DERRIERE L'IMAGE"
+        "title": "World News Headlines"
       },
       {
         "time": "15:45",
-        "title": "FOCUS"
-      },
-      {
-        "time": "15:50",
-        "title": "SPORTS"
+        "title": "Arts24: Paris des Arts"
       },
       {
         "time": "16:00",
-        "title": "AUTOUR DU MONDE - LE JOURNAL"
+        "title": "World News Live"
+      },
+      {
+        "time": "16:15",
+        "title": "France in Focus"
       },
       {
         "time": "16:30",
-        "title": "LE JOURNAL- LE RENDEZ-VOUS DE L'AFRIQUE"
+        "title": "World News Headlines"
       },
       {
         "time": "16:45",
-        "title": "PAS 2 QUARTIER"
-      },
-      {
-        "time": "16:51",
-        "title": "LE COUP DE COEUR DU PDA"
+        "title": "Truth or Fake: Disinformation"
       },
       {
         "time": "17:00",
-        "title": "AUTOUR DU MONDE - LE JOURNAL"
+        "title": "Live News Bulletin"
       },
       {
         "time": "17:30",
-        "title": "AUTOUR DU MONDE - LE JOURNAL"
+        "title": "Live News Bulletin"
       },
       {
-        "time": "17:40",
-        "title": "ELEMENT TERRE LA QUOTIDIENNE"
-      },
-      {
-        "time": "17:46",
-        "title": "A L'AFFICHE"
+        "time": "17:45",
+        "title": "France In Focus"
       },
       {
         "time": "18:00",
-        "title": "AUTOUR DU MONDE - LE JOURNAL"
+        "title": "Live News Bulletin"
       },
       {
-        "time": "18:15",
-        "title": "LES OBSERVATEURS"
-      },
-      {
-        "time": "18:21",
-        "title": "FOCUS"
+        "time": "18:16",
+        "title": "Arts24"
       },
       {
         "time": "18:30",
-        "title": "AUX AVANT-POSTES"
+        "title": "Live News Bulletin"
       },
       {
-        "time": "18:59",
-        "title": "AU COEUR DE L'INFO - LE JOURNAL"
+        "time": "18:46",
+        "title": "Truth or Fake"
       },
       {
-        "time": "19:16",
-        "title": "QUESTIONS DIRECTES"
+        "time": "19:00",
+        "title": "Prime News Live"
       },
       {
-        "time": "19:30",
-        "title": "AU COEUR DE L'INFO - LE JOURNAL"
-      },
-      {
-        "time": "19:46",
-        "title": "ECONOMIE SOIR"
-      },
-      {
-        "time": "19:51",
-        "title": "SPORTS"
+        "time": "19:15",
+        "title": "The Debate: Evening Panel"
       },
       {
         "time": "20:00",
-        "title": "AU COEUR DE L'INFO - LE JOURNAL"
+        "title": "Prime News Live"
       },
       {
         "time": "20:15",
-        "title": "LE DEBAT"
+        "title": "Focus: Global Investigations"
+      },
+      {
+        "time": "20:30",
+        "title": "Prime News Live"
+      },
+      {
+        "time": "20:45",
+        "title": "Eye on Africa: Daily Review"
       },
       {
         "time": "21:00",
-        "title": "L'ESSENTIEL - LE JOURNAL"
+        "title": "Prime News Live"
       },
       {
-        "time": "21:16",
-        "title": "ECONOMIE SOIR"
-      },
-      {
-        "time": "21:21",
-        "title": "SPORTS"
-      },
-      {
-        "time": "21:30",
-        "title": "LE JOURNAL - ON VA PLUS LOIN"
+        "time": "21:15",
+        "title": "The Debate: World Edition"
       },
       {
         "time": "22:00",
-        "title": "L'ESSENTIEL - LE JOURNAL"
+        "title": "Prime News Live"
       },
       {
         "time": "22:15",
-        "title": "INFO-INTOX"
-      },
-      {
-        "time": "22:20",
-        "title": "ELEMENT TERRE LA QUOTIDIENNE"
+        "title": "Business Africa"
       },
       {
         "time": "22:30",
-        "title": "L'ESSENTIEL - LE JOURNAL"
+        "title": "Prime News Live"
       },
       {
-        "time": "22:36",
-        "title": "LES CLES DE L'INFO"
-      },
-      {
-        "time": "22:44",
-        "title": "LE JOURNAL DE L'AFRIQUE"
+        "time": "22:45",
+        "title": "Tech 24: Innovations"
       },
       {
         "time": "23:00",
-        "title": "L'ACTU 360° - LE JOURNAL"
+        "title": "Late News Live"
       },
       {
         "time": "23:15",
-        "title": "ECONOMIE SOIR"
-      },
-      {
-        "time": "23:20",
-        "title": "INFO-INTOX"
+        "title": "Perspective: Global Interview"
       },
       {
         "time": "23:30",
-        "title": "LE ZOOM - USA 2026"
+        "title": "Late News Live"
       },
       {
-        "time": "23:44",
-        "title": "LE JOURNAL DE L'AFRIQUE"
+        "time": "23:45",
+        "title": "Reporters"
       },
       {
         "time": "00:00",
-        "title": "L'ACTU 360° - LE JOURNAL"
+        "title": "Overnight News Live"
       },
       {
         "time": "00:15",
-        "title": "ECONOMIE + INFO INTOX"
-      },
-      {
-        "time": "00:30",
-        "title": "L'ACTU 360° - LE JOURNAL"
-      },
-      {
-        "time": "00:39",
-        "title": "LES CLES DE L'INFO"
-      },
-      {
-        "time": "00:43",
-        "title": "SPORTS"
-      },
-      {
-        "time": "00:49",
-        "title": "LES UNES DE LA PRESSE"
-      },
-      {
-        "time": "00:51",
-        "title": "FOCUS"
+        "title": "The Debate"
       },
       {
         "time": "01:00",
-        "title": "L'ACTU 360° - LE JOURNAL"
+        "title": "Overnight News Live"
       },
       {
         "time": "01:15",
-        "title": "LE DEBAT"
+        "title": "Focus"
+      },
+      {
+        "time": "01:30",
+        "title": "Overnight News Live"
+      },
+      {
+        "time": "01:45",
+        "title": "Tech 24"
       },
       {
         "time": "02:00",
-        "title": "L'EDITION NUIT - LE JOURNAL"
+        "title": "Overnight News Live"
       },
       {
-        "time": "02:14",
-        "title": "LE JOURNAL DE L'AFRIQUE"
+        "time": "02:15",
+        "title": "Talking Europe"
       },
       {
         "time": "02:30",
-        "title": "L'EDITION NUIT - BULLETIN"
+        "title": "Overnight News Live"
       },
       {
         "time": "02:45",
-        "title": "A L'AFFICHE"
+        "title": "Arts24"
       },
       {
         "time": "03:00",
-        "title": "L'EDITION NUIT - LE JOURNAL"
+        "title": "Overnight News Live"
       },
       {
-        "time": "03:10",
-        "title": "ICI L'EUROPE 2 - ON EN DEBAT"
+        "time": "03:15",
+        "title": "Perspective"
       },
       {
         "time": "03:30",
-        "title": "L'EDITION NUIT - BULLETIN"
+        "title": "Overnight News Live"
       },
       {
-        "time": "03:40",
-        "title": "FACE A FACE"
+        "time": "03:45",
+        "title": "Reporters"
       },
       {
         "time": "04:00",
-        "title": "L'EDITION NUIT - LE JOURNAL"
+        "title": "Overnight News Live"
       },
       {
-        "time": "04:12",
-        "title": "LE DEBAT"
-      },
-      {
-        "time": "04:55",
-        "title": "L'INSTANT MOBILE"
+        "time": "04:15",
+        "title": "The Debate"
       },
       {
         "time": "05:00",
-        "title": "L'EDITION NUIT - LE JOURNAL"
+        "title": "Overnight News Live"
       },
       {
-        "time": "05:10",
-        "title": "BILLET RETOUR"
+        "time": "05:15",
+        "title": "Focus"
       },
       {
         "time": "05:30",
-        "title": "L'EDITION NUIT - BULLETIN"
+        "title": "Overnight News Live"
       },
       {
-        "time": "05:40",
-        "title": "LEGENDES URBAINES"
+        "time": "05:45",
+        "title": "Eye on Africa"
       },
       {
         "time": "06:00",
-        "title": "L'EDITION NUIT - LE JOURNAL"
+        "title": "Early Morning News Live"
       },
       {
-        "time": "06:10",
-        "title": "FACE A FACE"
+        "time": "06:15",
+        "title": "Middle East Matters"
       },
       {
         "time": "06:30",
-        "title": "L'EDITION NUIT - BULLETIN"
+        "title": "Early Morning News Live"
       },
       {
-        "time": "06:40",
-        "title": "L'INSTANT MOBILE"
-      },
-      {
-        "time": "06:44",
-        "title": "LE JOURNAL DE L'AFRIQUE"
+        "time": "06:45",
+        "title": "Tech 24"
       }
     ],
     "bloomberg-eu": [
       {
         "time": "07:00",
-        "title": "Bloomberg - The Opening Trade"
-      },
-      {
-        "time": "09:00",
-        "title": "The Pulse with Francine Lacqua"
-      },
-      {
-        "time": "10:00",
-        "title": "Bloomberg Brief"
-      },
-      {
-        "time": "11:00",
-        "title": "Bloomberg Surveillance"
-      },
-      {
-        "time": "14:00",
-        "title": "Bloomberg Open Interest"
-      },
-      {
-        "time": "16:00",
-        "title": "Bloomberg Tech"
-      },
-      {
-        "time": "17:00",
-        "title": "Bloomberg Crypto"
-      },
-      {
-        "time": "18:00",
-        "title": "Bloomberg - Balance of Power"
-      },
-      {
-        "time": "19:00",
-        "title": "Bloomberg Businessweek Daily"
-      },
-      {
-        "time": "20:00",
-        "title": "Bloomberg The Close"
-      },
-      {
-        "time": "22:00",
-        "title": "Bloomberg - Balance of Power"
-      },
-      {
-        "time": "23:00",
-        "title": "The Deal with Alex Rodriguez and Jason Kelly"
-      },
-      {
-        "time": "23:30",
-        "title": "The Deal with Alex Rodriguez and Jason Kelly"
-      },
-      {
-        "time": "00:00",
-        "title": "Bloomberg The Asia Trade"
-      },
-      {
-        "time": "02:00",
-        "title": "Bloomberg - The China Show"
-      },
-      {
-        "time": "04:00",
-        "title": "Insight with Haslinda Amin"
-      },
-      {
-        "time": "05:00",
         "title": "Bloomberg Horizons Middle East & Africa"
       },
       {
-        "time": "06:00",
+        "time": "08:00",
         "title": "Bloomberg Daybreak - Europe"
+      },
+      {
+        "time": "09:00",
+        "title": "Bloomberg - The Opening Trade"
+      },
+      {
+        "time": "11:00",
+        "title": "The Pulse with Francine Lacqua"
+      },
+      {
+        "time": "12:00",
+        "title": "Bloomberg Brief"
+      },
+      {
+        "time": "13:00",
+        "title": "Bloomberg Surveillance"
+      },
+      {
+        "time": "16:00",
+        "title": "Bloomberg Open Interest"
+      },
+      {
+        "time": "18:00",
+        "title": "Bloomberg Tech"
+      },
+      {
+        "time": "19:00",
+        "title": "Bloomberg Crypto"
+      },
+      {
+        "time": "20:00",
+        "title": "Bloomberg - Balance of Power"
+      },
+      {
+        "time": "21:00",
+        "title": "Bloomberg Businessweek Daily"
+      },
+      {
+        "time": "22:00",
+        "title": "Bloomberg The Close"
+      },
+      {
+        "time": "00:00",
+        "title": "Bloomberg - Balance of Power"
+      },
+      {
+        "time": "01:00",
+        "title": "The Deal with Alex Rodriguez and Jason Kelly"
+      },
+      {
+        "time": "01:30",
+        "title": "The Deal with Alex Rodriguez and Jason Kelly"
+      },
+      {
+        "time": "02:00",
+        "title": "Bloomberg The Asia Trade"
+      },
+      {
+        "time": "04:00",
+        "title": "Bloomberg - The China Show"
+      },
+      {
+        "time": "06:00",
+        "title": "Insight with Haslinda Amin"
+      }
+    ],
+    "ebs": [
+      {
+        "time": "08:00",
+        "title": "Europe by Satellite: European Union Daily Overview"
+      },
+      {
+        "time": "09:30",
+        "title": "European Commission: Morning Briefing & Press Agenda"
+      },
+      {
+        "time": "11:30",
+        "title": "Weekly European Commission College meeting"
+      },
+      {
+        "time": "12:00",
+        "title": "Court of Justice of the European Union"
+      },
+      {
+        "time": "13:05",
+        "title": "College read-out / Press conference by Raffaele FITTO and Apostolos TZITZIKOSTAS on sustainable tourism"
+      },
+      {
+        "time": "13:57",
+        "title": "EC Press conference by Maroš ŠEFČOVIČ and Valdis DOMBROVSKIS on the 2027 Commission work programme"
+      },
+      {
+        "time": "15:46",
+        "title": "EC Press conference by High Representative Kaja KALLAS and Commissioner Marta KOS on the Enlargement package"
+      },
+      {
+        "time": "17:05",
+        "title": "EP Exchange of views on EU Trade Policy - INTA Committee"
+      },
+      {
+        "time": "18:45",
+        "title": "European Commissioner Hadja LAHBIB at the European Civil Protection Forum"
+      },
+      {
+        "time": "19:00",
+        "title": "EP News - EU Trade Policy INTA Committee"
+      },
+      {
+        "time": "20:00",
+        "title": "European Council President António COSTA at the 30th Ibero-American Summit"
+      },
+      {
+        "time": "21:30",
+        "title": "European Commission: Highlights of the Day"
+      },
+      {
+        "time": "23:00",
+        "title": "EC Audiovisual Library: Historical Milestones"
+      },
+      {
+        "time": "01:00",
+        "title": "Standby: European Commission Official Broadcast"
+      }
+    ],
+    "ebs-plus": [
+      {
+        "time": "08:30",
+        "title": "European Parliament: Daily Plenary & Committee Briefing"
+      },
+      {
+        "time": "10:00",
+        "title": "EP Stockshots: Institutions & Parliamentary Life"
+      },
+      {
+        "time": "13:05",
+        "title": "College read-out / Press conference (International Sign Language) - Fitto & Tzitzikostas"
+      },
+      {
+        "time": "14:03",
+        "title": "EP exchange of views on the 2026 Enlargement Package - AFET Committee"
+      },
+      {
+        "time": "15:33",
+        "title": "EP exchange of views on EU Border and Coast Guard Regulation - LIBE Committee"
+      },
+      {
+        "time": "16:45",
+        "title": "EP News - 2026 Enlargement Package AFET Committee"
+      },
+      {
+        "time": "17:50",
+        "title": "EP News - European Border and Coast Guard Regulation (Frontex) LIBE Committee"
+      },
+      {
+        "time": "18:00",
+        "title": "EC Press conference (Sign Language) - Dombrovskis & Šefčovič"
+      },
+      {
+        "time": "18:45",
+        "title": "EC Press conference (Sign Language) - Kallas & Kos"
+      },
+      {
+        "time": "20:15",
+        "title": "European Parliament: Plenary Debate Highlights"
+      },
+      {
+        "time": "22:00",
+        "title": "Interparliamentary Committee Debate Retransmission"
+      },
+      {
+        "time": "00:00",
+        "title": "Standby: European Parliament Official Broadcast"
+      }
+    ],
+    "nhk-world": [
+      {
+        "time": "07:00",
+        "title": "NHK NEWSLINE"
+      },
+      {
+        "time": "07:15",
+        "title": "Newsline In Depth"
+      },
+      {
+        "time": "07:30",
+        "title": "Trails to Oishii Tokyo"
+      },
+      {
+        "time": "08:00",
+        "title": "NHK NEWSLINE"
+      },
+      {
+        "time": "08:15",
+        "title": "Biz Stream"
+      },
+      {
+        "time": "08:45",
+        "title": "DESIGN TALKS plus"
+      },
+      {
+        "time": "09:00",
+        "title": "NHK NEWSLINE"
+      },
+      {
+        "time": "09:15",
+        "title": "Direct Talk"
+      },
+      {
+        "time": "09:30",
+        "title": "Core Kyoto"
+      },
+      {
+        "time": "10:00",
+        "title": "NHK NEWSLINE"
+      },
+      {
+        "time": "10:15",
+        "title": "Asia Insight"
+      },
+      {
+        "time": "10:45",
+        "title": "Japanology Plus"
+      },
+      {
+        "time": "11:00",
+        "title": "NHK NEWSLINE"
+      },
+      {
+        "time": "11:15",
+        "title": "Zeroing In"
+      },
+      {
+        "time": "11:30",
+        "title": "Cycle Around Japan"
+      },
+      {
+        "time": "12:00",
+        "title": "NHK NEWSLINE"
+      },
+      {
+        "time": "12:15",
+        "title": "Catch Japan"
+      },
+      {
+        "time": "12:45",
+        "title": "Dining with the Chef"
+      },
+      {
+        "time": "13:00",
+        "title": "NHK NEWSLINE"
+      },
+      {
+        "time": "13:15",
+        "title": "Newsline In Depth"
+      },
+      {
+        "time": "13:30",
+        "title": "Somewhere Street"
+      },
+      {
+        "time": "14:00",
+        "title": "NHK NEWSLINE"
+      },
+      {
+        "time": "14:15",
+        "title": "Biz Stream"
+      },
+      {
+        "time": "14:45",
+        "title": "Journeys in Japan"
+      },
+      {
+        "time": "15:00",
+        "title": "NHK NEWSLINE"
+      },
+      {
+        "time": "15:15",
+        "title": "Medical Frontiers"
+      },
+      {
+        "time": "15:45",
+        "title": "DESIGN TALKS plus"
+      },
+      {
+        "time": "16:00",
+        "title": "NHK NEWSLINE"
+      },
+      {
+        "time": "16:15",
+        "title": "Direct Talk"
+      },
+      {
+        "time": "16:30",
+        "title": "Core Kyoto"
+      },
+      {
+        "time": "17:00",
+        "title": "NHK NEWSLINE"
+      },
+      {
+        "time": "17:10",
+        "title": "CINEMATIC JOURNEY"
+      },
+      {
+        "time": "17:25",
+        "title": "Nun's Cookbook"
+      },
+      {
+        "time": "17:40",
+        "title": "Journeys in Japan"
+      },
+      {
+        "time": "18:00",
+        "title": "NHK NEWSLINE"
+      },
+      {
+        "time": "18:15",
+        "title": "Japan Railway Journal"
+      },
+      {
+        "time": "18:45",
+        "title": "Seasoning the Seasons"
+      },
+      {
+        "time": "19:00",
+        "title": "NHK NEWSLINE"
+      },
+      {
+        "time": "19:15",
+        "title": "Zeroing In"
+      },
+      {
+        "time": "19:30",
+        "title": "Trails to Oishii Tokyo"
+      },
+      {
+        "time": "20:00",
+        "title": "NHK NEWSLINE"
+      },
+      {
+        "time": "20:15",
+        "title": "Newsline In Depth"
+      },
+      {
+        "time": "20:30",
+        "title": "Cycle Around Japan"
+      },
+      {
+        "time": "21:00",
+        "title": "NHK NEWSLINE"
+      },
+      {
+        "time": "21:15",
+        "title": "Biz Stream"
+      },
+      {
+        "time": "21:45",
+        "title": "Japanology Plus"
+      },
+      {
+        "time": "22:00",
+        "title": "NHK NEWSLINE"
+      },
+      {
+        "time": "22:15",
+        "title": "Asia Insight"
+      },
+      {
+        "time": "22:45",
+        "title": "Dining with the Chef"
+      },
+      {
+        "time": "23:00",
+        "title": "NHK NEWSLINE"
+      },
+      {
+        "time": "23:15",
+        "title": "Direct Talk"
+      },
+      {
+        "time": "23:30",
+        "title": "Somewhere Street"
+      },
+      {
+        "time": "00:00",
+        "title": "NHK NEWSLINE"
+      },
+      {
+        "time": "00:15",
+        "title": "Newsline In Depth"
+      },
+      {
+        "time": "00:30",
+        "title": "Catch Japan"
+      },
+      {
+        "time": "01:00",
+        "title": "NHK NEWSLINE"
+      },
+      {
+        "time": "01:15",
+        "title": "Direct Talk"
+      },
+      {
+        "time": "01:30",
+        "title": "Cycle Around Japan"
+      },
+      {
+        "time": "02:00",
+        "title": "NHK NEWSLINE"
+      },
+      {
+        "time": "02:15",
+        "title": "Biz Stream"
+      },
+      {
+        "time": "02:45",
+        "title": "Journeys in Japan"
+      },
+      {
+        "time": "03:00",
+        "title": "NHK NEWSLINE"
+      },
+      {
+        "time": "03:15",
+        "title": "Asia Insight"
+      },
+      {
+        "time": "03:45",
+        "title": "Medical Frontiers"
+      },
+      {
+        "time": "04:00",
+        "title": "NHK NEWSLINE"
+      },
+      {
+        "time": "04:15",
+        "title": "Japan Railway Journal"
+      },
+      {
+        "time": "04:45",
+        "title": "Dining with the Chef"
+      },
+      {
+        "time": "05:00",
+        "title": "NHK NEWSLINE"
+      },
+      {
+        "time": "05:15",
+        "title": "Zeroing In"
+      },
+      {
+        "time": "05:30",
+        "title": "Somewhere Street"
+      },
+      {
+        "time": "06:00",
+        "title": "NHK NEWSLINE"
+      },
+      {
+        "time": "06:15",
+        "title": "Seasoning the Seasons"
+      },
+      {
+        "time": "06:30",
+        "title": "J-Arena"
+      }
+    ],
+    "moviesphere": [
+      {
+        "time": "07:30",
+        "title": "What to Expect When You're Expecting"
+      },
+      {
+        "time": "09:30",
+        "title": "The Bank Job"
+      },
+      {
+        "time": "11:45",
+        "title": "The Ghost Writer"
+      },
+      {
+        "time": "14:00",
+        "title": "Meet Dave"
+      },
+      {
+        "time": "16:02",
+        "title": "Gods of Egypt"
+      },
+      {
+        "time": "18:21",
+        "title": "Dune"
+      },
+      {
+        "time": "21:06",
+        "title": "Outlander"
+      },
+      {
+        "time": "23:15",
+        "title": "Chaos"
+      },
+      {
+        "time": "01:15",
+        "title": "The Lincoln Lawyer"
+      },
+      {
+        "time": "03:15",
+        "title": "Buried"
+      },
+      {
+        "time": "04:50",
+        "title": "Hours"
+      },
+      {
+        "time": "06:15",
+        "title": "Remember"
+      }
+    ],
+    "artflix": [
+      {
+        "time": "07:00",
+        "title": "Der Mann von der Insel"
+      },
+      {
+        "time": "08:35",
+        "title": "Robinson Crusoe auf dem Mars"
+      },
+      {
+        "time": "10:15",
+        "title": "Der geheimnisvolle Schatz"
+      },
+      {
+        "time": "11:50",
+        "title": "Die Nibelungen - Teil 1: Siegfried"
+      },
+      {
+        "time": "13:30",
+        "title": "Die Nibelungen - Teil 2: Kriemhilds Rache"
+      },
+      {
+        "time": "15:02",
+        "title": "Tumak, der Herr des Urwalds"
+      },
+      {
+        "time": "16:23",
+        "title": "Tarzan"
+      },
+      {
+        "time": "17:47",
+        "title": "Die Küste der Piraten"
+      },
+      {
+        "time": "19:24",
+        "title": "Heidi kehrt heim"
+      },
+      {
+        "time": "21:00",
+        "title": "Sturm über Jamaika"
+      },
+      {
+        "time": "22:38",
+        "title": "Der kleine Lord"
+      },
+      {
+        "time": "00:30",
+        "title": "Der rote Schatten"
+      },
+      {
+        "time": "02:15",
+        "title": "Die Rückkehr der Fliege"
+      },
+      {
+        "time": "03:50",
+        "title": "Im Reich der Amazonen"
+      },
+      {
+        "time": "05:25",
+        "title": "Die Rache des Pharao"
       }
     ]
   }

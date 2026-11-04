@@ -146,8 +146,8 @@
   function initClocks() {
     function tick() {
       const now = new Date();
-      const timeStr = now.toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
-      const dateStr = now.toLocaleDateString("ro-RO", { weekday: "short", day: "numeric", month: "short" });
+      const timeStr = now.toLocaleTimeString("ro-RO", { timeZone: "Europe/Bucharest", hour: "2-digit", minute: "2-digit", second: "2-digit" });
+      const dateStr = now.toLocaleDateString("ro-RO", { timeZone: "Europe/Bucharest", weekday: "short", day: "numeric", month: "short" });
 
       if (dom.guideClock) dom.guideClock.textContent = timeStr;
       if (dom.guideDate) dom.guideDate.textContent = dateStr;
@@ -246,7 +246,7 @@
     if (!dom.epgChannelsRows || !dom.epgTimeRuler) return;
 
     const now = new Date();
-    const startHour = Math.max(0, now.getHours() - 1);
+    const startHour = Math.max(0, (EPG_DATA.getBucharestHour ? EPG_DATA.getBucharestHour(now) : now.getHours()) - 1);
     state.timelineBaseHour = startHour;
 
     // 1. Render Timeline Ruler
@@ -360,9 +360,8 @@
   }
 
   function updateNowMarkerPosition(now) {
-    if (!dom.epgNowMarker || state.timelineBaseHour === null) return;
-    const baseHour = state.timelineBaseHour;
-    const baseTimelineStartMs = new Date(now.getFullYear(), now.getMonth(), now.getDate(), baseHour, 0, 0, 0).getTime();
+    if (!dom.epgNowMarker) return;
+    const baseTimelineStartMs = EPG_DATA.getBaseTimelineStartMs ? EPG_DATA.getBaseTimelineStartMs(now) : new Date(now.getFullYear(), now.getMonth(), now.getDate(), state.timelineBaseHour || 0, 0, 0, 0).getTime();
     const PX_PER_MIN = EPG_DATA.PX_PER_MINUTE || 8;
 
     const elapsedMs = Math.max(0, now.getTime() - baseTimelineStartMs);
@@ -718,8 +717,7 @@
 
     // Center horizontal timeline on the LIVE time
     const now = new Date();
-    const startHour = Math.max(0, now.getHours() - 1);
-    const baseTimelineStartMs = new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHour, 0, 0, 0).getTime();
+    const baseTimelineStartMs = EPG_DATA.getBaseTimelineStartMs ? EPG_DATA.getBaseTimelineStartMs(now) : new Date(now.getFullYear(), now.getMonth(), now.getDate(), Math.max(0, now.getHours() - 1), 0, 0, 0).getTime();
     const PX_PER_MIN = EPG_DATA.PX_PER_MINUTE || 8;
     const nowOffset = ((now.getTime() - baseTimelineStartMs) / 60000) * PX_PER_MIN;
     if (dom.epgGridContainer) {
