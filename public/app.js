@@ -3,11 +3,13 @@
  * Engineered for Samsung The Frame (Tizen 6.5) & 10-Foot UI
  *
  * Implements:
- * 1. 2-Press OK Remote Control Flow (1st press = OSD banner, 2nd press = TV Guide)
- * 2. Guaranteed Current Channel Focus on TV Guide opening
- * 3. Dynamic Linear EPG Timeline Grid with Live Progress Bars
- * 4. Dedicated Event Category & Real-time Live Event Notification Toast
- * 5. Robust Direct HLS & Clean YouTube Embed Streaming
+ * 1. Samsung SolarCell Remote Channel Rocker (ChannelUp / ChannelDown) & Arrow navigation
+ * 2. 2-Press OK Remote Control Flow (1st press = OSD banner, 2nd press = TV Guide)
+ * 3. Guaranteed Current Channel Focus on TV Guide opening
+ * 4. Zero DOM thrashing: DOM pre-rendered & cached once, toggled smoothly with CSS
+ * 5. Official Standby Screen for event channels (BNR, CDEP, Senat, Gov) when offline
+ * 6. TextTrack & CC subtitle suppression for True History & Yahoo Finance
+ * 7. Real-time Live Event Detection & Notification Toast
  */
 
 (function () {
@@ -18,7 +20,6 @@
     activeCategory: "all",
     focusedRowIndex: 0,
     focusedProgIndex: 0,
-    focusMode: "program", // 'channel' | 'program'
     currentChannel: null,
     guideVisible: false,
     osdVisible: false,
@@ -30,7 +31,8 @@
     activeLiveEventChannel: null,
     hasNotifiedChannels: new Set(),
     timelineBaseHour: null,
-    currentInspectedTimeMs: null
+    currentInspectedTimeMs: null,
+    rowDomCache: [] // Array of { channel, rowEl, trackEl, cardEls }
   };
 
   // DOM Cache
@@ -42,6 +44,12 @@
     ytPlayerTarget: document.getElementById("yt-player-target"),
     webEmbed: document.getElementById("web-embed-container"),
     unmutePrompt: document.getElementById("unmute-prompt"),
+
+    // Standby Screen
+    eventStandbyScreen: document.getElementById("event-standby-screen"),
+    standbyBadge: document.getElementById("standby-badge"),
+    standbyTitle: document.getElementById("standby-title"),
+    standbyPortal: document.getElementById("standby-portal"),
 
     // Linear TV Guide Overlay
     guideOverlay: document.getElementById("guide-overlay"),
@@ -91,30 +99,34 @@
   function init() {
     registerTizenKeys();
     initClocks();
+    setupVideoTextTrackSuppression();
     renderCategoryPills();
 
-    // Start with CH 01 (CineMaraton Plus HD or Bloomberg EU)
+    // Pre-build and cache the entire EPG grid DOM once
+    buildEpgGridOnce();
+
+    // Start with CH 01 (CineMaraton Plus HD)
     const initialChannel = CHANNELS_DATA[0];
     playChannel(initialChannel, false);
-
-    // Initial render of EPG grid
-    renderEpgGrid();
 
     setupEventListeners();
     startLiveEventMonitor();
 
-    console.log("[NEXUS] Initialized successfully. Total channels:", CHANNELS_DATA.length);
+    console.log("[NEXUS] Initialized successfully. Total clean channels:", CHANNELS_DATA.length);
   }
 
+  /**
+   * Registers physical Samsung SolarCell remote keys (ChannelUp / ChannelDown rocker, Color keys, Numbers)
+   */
   function registerTizenKeys() {
     if (typeof tizen !== "undefined" && tizen.tvinputdevice) {
       const keys = [
+        "ChannelUp",
+        "ChannelDown",
         "ColorF0Red",
         "ColorF1Green",
         "ColorF2Yellow",
         "ColorF3Blue",
-        "ChannelUp",
-        "ChannelDown",
         "MediaPlay",
         "MediaPause",
         "MediaPlayPause",
@@ -125,7 +137,7 @@
         try {
           tizen.tvinputdevice.registerKey(k);
         } catch (e) {
-          // Ignore if already registered
+          // Key already registered or not supported
         }
       });
     }
@@ -141,7 +153,6 @@
       if (dom.guideDate) dom.guideDate.textContent = dateStr;
       if (dom.osdClock) dom.osdClock.textContent = timeStr;
 
-      // Update vertical 'NOW' indicator in EPG grid if visible
       if (state.guideVisible) {
         updateNowMarkerPosition(now);
       }
@@ -150,8 +161,36 @@
     setInterval(tick, 1000);
   }
 
+  /**
+   * Disables native webvtt and CEA-608/708 subtitles to eliminate duplicate/unwanted captions
+   */
+  function setupVideoTextTrackSuppression() {
+    if (!dom.hlsVideo) return;
+
+    function suppressTracks() {
+      if (dom.hlsVideo.textTracks) {
+        for (let i = 0; i < dom.hlsVideo.textTracks.length; i++) {
+          try {
+            dom.hlsVideo.textTracks[i].mode = "disabled";
+          } catch (e) {}
+        }
+      }
+    }
+
+    if (dom.hlsVideo.textTracks) {
+      dom.hlsVideo.textTracks.addEventListener("addtrack", (e) => {
+        try {
+          e.track.mode = "disabled";
+        } catch (err) {}
+      });
+    }
+
+    dom.hlsVideo.addEventListener("loadedmetadata", suppressTracks);
+    dom.hlsVideo.addEventListener("play", suppressTracks);
+  }
+
   // =========================================================================
-  // 2. CATEGORY PILLS & CHANNEL FILTERING
+  // 2. CATEGORY PILLS & FAST FILTERING
   // =========================================================================
   function renderCategoryPills() {
     if (!dom.guideCategories) return;
@@ -168,34 +207,49 @@
       `;
 
       btn.addEventListener("click", () => {
-        state.activeCategory = cat.id;
-        renderCategoryPills();
-        renderEpgGrid();
-        focusChannelRow(0);
+        selectCategory(cat.id);
       });
 
       dom.guideCategories.appendChild(btn);
     });
   }
 
-  function getFilteredChannels() {
+  function selectCategory(catId) {
+    state.activeCategory = catId;
+
+    // Update pill active classes
+    const pills = dom.guideCategories.querySelectorAll(".cat-pill");
+    pills.forEach(p => {
+      p.classList.toggle("active", p.dataset.category === catId);
+    });
+
+    // Fast CSS toggle on pre-rendered DOM rows (NO DOM THRASING!)
+    state.rowDomCache.forEach((item) => {
+      const visible = (catId === "all" || item.channel.category === catId);
+      item.rowEl.style.display = visible ? "flex" : "none";
+    });
+
+    // Focus the first visible channel
+    const visibleIndex = getVisibleChannels().findIndex(c => c.id === state.currentChannel?.id);
+    focusChannelRow(visibleIndex !== -1 ? visibleIndex : 0);
+  }
+
+  function getVisibleChannels() {
     if (state.activeCategory === "all") return CHANNELS_DATA;
     return CHANNELS_DATA.filter(c => c.category === state.activeCategory);
   }
 
   // =========================================================================
-  // 3. LINEAR EPG TIMELINE GRID RENDERING
+  // 3. ZERO-LAG LINEAR EPG TIMELINE GRID (RENDER ONCE & CACHE)
   // =========================================================================
-  function renderEpgGrid() {
+  function buildEpgGridOnce() {
     if (!dom.epgChannelsRows || !dom.epgTimeRuler) return;
 
     const now = new Date();
-    const channels = getFilteredChannels();
-
     const startHour = Math.max(0, now.getHours() - 1);
     state.timelineBaseHour = startHour;
 
-    // 1. Render Timeline Ruler across top
+    // 1. Render Timeline Ruler
     const intervals = EPG_DATA.getTimelineIntervals(now, EPG_DATA.TIMELINE_HOURS, 30);
     const rulerTotalWidthPx = intervals.length * 240;
 
@@ -208,18 +262,17 @@
       dom.epgTimeRuler.appendChild(slot);
     });
 
-    // 2. Render Channel Rows & Program Blocks
-    dom.epgChannelsRows.innerHTML = "";
+    // 2. Build rows into a DocumentFragment for maximum paint performance
+    const fragment = document.createDocumentFragment();
+    state.rowDomCache = [];
 
-    channels.forEach((ch, rowIdx) => {
+    CHANNELS_DATA.forEach((ch, chIdx) => {
       const row = document.createElement("div");
-      const isCurrentChannel = state.currentChannel?.id === ch.id;
-      row.className = `epg-channel-row ${rowIdx === state.focusedRowIndex ? "row-focused" : ""} ${isCurrentChannel ? "is-current-playing" : ""}`;
-      row.dataset.row = rowIdx;
+      row.className = "epg-channel-row";
       row.dataset.channelId = ch.id;
+      row.dataset.category = ch.category;
 
       // Channel Sticky Left Cell
-      const isLiveEvent = ch.isEventStream && ch.isLiveNow;
       const cell = document.createElement("div");
       cell.className = "epg-channel-cell";
       cell.innerHTML = `
@@ -230,14 +283,13 @@
         <div class="epg-ch-info">
           <span class="epg-ch-name">${ch.name}</span>
           <div class="epg-ch-meta">
-            <span class="epg-live-dot ${isLiveEvent ? 'event-live' : ''}"></span>
+            <span class="epg-live-dot ${ch.isEventStream && ch.isLiveNow ? 'event-live' : ''}"></span>
             <span>${ch.badge}</span>
           </div>
         </div>
       `;
 
       cell.addEventListener("click", () => {
-        focusChannelRow(rowIdx);
         playChannel(ch, true);
         hideGuide(false);
       });
@@ -250,12 +302,13 @@
       track.style.width = `${rulerTotalWidthPx}px`;
 
       const visibleShows = EPG_DATA.getVisibleShows(ch.id, now);
+      const cardEls = [];
 
       visibleShows.forEach((prog, progIdx) => {
         const card = document.createElement("div");
         card.style.left = `${prog.leftPx}px`;
         card.style.width = `${prog.widthPx}px`;
-        card.className = `epg-program-card ${prog.isLiveNow ? 'is-live-show' : ''} ${rowIdx === state.focusedRowIndex && progIdx === state.focusedProgIndex ? 'focused' : ''}`;
+        card.className = `epg-program-card ${prog.isLiveNow ? 'is-live-show' : ''}`;
         card.dataset.progIdx = progIdx;
         card._progData = prog;
 
@@ -281,17 +334,27 @@
 
         card.addEventListener("click", (e) => {
           e.stopPropagation();
-          focusProgramCard(rowIdx, progIdx);
           playChannel(ch, true);
           hideGuide(false);
         });
 
         track.appendChild(card);
+        cardEls.push(card);
       });
 
       row.appendChild(track);
-      dom.epgChannelsRows.appendChild(row);
+      fragment.appendChild(row);
+
+      state.rowDomCache.push({
+        channel: ch,
+        rowEl: row,
+        trackEl: track,
+        cardEls: cardEls
+      });
     });
+
+    dom.epgChannelsRows.innerHTML = "";
+    dom.epgChannelsRows.appendChild(fragment);
 
     updateNowMarkerPosition(now);
   }
@@ -303,45 +366,68 @@
     const PX_PER_MIN = EPG_DATA.PX_PER_MINUTE || 8;
 
     const elapsedMs = Math.max(0, now.getTime() - baseTimelineStartMs);
-    const markerLeftPx = 290 + (elapsedMs / 60000) * PX_PER_MIN;
+    const markerLeftPx = 320 + (elapsedMs / 60000) * PX_PER_MIN;
 
     dom.epgNowMarker.style.left = `${markerLeftPx}px`;
+  }
+
+  /**
+   * Refreshes the active playing highlights and progress bars when opening the guide
+   */
+  function refreshGuideState() {
+    const now = new Date();
+    updateNowMarkerPosition(now);
+
+    state.rowDomCache.forEach((item) => {
+      const isCurrent = state.currentChannel?.id === item.channel.id;
+      item.rowEl.classList.toggle("is-current-playing", isCurrent);
+
+      // Update progress bar on live show card
+      item.cardEls.forEach(card => {
+        if (card._progData) {
+          const isLive = now.getTime() >= card._progData.startMs && now.getTime() < card._progData.endMs;
+          card.classList.toggle("is-live-show", isLive);
+          if (isLive) {
+            const elapsed = Math.max(0, now.getTime() - card._progData.startMs);
+            const total = Math.max(1, card._progData.endMs - card._progData.startMs);
+            const pct = Math.min(100, Math.round((elapsed / total) * 100));
+            const fill = card.querySelector(".epg-prog-progress-fill");
+            if (fill) fill.style.width = `${pct}%`;
+          }
+        }
+      });
+    });
   }
 
   // =========================================================================
   // 4. EPG FOCUS & INSPECTOR CONTROLLER
   // =========================================================================
-  function focusChannelRow(rowIndex, scroll = true) {
-    const channels = getFilteredChannels();
-    if (channels.length === 0) return;
+  function focusChannelRow(rowIndex, scroll = true, smooth = true) {
+    const visibleChannels = getVisibleChannels();
+    if (visibleChannels.length === 0) return;
 
     if (rowIndex < 0) rowIndex = 0;
-    if (rowIndex >= channels.length) rowIndex = channels.length - 1;
+    if (rowIndex >= visibleChannels.length) rowIndex = visibleChannels.length - 1;
 
     state.focusedRowIndex = rowIndex;
+    const targetChannel = visibleChannels[rowIndex];
 
-    const rows = dom.epgChannelsRows.querySelectorAll(".epg-channel-row");
-    rows.forEach((r, i) => {
-      if (i === rowIndex) {
-        r.classList.add("row-focused");
-        if (scroll) {
-          r.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
-      } else {
-        r.classList.remove("row-focused");
+    // Update row-focused class on cached row DOMs
+    state.rowDomCache.forEach((item) => {
+      const isTarget = item.channel.id === targetChannel.id;
+      item.rowEl.classList.toggle("row-focused", isTarget);
+      if (isTarget && scroll) {
+        item.rowEl.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "center" });
       }
     });
 
-    const targetRow = rows[rowIndex];
-    if (!targetRow) return;
-
-    const cards = targetRow.querySelectorAll(".epg-program-card");
-    if (cards.length === 0) return;
+    const activeItem = state.rowDomCache.find(item => item.channel.id === targetChannel.id);
+    if (!activeItem || activeItem.cardEls.length === 0) return;
 
     // Pick program: match inspected time if exists, or live show, or default to 0
     let targetProgIdx = -1;
     if (state.currentInspectedTimeMs) {
-      cards.forEach((c, i) => {
+      activeItem.cardEls.forEach((c, i) => {
         if (c._progData && state.currentInspectedTimeMs >= c._progData.startMs && state.currentInspectedTimeMs < c._progData.endMs) {
           targetProgIdx = i;
         }
@@ -349,7 +435,7 @@
     }
 
     if (targetProgIdx === -1) {
-      cards.forEach((c, i) => {
+      activeItem.cardEls.forEach((c, i) => {
         if (c._progData && c._progData.isLiveNow) {
           targetProgIdx = i;
         }
@@ -358,25 +444,21 @@
 
     if (targetProgIdx === -1) targetProgIdx = 0;
 
-    focusProgramCard(rowIndex, targetProgIdx, scroll);
+    focusProgramCard(targetChannel, activeItem, targetProgIdx, scroll, smooth);
   }
 
-  function focusProgramCard(rowIdx, progIdx, scroll = true) {
-    const rows = dom.epgChannelsRows.querySelectorAll(".epg-channel-row");
-    const row = rows[rowIdx];
-    if (!row) return;
-
-    const cards = row.querySelectorAll(".epg-program-card");
-    if (cards.length === 0) return;
+  function focusProgramCard(channel, rowItem, progIdx, scroll = true, smooth = true) {
+    if (!rowItem || rowItem.cardEls.length === 0) return;
 
     if (progIdx < 0) progIdx = 0;
-    if (progIdx >= cards.length) progIdx = cards.length - 1;
+    if (progIdx >= rowItem.cardEls.length) progIdx = rowItem.cardEls.length - 1;
 
     state.focusedProgIndex = progIdx;
 
+    // Clear focused on all cards
     dom.epgChannelsRows.querySelectorAll(".epg-program-card.focused").forEach(c => c.classList.remove("focused"));
 
-    const targetCard = cards[progIdx];
+    const targetCard = rowItem.cardEls[progIdx];
     if (targetCard) {
       targetCard.classList.add("focused");
 
@@ -385,31 +467,21 @@
 
         if (scroll && dom.epgGridContainer) {
           const container = dom.epgGridContainer;
-          const cardLeft = 290 + targetCard._progData.leftPx;
+          const cardLeft = 320 + targetCard._progData.leftPx;
           const cardRight = cardLeft + targetCard._progData.widthPx;
-          const viewLeft = container.scrollLeft + 290;
+          const viewLeft = container.scrollLeft + 320;
           const viewRight = container.scrollLeft + container.clientWidth - 40;
 
           if (cardLeft < viewLeft) {
-            container.scrollTo({ left: Math.max(0, cardLeft - 320), behavior: "smooth" });
+            container.scrollTo({ left: Math.max(0, cardLeft - 350), behavior: smooth ? "smooth" : "auto" });
           } else if (cardRight > viewRight) {
-            container.scrollTo({ left: cardRight - container.clientWidth + 60, behavior: "smooth" });
+            container.scrollTo({ left: cardRight - container.clientWidth + 80, behavior: smooth ? "smooth" : "auto" });
           }
         }
 
-        const channels = getFilteredChannels();
-        const ch = channels[rowIdx];
-        if (ch) {
-          updateInspectorWithShow(ch, targetCard._progData);
-        }
+        updateInspectorWithShow(channel, targetCard._progData);
       }
     }
-  }
-
-  function updateInspectorWithCurrentShow(ch) {
-    const now = new Date();
-    const show = EPG_DATA.getCurrentShow(ch.id, now);
-    updateInspectorWithShow(ch, show);
   }
 
   function updateInspectorWithShow(ch, show) {
@@ -429,14 +501,14 @@
     if (dom.inspTime) dom.inspTime.textContent = `${show.startTimeStr} - ${show.endTimeStr}`;
     if (dom.inspProgressText) {
       dom.inspProgressText.textContent = (show.isLiveNow || show.isLive)
-        ? `A mai rămas: ${show.remainingMinutes || 30} min`
+        ? `A mai rămas: ${show.remainingMinutes || 25} min`
         : `Durată: ${show.durationMinutes} min`;
     }
     if (dom.inspDesc) dom.inspDesc.textContent = show.desc || ch.description;
   }
 
   // =========================================================================
-  // 5. MEDIA STREAM ENGINE (DIRECT HLS & CLEAN YOUTUBE)
+  // 5. MEDIA STREAM ENGINE (DIRECT HLS, OFFICIAL STANDBY & YOUTUBE)
   // =========================================================================
   function playChannel(channel, showOsd = true) {
     if (!channel) return;
@@ -444,10 +516,16 @@
 
     stopCurrentPlayback();
 
-    if (channel.type === "hls") {
-      playHls(channel.hlsUrl);
-    } else if (channel.type.startsWith("youtube")) {
-      playYouTubeClean(channel);
+    // Check if channel is an official event stream currently in standby (offline)
+    if (channel.isEventOnly && !channel.isLiveNow) {
+      showEventStandbyScreen(channel);
+    } else {
+      hideEventStandbyScreen();
+      if (channel.type === "hls") {
+        playHls(channel);
+      } else if (channel.type.startsWith("youtube")) {
+        playYouTubeClean(channel);
+      }
     }
 
     if (showOsd) {
@@ -479,12 +557,46 @@
     }
   }
 
-  // Native & Hls.js Direct Stream Player (Fixed Unmute Behavior & Auto-Fallback)
-  function playHls(url) {
+  function showEventStandbyScreen(channel) {
+    if (!dom.eventStandbyScreen) return;
+
+    if (dom.standbyBadge) {
+      dom.standbyBadge.textContent = channel.logoText || "EVENT";
+      dom.standbyBadge.style.background = channel.color || "#1e3a8a";
+    }
+    if (dom.standbyTitle) {
+      dom.standbyTitle.textContent = channel.name;
+    }
+    if (dom.standbyPortal) {
+      dom.standbyPortal.textContent = channel.portalDomain || "Transmisiune Oficială";
+    }
+
+    dom.eventStandbyScreen.classList.remove("hidden");
+  }
+
+  function hideEventStandbyScreen() {
+    if (dom.eventStandbyScreen) {
+      dom.eventStandbyScreen.classList.add("hidden");
+    }
+  }
+
+  // Native & Hls.js Direct Stream Player with Subtitle Suppression
+  function playHls(channel) {
+    const url = channel.hlsUrl;
     dom.hlsVideo.style.display = "block";
     dom.hlsVideo.muted = false;
     state.isMuted = false;
     dom.unmutePrompt.style.display = "none";
+
+    function disableTracks() {
+      if (dom.hlsVideo.textTracks) {
+        for (let i = 0; i < dom.hlsVideo.textTracks.length; i++) {
+          try {
+            dom.hlsVideo.textTracks[i].mode = "disabled";
+          } catch (e) {}
+        }
+      }
+    }
 
     if (typeof Hls !== "undefined" && Hls.isSupported()) {
       const hls = new Hls({
@@ -494,10 +606,15 @@
       });
       state.hlsPlayer = hls;
 
+      // Suppress subtitles in Hls.js
+      hls.subtitleTrack = -1;
+
       hls.loadSource(url);
       hls.attachMedia(dom.hlsVideo);
 
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        hls.subtitleTrack = -1;
+        disableTracks();
         dom.hlsVideo.play().catch(err => {
           if (err.name === "NotAllowedError") {
             dom.hlsVideo.muted = true;
@@ -506,6 +623,11 @@
             dom.hlsVideo.play().catch(() => {});
           }
         });
+      });
+
+      hls.on(Hls.Events.SUBTITLE_TRACKS_UPDATED, () => {
+        hls.subtitleTrack = -1;
+        disableTracks();
       });
 
       hls.on(Hls.Events.ERROR, (event, data) => {
@@ -519,10 +641,6 @@
               break;
             default:
               hls.destroy();
-              if (state.currentChannel?.youtube) {
-                console.log("[NEXUS] HLS fallback to YouTube for channel:", state.currentChannel.name);
-                playYouTubeClean(state.currentChannel);
-              }
               break;
           }
         }
@@ -530,6 +648,7 @@
     } else if (dom.hlsVideo.canPlayType("application/vnd.apple.mpegurl")) {
       dom.hlsVideo.src = url;
       dom.hlsVideo.addEventListener("loadedmetadata", () => {
+        disableTracks();
         dom.hlsVideo.play().catch(err => {
           if (err.name === "NotAllowedError") {
             dom.hlsVideo.muted = true;
@@ -542,31 +661,27 @@
     }
   }
 
-  // Clean YouTube Live Player (Strict Frame-safe Handshake)
+  // Clean YouTube Live Player (Active only for live broadcasts)
   function playYouTubeClean(channel) {
     dom.ytCropStage.style.display = "block";
 
     const videoId = channel.youtube?.videoId || "";
-    const playlistId = channel.youtube?.playlistId || "";
     let src = "";
 
     if (videoId) {
       src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&mute=0&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&playsinline=1&enablejsapi=1&disablekb=1&fs=0`;
-    } else if (playlistId) {
-      src = `https://www.youtube-nocookie.com/embed/videoseries?list=${playlistId}&autoplay=1&mute=0&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&playsinline=1&enablejsapi=1&disablekb=1&fs=0`;
-    } else if (channel.youtube?.channelId) {
-      const uploadsList = `UU${channel.youtube.channelId.substring(2)}`;
-      src = `https://www.youtube-nocookie.com/embed/videoseries?list=${uploadsList}&autoplay=1&mute=0&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&playsinline=1&enablejsapi=1&disablekb=1&fs=0`;
     }
 
-    dom.ytPlayerTarget.innerHTML = `
-      <iframe 
-        src="${src}" 
-        title="${channel.name}"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-        allowfullscreen>
-      </iframe>
-    `;
+    if (src) {
+      dom.ytPlayerTarget.innerHTML = `
+        <iframe 
+          src="${src}" 
+          title="${channel.name}"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allowfullscreen>
+        </iframe>
+      `;
+    }
   }
 
   function unlockAudio() {
@@ -578,28 +693,27 @@
   }
 
   // =========================================================================
-  // 6. TV GUIDE & 2-PRESS OK REMOTE LOGIC
+  // 6. TV GUIDE & 2-PRESS OK REMOTE LOGIC (INSTANT TRANSITIONS)
   // =========================================================================
 
   /**
-   * Opens TV Guide overlay.
-   * REQUIREMENT 6: ALWAYS opens focused on the currently playing channel & live show!
+   * Opens TV Guide overlay instantly without DOM re-building.
+   * ALWAYS opens focused on the currently playing channel & live show!
    */
   function showGuide() {
     state.guideVisible = true;
     hideOsdBanner();
 
-    // Ensure currently playing channel is visible in filtered category
+    // Ensure currently playing channel is visible in the active category
     if (state.currentChannel) {
-      const filtered = getFilteredChannels();
-      const existsInCurrentCategory = filtered.some(c => c.id === state.currentChannel.id);
+      const visible = getVisibleChannels();
+      const existsInCurrentCategory = visible.some(c => c.id === state.currentChannel.id);
       if (!existsInCurrentCategory) {
-        state.activeCategory = "all";
-        renderCategoryPills();
+        selectCategory("all");
       }
     }
 
-    renderEpgGrid();
+    refreshGuideState();
     dom.guideOverlay.classList.remove("hidden");
 
     // Center horizontal timeline on the LIVE time
@@ -612,16 +726,15 @@
       dom.epgGridContainer.scrollLeft = Math.max(0, nowOffset - 300);
     }
 
-    // Reset inspected time to current time
     state.currentInspectedTimeMs = now.getTime();
 
-    // Focus exactly the currently playing channel row and live show
+    // Focus exactly the currently playing channel row and live show instantly
     if (state.currentChannel) {
-      const channels = getFilteredChannels();
-      const currIdx = channels.findIndex(c => c.id === state.currentChannel.id);
-      focusChannelRow(currIdx !== -1 ? currIdx : 0, true);
+      const visible = getVisibleChannels();
+      const currIdx = visible.findIndex(c => c.id === state.currentChannel.id);
+      focusChannelRow(currIdx !== -1 ? currIdx : 0, true, false);
     } else {
-      focusChannelRow(0, true);
+      focusChannelRow(0, true, false);
     }
   }
 
@@ -651,7 +764,6 @@
     if (dom.osdQuality) dom.osdQuality.textContent = channel.quality;
     if (dom.osdDesc) dom.osdDesc.textContent = channel.description;
 
-    // Query dynamic EPG for current and next show
     const now = new Date();
     const currentShow = EPG_DATA.getCurrentShow(channel.id, now);
     const nextShow = EPG_DATA.getNextShow(channel.id, now);
@@ -681,7 +793,7 @@
     if (state.osdTimer) clearTimeout(state.osdTimer);
   }
 
-  // Fullscreen Channel Zapping (Correct Polarity: ArrowUp = Next, ArrowDown = Prev)
+  // Fullscreen Channel Zapping (Correct Polarity: Next = +1, Prev = -1)
   function switchChannelDelta(delta) {
     const channels = CHANNELS_DATA;
     let currIdx = channels.findIndex(c => c.id === state.currentChannel?.id);
@@ -692,10 +804,9 @@
   }
 
   // =========================================================================
-  // 7. LIVE EVENT POLLER & TOAST NOTIFICATION (REQUIREMENT 3)
+  // 7. LIVE EVENT POLLER & TOAST NOTIFICATION
   // =========================================================================
   function startLiveEventMonitor() {
-    // Check initially and periodically every 60 seconds
     checkEventStreams();
     setInterval(checkEventStreams, 60000);
   }
@@ -705,7 +816,6 @@
 
     eventChannels.forEach(ch => {
       if (ch.type.startsWith("youtube") && ch.youtube?.handle && ch.isEventOnly) {
-        // YouTube live stream detection (Only true live streams have canonical watch?v=)
         const liveCheckUrl = `https://www.youtube.com/${ch.youtube.handle}/live`;
         fetch(liveCheckUrl, { method: "GET", cache: "no-store" })
           .then(res => res.text())
@@ -719,11 +829,13 @@
               setEventChannelLive(ch);
             } else {
               ch.isLiveNow = false;
+              if (state.currentChannel?.id === ch.id) {
+                showEventStandbyScreen(ch);
+              }
             }
           })
           .catch(() => {});
       } else if (ch.type === "hls" && ch.isEventOnly) {
-        // Only check event-only HLS feeds (do not false-alert for 24/7 channels like EbS)
         fetch(ch.hlsUrl, { method: "HEAD", cache: "no-store" })
           .then(res => {
             if (res.ok) {
@@ -742,8 +854,17 @@
   function setEventChannelLive(channel) {
     channel.isLiveNow = true;
 
-    // If already watching or already alerted this session, don't spam
-    if (state.currentChannel?.id === channel.id) return;
+    // If already watching this channel, switch smoothly from standby to live stream
+    if (state.currentChannel?.id === channel.id) {
+      hideEventStandbyScreen();
+      if (channel.type === "hls") {
+        playHls(channel);
+      } else if (channel.type.startsWith("youtube")) {
+        playYouTubeClean(channel);
+      }
+      return;
+    }
+
     if (state.hasNotifiedChannels.has(channel.id)) return;
 
     state.hasNotifiedChannels.add(channel.id);
@@ -791,8 +912,12 @@
       }
     });
 
-    dom.btnCloseGuide.addEventListener("click", () => hideGuide(false));
-    dom.unmutePrompt.addEventListener("click", unlockAudio);
+    if (dom.btnCloseGuide) {
+      dom.btnCloseGuide.addEventListener("click", () => hideGuide(false));
+    }
+    if (dom.unmutePrompt) {
+      dom.unmutePrompt.addEventListener("click", unlockAudio);
+    }
 
     if (dom.liveEventToast) {
       dom.liveEventToast.addEventListener("click", () => {
@@ -805,7 +930,7 @@
   }
 
   /**
-   * REQUIREMENT 5: Remote OK key logic:
+   * 2-Press OK Remote Control Flow:
    * - 1st press: shows OSD Info Banner
    * - 2nd press (while OSD is visible): opens the TV Guide
    * - When in TV Guide: OK tunes to selected channel
@@ -819,9 +944,8 @@
     }
 
     if (state.guideVisible) {
-      // If inside guide, OK selects the highlighted channel
-      const channels = getFilteredChannels();
-      const targetChannel = channels[state.focusedRowIndex];
+      const visible = getVisibleChannels();
+      const targetChannel = visible[state.focusedRowIndex];
       if (targetChannel) {
         playChannel(targetChannel, true);
         hideGuide(false);
@@ -850,7 +974,7 @@
     // Return key: 10009 on Samsung Tizen
     if (keyCode === 10009 || key === "Escape" || key === "Backspace") {
       if (state.guideVisible) {
-        hideGuide(false); // Clean return to video, no OSD banner popup
+        hideGuide(false);
       } else if (state.osdVisible) {
         hideOsdBanner();
       } else if (state.activeLiveEventChannel) {
@@ -860,131 +984,131 @@
       return;
     }
 
+    // Normalized Remote Control Keys
+    const isChannelUp = key === "ChannelUp" || key === "PageUp" || keyCode === 427 || keyCode === 33;
+    const isChannelDown = key === "ChannelDown" || key === "PageDown" || keyCode === 428 || keyCode === 34;
+    const isEnter = key === "Enter" || key === " " || keyCode === 13 || keyCode === 32;
+    const isBlue = key === "b" || key === "B" || keyCode === 406;
+    const isYellow = key === "y" || key === "Y" || keyCode === 405;
+    const isRed = key === "r" || key === "R" || key === "f" || key === "F" || keyCode === 403;
+
     // =======================================================================
     // CASE A: IN TV GUIDE OVERLAY MODE
     // =======================================================================
     if (state.guideVisible) {
-      const channels = getFilteredChannels();
-
-      switch (key) {
-        case "ArrowDown":
-          focusChannelRow(state.focusedRowIndex + 1);
-          e.preventDefault();
-          break;
-
-        case "ArrowUp":
-          focusChannelRow(state.focusedRowIndex - 1);
-          e.preventDefault();
-          break;
-
-        case "ArrowRight":
-          focusProgramCard(state.focusedRowIndex, state.focusedProgIndex + 1);
-          e.preventDefault();
-          break;
-
-        case "ArrowLeft":
-          if (state.focusedProgIndex > 0) {
-            focusProgramCard(state.focusedRowIndex, state.focusedProgIndex - 1);
-          }
-          e.preventDefault();
-          break;
-
-        case "Enter":
-        case " ":
-          handleOkKeyPress();
-          e.preventDefault();
-          break;
-
-        // Channel up/down rocker inside guide -> page 5 channels
-        case "PageDown":
-        case 428: // ChannelDown Rocker
-          focusChannelRow(state.focusedRowIndex + 5);
-          e.preventDefault();
-          break;
-
-        case "PageUp":
-        case 427: // ChannelUp Rocker
-          focusChannelRow(state.focusedRowIndex - 5);
-          e.preventDefault();
-          break;
-
-        // Remote color buttons for quick category switching
-        case "b":
-        case "B":
-        case 406: // Blue button
-          cycleCategory(1);
-          e.preventDefault();
-          break;
-
-        case "y":
-        case "Y":
-        case 405: // Yellow button
-          cycleCategory(-1);
-          e.preventDefault();
-          break;
-
-        default:
-          break;
+      if (isChannelDown) {
+        focusChannelRow(state.focusedRowIndex + 5, true, true);
+        e.preventDefault();
+        return;
       }
+
+      if (isChannelUp) {
+        focusChannelRow(state.focusedRowIndex - 5, true, true);
+        e.preventDefault();
+        return;
+      }
+
+      if (key === "ArrowDown" || keyCode === 40) {
+        focusChannelRow(state.focusedRowIndex + 1, true, true);
+        e.preventDefault();
+        return;
+      }
+
+      if (key === "ArrowUp" || keyCode === 38) {
+        focusChannelRow(state.focusedRowIndex - 1, true, true);
+        e.preventDefault();
+        return;
+      }
+
+      if (key === "ArrowRight" || keyCode === 39) {
+        const visible = getVisibleChannels();
+        const activeCh = visible[state.focusedRowIndex];
+        const activeItem = state.rowDomCache.find(item => item.channel.id === activeCh?.id);
+        focusProgramCard(activeCh, activeItem, state.focusedProgIndex + 1, true, true);
+        e.preventDefault();
+        return;
+      }
+
+      if (key === "ArrowLeft" || keyCode === 37) {
+        if (state.focusedProgIndex > 0) {
+          const visible = getVisibleChannels();
+          const activeCh = visible[state.focusedRowIndex];
+          const activeItem = state.rowDomCache.find(item => item.channel.id === activeCh?.id);
+          focusProgramCard(activeCh, activeItem, state.focusedProgIndex - 1, true, true);
+        }
+        e.preventDefault();
+        return;
+      }
+
+      if (isEnter) {
+        handleOkKeyPress();
+        e.preventDefault();
+        return;
+      }
+
+      if (isBlue) {
+        cycleCategory(1);
+        e.preventDefault();
+        return;
+      }
+
+      if (isYellow) {
+        cycleCategory(-1);
+        e.preventDefault();
+        return;
+      }
+
       return;
     }
 
     // =======================================================================
     // CASE B: IN FULLSCREEN BROADCAST MODE
     // =======================================================================
-    switch (key) {
-      // 1st press = OSD banner, 2nd press = TV Guide!
-      case "Enter":
-      case " ":
-        handleOkKeyPress();
-        e.preventDefault();
-        break;
+    // 1. Samsung Physical Channel Rocker Up & ArrowUp -> NEXT CHANNEL (+1)
+    if (isChannelUp || key === "ArrowUp" || keyCode === 38) {
+      switchChannelDelta(1);
+      e.preventDefault();
+      return;
+    }
 
-      // Direct Guide key on some Samsung remotes
-      case "g":
-      case "G":
-        showGuide();
-        e.preventDefault();
-        break;
+    // 2. Samsung Physical Channel Rocker Down & ArrowDown -> PREVIOUS CHANNEL (-1)
+    if (isChannelDown || key === "ArrowDown" || keyCode === 40) {
+      switchChannelDelta(-1);
+      e.preventDefault();
+      return;
+    }
 
-      // SĂGEATA ÎN SUS -> URMĂTORUL CANAL (+1)
-      case "ArrowUp":
-      case "PageUp":
-      case 427: // ChannelUp Rocker
-        switchChannelDelta(1);
-        e.preventDefault();
-        break;
+    if (isEnter) {
+      handleOkKeyPress();
+      e.preventDefault();
+      return;
+    }
 
-      // SĂGEATA ÎN JOS -> CANALUL ANTERIOR (-1)
-      case "ArrowDown":
-      case "PageDown":
-      case 428: // ChannelDown Rocker
-        switchChannelDelta(-1);
-        e.preventDefault();
-        break;
+    // Direct Guide key on remotes
+    if (key === "g" || key === "G") {
+      showGuide();
+      e.preventDefault();
+      return;
+    }
 
-      // Fullscreen toggle (Red Button / F)
-      case "f":
-      case "F":
-      case 403: // Red Button
-        if (!document.fullscreenElement) {
-          document.documentElement.requestFullscreen().catch(() => {});
-        } else {
-          document.exitFullscreen().catch(() => {});
-        }
-        e.preventDefault();
-        break;
+    // Fullscreen toggle (Red Button / F)
+    if (isRed) {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+      e.preventDefault();
+      return;
+    }
 
-      default:
-        // Numeric direct channel tuning (1 - 9)
-        if (/^[1-9]$/.test(key)) {
-          const numIdx = parseInt(key, 10) - 1;
-          if (CHANNELS_DATA[numIdx]) {
-            playChannel(CHANNELS_DATA[numIdx], true);
-          }
-          e.preventDefault();
-        }
-        break;
+    // Numeric direct channel tuning (1 - 9)
+    if (/^[1-9]$/.test(key)) {
+      const numIdx = parseInt(key, 10) - 1;
+      if (CHANNELS_DATA[numIdx]) {
+        playChannel(CHANNELS_DATA[numIdx], true);
+      }
+      e.preventDefault();
     }
   }
 
@@ -993,10 +1117,7 @@
     let curr = cats.findIndex(c => c.id === state.activeCategory);
     if (curr === -1) curr = 0;
     let next = (curr + delta + cats.length) % cats.length;
-    state.activeCategory = cats[next].id;
-    renderCategoryPills();
-    renderEpgGrid();
-    focusChannelRow(0);
+    selectCategory(cats[next].id);
   }
 
   if (document.readyState === "loading") {

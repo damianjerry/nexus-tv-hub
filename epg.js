@@ -245,6 +245,33 @@ const EPG_DATA = (function () {
         });
       }
 
+      // Check if last show ends before next day, fill remainder of timeline
+      if (schedule.length > 0) {
+        const lastShow = schedule[schedule.length - 1];
+        const nextMorningMs = midnightMs + 28 * 3600 * 1000;
+        if (lastShow.endMs < nextMorningMs) {
+          const gapStartMs = lastShow.endMs;
+          const gapEndMs = nextMorningMs;
+          const dur = Math.round((gapEndMs - gapStartMs) / 60000);
+          const sD = new Date(gapStartMs);
+          const eD = new Date(gapEndMs);
+          schedule.push({
+            id: `${channelId}-${gapStartMs}`,
+            channelId: channelId,
+            title: "Program Nocturn & Retrospectivă",
+            desc: "Sinteze, documentare și reluări din arhiva de noapte a canalului.",
+            durationMinutes: dur,
+            startMs: gapStartMs,
+            endMs: gapEndMs,
+            startDate: sD,
+            endDate: eD,
+            startTimeStr: sD.toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" }),
+            endTimeStr: eD.toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" }),
+            timeSpanStr: `${sD.toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" })} - ${eD.toLocaleTimeString("ro-RO", { hour: "2-digit", minute: "2-digit" })}`
+          });
+        }
+      }
+
       return schedule;
     }
 
@@ -353,7 +380,7 @@ const EPG_DATA = (function () {
   }
 
   const PX_PER_MINUTE = 8;
-  const TIMELINE_HOURS = 6;
+  const TIMELINE_HOURS = 24;
 
   // Generate time intervals for timeline headers (e.g. 30 min slices around current time)
   function getTimelineIntervals(now = new Date(), hoursAhead = TIMELINE_HOURS, intervalMinutes = 30) {

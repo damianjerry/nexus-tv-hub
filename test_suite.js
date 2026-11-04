@@ -146,6 +146,37 @@ runTest("getVisibleShows produces valid layout coordinates for EPG grid", () => 
   });
 });
 
+runTest("Real EPG matches user-reported shows (CineMaraton, CineWow, Aleph News, Nostalgia)", () => {
+  // 1. CineMaraton must have "Tusea și junghiul"
+  const cmShows = REAL_EPG_SCHEDULES["cinemaraton"];
+  assert.ok(cmShows.some(s => s.title.includes("Tusea și junghiul")), "CineMaraton must have 'Tusea și junghiul'");
+  
+  // 2. CineWow must have "Balul de sâmbătă seara" and afternoon shows "Pup-o, mă!"
+  const cwShows = REAL_EPG_SCHEDULES["cinewow"];
+  assert.ok(cwShows.some(s => s.title.includes("Balul de sâmbătă seara")), "CineWow must have 'Balul de sâmbătă seara'");
+  assert.ok(cwShows.some(s => s.title.includes("Pup-o, mă!")), "CineWow must have 'Pup-o, mă!'");
+  
+  // 3. Aleph News must have "Cine te apără"
+  const anShows = REAL_EPG_SCHEDULES["aleph-news"];
+  assert.ok(anShows.some(s => s.title.includes("Cine te apără")), "Aleph News must have 'Cine te apără'");
+  
+  // 4. Nostalgia must have "Alberto Express"
+  const nosShows = REAL_EPG_SCHEDULES["nostalgia"];
+  assert.ok(nosShows.some(s => s.title.includes("Alberto Express")), "Nostalgia must have 'Alberto Express'");
+});
+
+runTest("TIMELINE_HOURS is 24 for full day & evening guide exploration", () => {
+  assert.strictEqual(EPG_DATA.TIMELINE_HOURS, 24, "TIMELINE_HOURS must be 24");
+  const now = new Date();
+  const intervals = EPG_DATA.getTimelineIntervals(now, EPG_DATA.TIMELINE_HOURS, 30);
+  assert.ok(intervals.length >= 48, "Must generate at least 48 intervals for 24 hours");
+});
+
+runTest("epg_real.js exports to window.REAL_EPG_SCHEDULES for browser scope", () => {
+  const epgRealJs = fs.readFileSync(path.join(ROOT_DIR, "epg_real.js"), "utf-8");
+  assert.ok(epgRealJs.includes("window.REAL_EPG_SCHEDULES = REAL_EPG_SCHEDULES"), "Must set window.REAL_EPG_SCHEDULES");
+});
+
 // =========================================================================
 // TEST SUITE 3: UI SIZING & MINIMALIST LAYOUT (Points 3, 4, 5)
 // =========================================================================
@@ -179,6 +210,10 @@ runTest("styles.css: Timeline ruler typography is 1.5rem (24px) bold", () => {
   assert.ok(stylesCss.includes("font-size: 1.5rem;"), "epg-time-slot must have 1.5rem (24px) font");
 });
 
+runTest("styles.css: Purged all GPU-stalling backdrop-filter to ensure 60fps instant transitions", () => {
+  assert.ok(!stylesCss.includes("backdrop-filter"), "Must not contain backdrop-filter");
+});
+
 // =========================================================================
 // TEST SUITE 4: SAMSUNG REMOTE CHANNEL ROCKER MAPPING (Point 6)
 // =========================================================================
@@ -196,14 +231,21 @@ runTest("app.js registers ChannelUp and ChannelDown keys with Tizen", () => {
   assert.ok(appJs.includes("\"ChannelDown\""), "Must register ChannelDown");
 });
 
-runTest("app.js maps ChannelUp (427) to switchChannelDelta(1)", () => {
-  assert.ok(appJs.includes("keyCode === 427") || appJs.includes("427"), "Must handle keyCode 427 for ChannelUp");
-  assert.ok(appJs.includes("switchChannelDelta(1)"), "ChannelUp must advance channel");
+runTest("app.js normalizes ChannelUp (keyCode 427) and ChannelDown (keyCode 428)", () => {
+  assert.ok(appJs.includes("keyCode === 427"), "Must handle keyCode 427");
+  assert.ok(appJs.includes("keyCode === 428"), "Must handle keyCode 428");
+  assert.ok(appJs.includes("isChannelUp"), "Must define isChannelUp");
+  assert.ok(appJs.includes("isChannelDown"), "Must define isChannelDown");
 });
 
-runTest("app.js maps ChannelDown (428) to switchChannelDelta(-1)", () => {
-  assert.ok(appJs.includes("keyCode === 428") || appJs.includes("428"), "Must handle keyCode 428 for ChannelDown");
-  assert.ok(appJs.includes("switchChannelDelta(-1)"), "ChannelDown must decrement channel");
+runTest("app.js maps Channel Rocker in fullscreen to switch channels (+1 / -1)", () => {
+  assert.ok(appJs.includes("isChannelUp || key === \"ArrowUp\""), "ChannelUp/ArrowUp triggers next channel");
+  assert.ok(appJs.includes("isChannelDown || key === \"ArrowDown\""), "ChannelDown/ArrowDown triggers prev channel");
+});
+
+runTest("app.js maps Channel Rocker in TV Guide to page 5 channels (+5 / -5)", () => {
+  assert.ok(appJs.includes("focusChannelRow(state.focusedRowIndex + 5"), "ChannelDown in guide pages down 5 channels");
+  assert.ok(appJs.includes("focusChannelRow(state.focusedRowIndex - 5"), "ChannelUp in guide pages up 5 channels");
 });
 
 // =========================================================================

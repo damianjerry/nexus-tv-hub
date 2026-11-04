@@ -402,7 +402,7 @@
   // =========================================================================
   // 4. EPG FOCUS & INSPECTOR CONTROLLER
   // =========================================================================
-  function focusChannelRow(rowIndex, scroll = true) {
+  function focusChannelRow(rowIndex, scroll = true, smooth = true) {
     const visibleChannels = getVisibleChannels();
     if (visibleChannels.length === 0) return;
 
@@ -417,7 +417,7 @@
       const isTarget = item.channel.id === targetChannel.id;
       item.rowEl.classList.toggle("row-focused", isTarget);
       if (isTarget && scroll) {
-        item.rowEl.scrollIntoView({ behavior: "smooth", block: "center" });
+        item.rowEl.scrollIntoView({ behavior: smooth ? "smooth" : "auto", block: "center" });
       }
     });
 
@@ -444,10 +444,10 @@
 
     if (targetProgIdx === -1) targetProgIdx = 0;
 
-    focusProgramCard(targetChannel, activeItem, targetProgIdx, scroll);
+    focusProgramCard(targetChannel, activeItem, targetProgIdx, scroll, smooth);
   }
 
-  function focusProgramCard(channel, rowItem, progIdx, scroll = true) {
+  function focusProgramCard(channel, rowItem, progIdx, scroll = true, smooth = true) {
     if (!rowItem || rowItem.cardEls.length === 0) return;
 
     if (progIdx < 0) progIdx = 0;
@@ -473,9 +473,9 @@
           const viewRight = container.scrollLeft + container.clientWidth - 40;
 
           if (cardLeft < viewLeft) {
-            container.scrollTo({ left: Math.max(0, cardLeft - 350), behavior: "smooth" });
+            container.scrollTo({ left: Math.max(0, cardLeft - 350), behavior: smooth ? "smooth" : "auto" });
           } else if (cardRight > viewRight) {
-            container.scrollTo({ left: cardRight - container.clientWidth + 80, behavior: "smooth" });
+            container.scrollTo({ left: cardRight - container.clientWidth + 80, behavior: smooth ? "smooth" : "auto" });
           }
         }
 
@@ -728,13 +728,13 @@
 
     state.currentInspectedTimeMs = now.getTime();
 
-    // Focus exactly the currently playing channel row and live show
+    // Focus exactly the currently playing channel row and live show instantly
     if (state.currentChannel) {
       const visible = getVisibleChannels();
       const currIdx = visible.findIndex(c => c.id === state.currentChannel.id);
-      focusChannelRow(currIdx !== -1 ? currIdx : 0, true);
+      focusChannelRow(currIdx !== -1 ? currIdx : 0, true, false);
     } else {
-      focusChannelRow(0, true);
+      focusChannelRow(0, true, false);
     }
   }
 
@@ -984,80 +984,80 @@
       return;
     }
 
+    // Normalized Remote Control Keys
+    const isChannelUp = key === "ChannelUp" || key === "PageUp" || keyCode === 427 || keyCode === 33;
+    const isChannelDown = key === "ChannelDown" || key === "PageDown" || keyCode === 428 || keyCode === 34;
+    const isEnter = key === "Enter" || key === " " || keyCode === 13 || keyCode === 32;
+    const isBlue = key === "b" || key === "B" || keyCode === 406;
+    const isYellow = key === "y" || key === "Y" || keyCode === 405;
+    const isRed = key === "r" || key === "R" || key === "f" || key === "F" || keyCode === 403;
+
     // =======================================================================
     // CASE A: IN TV GUIDE OVERLAY MODE
     // =======================================================================
     if (state.guideVisible) {
-      const visible = getVisibleChannels();
+      if (isChannelDown) {
+        focusChannelRow(state.focusedRowIndex + 5, true, true);
+        e.preventDefault();
+        return;
+      }
 
-      switch (key) {
-        case "ArrowDown":
-          focusChannelRow(state.focusedRowIndex + 1);
-          e.preventDefault();
-          break;
+      if (isChannelUp) {
+        focusChannelRow(state.focusedRowIndex - 5, true, true);
+        e.preventDefault();
+        return;
+      }
 
-        case "ArrowUp":
-          focusChannelRow(state.focusedRowIndex - 1);
-          e.preventDefault();
-          break;
+      if (key === "ArrowDown" || keyCode === 40) {
+        focusChannelRow(state.focusedRowIndex + 1, true, true);
+        e.preventDefault();
+        return;
+      }
 
-        case "ArrowRight": {
+      if (key === "ArrowUp" || keyCode === 38) {
+        focusChannelRow(state.focusedRowIndex - 1, true, true);
+        e.preventDefault();
+        return;
+      }
+
+      if (key === "ArrowRight" || keyCode === 39) {
+        const visible = getVisibleChannels();
+        const activeCh = visible[state.focusedRowIndex];
+        const activeItem = state.rowDomCache.find(item => item.channel.id === activeCh?.id);
+        focusProgramCard(activeCh, activeItem, state.focusedProgIndex + 1, true, true);
+        e.preventDefault();
+        return;
+      }
+
+      if (key === "ArrowLeft" || keyCode === 37) {
+        if (state.focusedProgIndex > 0) {
+          const visible = getVisibleChannels();
           const activeCh = visible[state.focusedRowIndex];
           const activeItem = state.rowDomCache.find(item => item.channel.id === activeCh?.id);
-          focusProgramCard(activeCh, activeItem, state.focusedProgIndex + 1);
-          e.preventDefault();
-          break;
+          focusProgramCard(activeCh, activeItem, state.focusedProgIndex - 1, true, true);
         }
-
-        case "ArrowLeft": {
-          if (state.focusedProgIndex > 0) {
-            const activeCh = visible[state.focusedRowIndex];
-            const activeItem = state.rowDomCache.find(item => item.channel.id === activeCh?.id);
-            focusProgramCard(activeCh, activeItem, state.focusedProgIndex - 1);
-          }
-          e.preventDefault();
-          break;
-        }
-
-        case "Enter":
-        case " ":
-          handleOkKeyPress();
-          e.preventDefault();
-          break;
-
-        // Channel Rocker inside TV Guide -> Page 5 channels
-        case "PageDown":
-        case "ChannelDown":
-        case 428:
-          focusChannelRow(state.focusedRowIndex + 5);
-          e.preventDefault();
-          break;
-
-        case "PageUp":
-        case "ChannelUp":
-        case 427:
-          focusChannelRow(state.focusedRowIndex - 5);
-          e.preventDefault();
-          break;
-
-        // Color buttons for quick category switching
-        case "b":
-        case "B":
-        case 406: // Blue button
-          cycleCategory(1);
-          e.preventDefault();
-          break;
-
-        case "y":
-        case "Y":
-        case 405: // Yellow button
-          cycleCategory(-1);
-          e.preventDefault();
-          break;
-
-        default:
-          break;
+        e.preventDefault();
+        return;
       }
+
+      if (isEnter) {
+        handleOkKeyPress();
+        e.preventDefault();
+        return;
+      }
+
+      if (isBlue) {
+        cycleCategory(1);
+        e.preventDefault();
+        return;
+      }
+
+      if (isYellow) {
+        cycleCategory(-1);
+        e.preventDefault();
+        return;
+      }
+
       return;
     }
 
@@ -1065,56 +1065,50 @@
     // CASE B: IN FULLSCREEN BROADCAST MODE
     // =======================================================================
     // 1. Samsung Physical Channel Rocker Up & ArrowUp -> NEXT CHANNEL (+1)
-    if (key === "ChannelUp" || keyCode === 427 || key === "ArrowUp") {
+    if (isChannelUp || key === "ArrowUp" || keyCode === 38) {
       switchChannelDelta(1);
       e.preventDefault();
       return;
     }
 
     // 2. Samsung Physical Channel Rocker Down & ArrowDown -> PREVIOUS CHANNEL (-1)
-    if (key === "ChannelDown" || keyCode === 428 || key === "ArrowDown") {
+    if (isChannelDown || key === "ArrowDown" || keyCode === 40) {
       switchChannelDelta(-1);
       e.preventDefault();
       return;
     }
 
-    switch (key) {
-      // 1st press = OSD banner, 2nd press = TV Guide!
-      case "Enter":
-      case " ":
-        handleOkKeyPress();
-        e.preventDefault();
-        break;
+    if (isEnter) {
+      handleOkKeyPress();
+      e.preventDefault();
+      return;
+    }
 
-      // Direct Guide key on remotes
-      case "g":
-      case "G":
-        showGuide();
-        e.preventDefault();
-        break;
+    // Direct Guide key on remotes
+    if (key === "g" || key === "G") {
+      showGuide();
+      e.preventDefault();
+      return;
+    }
 
-      // Fullscreen toggle (Red Button / F)
-      case "f":
-      case "F":
-      case 403:
-        if (!document.fullscreenElement) {
-          document.documentElement.requestFullscreen().catch(() => {});
-        } else {
-          document.exitFullscreen().catch(() => {});
-        }
-        e.preventDefault();
-        break;
+    // Fullscreen toggle (Red Button / F)
+    if (isRed) {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+      e.preventDefault();
+      return;
+    }
 
-      default:
-        // Numeric direct channel tuning (1 - 9)
-        if (/^[1-9]$/.test(key)) {
-          const numIdx = parseInt(key, 10) - 1;
-          if (CHANNELS_DATA[numIdx]) {
-            playChannel(CHANNELS_DATA[numIdx], true);
-          }
-          e.preventDefault();
-        }
-        break;
+    // Numeric direct channel tuning (1 - 9)
+    if (/^[1-9]$/.test(key)) {
+      const numIdx = parseInt(key, 10) - 1;
+      if (CHANNELS_DATA[numIdx]) {
+        playChannel(CHANNELS_DATA[numIdx], true);
+      }
+      e.preventDefault();
     }
   }
 
