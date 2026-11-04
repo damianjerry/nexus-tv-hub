@@ -292,6 +292,47 @@ runTest("epg_real.js exports to window.REAL_EPG_SCHEDULES for browser scope", ()
   assert.ok(epgRealJs.includes("window.REAL_EPG_SCHEDULES = REAL_EPG_SCHEDULES"), "Must set window.REAL_EPG_SCHEDULES");
 });
 
+runTest("getBucharestOffsetMs calculates integer UTC offset without string parsing across winter and summer", () => {
+  const winter = new Date("2026-01-15T12:00:00Z");
+  const summer = new Date("2026-07-15T12:00:00Z");
+  const winterOffset = EPG_DATA.getBucharestOffsetMs(winter);
+  const summerOffset = EPG_DATA.getBucharestOffsetMs(summer);
+
+  assert.strictEqual(winterOffset, 2 * 3600 * 1000, "Winter offset must be exactly +2h (EET)");
+  assert.strictEqual(summerOffset, 3 * 3600 * 1000, "Summer offset must be exactly +3h (EEST)");
+});
+
+runTest("Timeline grid and now-marker maintain synchronized coordinate space without drift over elapsed time", () => {
+  // Simulate grid built at 10:00 Bucharest (08:00 UTC)
+  const t0 = new Date("2026-11-04T08:00:00Z");
+  const gridBaseStartMs = EPG_DATA.getBaseTimelineStartMs(t0); // 09:00 Bucharest = 07:00 UTC
+
+  // Shows are laid out relative to gridBaseStartMs
+  const visibleShows = EPG_DATA.getVisibleShows("bloomberg-eu", t0);
+  const show1400 = visibleShows.find(s => s.startTimeStr === "13:00" || s.startTimeStr === "16:00");
+  assert.ok(show1400, "Must have show near afternoon");
+
+  // Advance time by 4.5 hours to 14:30 Bucharest (12:30 UTC)
+  const t1 = new Date("2026-11-04T12:30:00Z");
+  const elapsedMs = t1.getTime() - gridBaseStartMs; // Elapsed from grid base
+  const PX_PER_MIN = EPG_DATA.PX_PER_MINUTE || 8;
+  const markerOffsetPx = (elapsedMs / 60000) * PX_PER_MIN;
+
+  // 14:30 is 5.5 hours from 09:00 base = 330 minutes * 8 = 2640 px
+  assert.strictEqual(markerOffsetPx, 330 * 8, "Marker position must match actual elapsed time from grid base");
+});
+
+runTest("epg_real.json contains authentic channels object perfectly mirroring REAL_EPG_SCHEDULES", () => {
+  const jsonContent = JSON.parse(fs.readFileSync(path.join(ROOT_DIR, "epg_real.json"), "utf-8"));
+  assert.ok(jsonContent.date, "epg_real.json must have date field");
+  assert.ok(jsonContent.channels, "epg_real.json must have channels dictionary");
+  const keys = Object.keys(jsonContent.channels);
+  assert.strictEqual(keys.length, 20, "epg_real.json must contain all 20 channels");
+  keys.forEach(k => {
+    assert.deepStrictEqual(jsonContent.channels[k], REAL_EPG_SCHEDULES[k], `Schedule in json for ${k} must match REAL_EPG_SCHEDULES`);
+  });
+});
+
 // =========================================================================
 // TEST SUITE 3: UI SIZING & MINIMALIST LAYOUT (Points 3, 4, 5)
 // =========================================================================

@@ -147,16 +147,6 @@ const EPG_DATA = (function () {
   };
 
   /**
-   * Helper: calculates Bucharest offset in milliseconds for a given date.
-   * Romania operates on UTC+2 in winter (EET) and UTC+3 in summer (EEST).
-   */
-  function getBucharestOffsetMs(date = new Date()) {
-    const utcDate = new Date(date.toLocaleString("en-US", { timeZone: "UTC" }));
-    const roDate = new Date(date.toLocaleString("en-US", { timeZone: "Europe/Bucharest" }));
-    return roDate.getTime() - utcDate.getTime();
-  }
-
-  /**
    * Helper: extracts calendar date parts in Europe/Bucharest timezone.
    */
   function getBucharestDateParts(date = new Date()) {
@@ -172,6 +162,18 @@ const EPG_DATA = (function () {
       if (type !== "literal") p[type] = parseInt(value, 10);
     }
     return p;
+  }
+
+  /**
+   * Helper: calculates Bucharest offset in milliseconds for a given date.
+   * Romania operates on UTC+2 in winter (EET) and UTC+3 in summer (EEST).
+   * Uses pure integer UTC timestamp arithmetic without locale string parsing.
+   */
+  function getBucharestOffsetMs(date = new Date()) {
+    const p = getBucharestDateParts(date);
+    const bucharestUtcVal = Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second || 0);
+    const dateUtcVal = Math.floor(date.getTime() / 1000) * 1000;
+    return bucharestUtcVal - dateUtcVal;
   }
 
   /**

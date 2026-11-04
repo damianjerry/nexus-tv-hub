@@ -31,6 +31,7 @@
     activeLiveEventChannel: null,
     hasNotifiedChannels: new Set(),
     timelineBaseHour: null,
+    gridBaseStartMs: null,
     currentInspectedTimeMs: null,
     rowDomCache: [] // Array of { channel, rowEl, trackEl, cardEls }
   };
@@ -242,12 +243,12 @@
   // =========================================================================
   // 3. ZERO-LAG LINEAR EPG TIMELINE GRID (RENDER ONCE & CACHE)
   // =========================================================================
-  function buildEpgGridOnce() {
+  function buildEpgGrid(now = new Date()) {
     if (!dom.epgChannelsRows || !dom.epgTimeRuler) return;
 
-    const now = new Date();
     const startHour = Math.max(0, (EPG_DATA.getBucharestHour ? EPG_DATA.getBucharestHour(now) : now.getHours()) - 1);
     state.timelineBaseHour = startHour;
+    state.gridBaseStartMs = EPG_DATA.getBaseTimelineStartMs ? EPG_DATA.getBaseTimelineStartMs(now) : new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHour, 0, 0, 0).getTime();
 
     // 1. Render Timeline Ruler
     const intervals = EPG_DATA.getTimelineIntervals(now, EPG_DATA.TIMELINE_HOURS, 30);
@@ -359,9 +360,11 @@
     updateNowMarkerPosition(now);
   }
 
+  const buildEpgGridOnce = buildEpgGrid;
+
   function updateNowMarkerPosition(now) {
     if (!dom.epgNowMarker) return;
-    const baseTimelineStartMs = EPG_DATA.getBaseTimelineStartMs ? EPG_DATA.getBaseTimelineStartMs(now) : new Date(now.getFullYear(), now.getMonth(), now.getDate(), state.timelineBaseHour || 0, 0, 0, 0).getTime();
+    const baseTimelineStartMs = state.gridBaseStartMs || (EPG_DATA.getBaseTimelineStartMs ? EPG_DATA.getBaseTimelineStartMs(now) : new Date(now.getFullYear(), now.getMonth(), now.getDate(), state.timelineBaseHour || 0, 0, 0, 0).getTime());
     const PX_PER_MIN = EPG_DATA.PX_PER_MINUTE || 8;
 
     const elapsedMs = Math.max(0, now.getTime() - baseTimelineStartMs);
@@ -696,12 +699,21 @@
   // =========================================================================
 
   /**
-   * Opens TV Guide overlay instantly without DOM re-building.
+   * Opens TV Guide overlay instantly with cached DOM.
+   * Auto-refreshes grid if timeline base has shifted by >= 1 hour.
    * ALWAYS opens focused on the currently playing channel & live show!
    */
   function showGuide() {
     state.guideVisible = true;
     hideOsdBanner();
+
+    const now = new Date();
+    const currentBaseMs = EPG_DATA.getBaseTimelineStartMs ? EPG_DATA.getBaseTimelineStartMs(now) : 0;
+
+    // Refresh grid if never built or if timeline base has shifted by 1 hour or more
+    if (!state.gridBaseStartMs || Math.abs(currentBaseMs - state.gridBaseStartMs) >= 3600 * 1000) {
+      buildEpgGrid(now);
+    }
 
     // Ensure currently playing channel is visible in the active category
     if (state.currentChannel) {
@@ -715,9 +727,8 @@
     refreshGuideState();
     dom.guideOverlay.classList.remove("hidden");
 
-    // Center horizontal timeline on the LIVE time
-    const now = new Date();
-    const baseTimelineStartMs = EPG_DATA.getBaseTimelineStartMs ? EPG_DATA.getBaseTimelineStartMs(now) : new Date(now.getFullYear(), now.getMonth(), now.getDate(), Math.max(0, now.getHours() - 1), 0, 0, 0).getTime();
+    // Center horizontal timeline on the LIVE time relative to grid base
+    const baseTimelineStartMs = state.gridBaseStartMs || currentBaseMs;
     const PX_PER_MIN = EPG_DATA.PX_PER_MINUTE || 8;
     const nowOffset = ((now.getTime() - baseTimelineStartMs) / 60000) * PX_PER_MIN;
     if (dom.epgGridContainer) {
