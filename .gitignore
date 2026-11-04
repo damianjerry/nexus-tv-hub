@@ -1,0 +1,11 @@
+# Build Artifacts
+*.wgt
+.manifest.tmp
+author-signature.xml
+signature1.xml
+*.log
+
+# System & Node
+.DS_Store
+node_modules/
+dist/

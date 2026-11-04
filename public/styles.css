@@ -1,0 +1,629 @@
+/* ==========================================================================
+   NEXUS TV // Smart TV Guide & Linear Player
+   Optimized for 50-Inch Samsung The Frame 4K (Tizen 6.5)
+   10-Foot UI Viewing Distance (2.5 - 3.5m)
+   ========================================================================== */
+
+:root {
+  --bg-dark: #07090e;
+  --bg-overlay: rgba(10, 13, 20, 0.90);
+  --bg-surface: rgba(22, 28, 42, 0.75);
+  --bg-surface-hover: rgba(35, 45, 68, 0.9);
+  
+  --border-subtle: rgba(255, 255, 255, 0.10);
+  --border-active: #f59e0b;
+  --border-active-glow: rgba(245, 158, 11, 0.45);
+  
+  --text-main: #f8fafc;
+  --text-dim: #cbd5e1;
+  --text-muted: #94a3b8;
+  
+  --accent-gold: #f59e0b;
+  --accent-gold-dark: #d97706;
+  --accent-emerald: #10b981;
+  --accent-blue: #3b82f6;
+  --accent-rose: #f43f5e;
+  
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+body, html {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #000000;
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ==========================================================================
+   STAGE 1: FULLSCREEN VIDEO PLAYER
+   ========================================================================== */
+#video-stage {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  background: #000;
+  overflow: hidden;
+}
+
+#hls-video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+
+/* YouTube Viewport Cropping Engine */
+.yt-crop-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+}
+
+.yt-crop-container iframe {
+  position: absolute;
+  top: -65px;
+  left: -2px;
+  width: calc(100% + 4px);
+  height: calc(100% + 130px);
+  border: none;
+  pointer-events: none;
+}
+
+#web-embed-container {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #fff;
+}
+
+.unmute-banner {
+  position: absolute;
+  top: 32px;
+  right: 36px;
+  z-index: 50;
+  background: rgba(245, 158, 11, 0.95);
+  color: #080a0f;
+  font-weight: 800;
+  font-size: 1.05rem;
+  padding: 12px 24px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.8);
+}
+
+/* ==========================================================================
+   STAGE 2: TV GUIDE OVERLAY (EPG GLASS ARCHITECTURE - 10-FOOT SCALE)
+   ========================================================================== */
+.tv-guide-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 100;
+  background: rgba(8, 11, 18, 0.86);
+  backdrop-filter: blur(32px) brightness(0.6);
+  -webkit-backdrop-filter: blur(32px) brightness(0.6);
+  display: flex;
+  flex-direction: column;
+  padding: 36px 54px;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1), transform 280ms cubic-bezier(0.16, 1, 0.3, 1), visibility 280ms;
+}
+
+.tv-guide-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(1.02);
+  pointer-events: none;
+}
+
+/* Guide Header */
+.guide-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 28px;
+}
+
+.guide-brand {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.guide-logo-box {
+  width: 54px;
+  height: 54px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-gold);
+  color: #080a0f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 1.5rem;
+  box-shadow: 0 4px 18px var(--border-active-glow);
+}
+
+.guide-brand-text h1 {
+  font-size: 1.8rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.guide-brand-text h1 span.guide-tag {
+  font-size: 0.8rem;
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: rgba(245, 158, 11, 0.2);
+  color: var(--accent-gold);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  font-weight: 800;
+}
+
+.guide-brand-text p {
+  font-size: 1.05rem;
+  color: var(--text-dim);
+  font-weight: 500;
+}
+
+.guide-header-right {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.guide-clock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.guide-clock-time {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 0.04em;
+}
+
+.guide-clock-date {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+}
+
+.guide-btn-close {
+  padding: 12px 22px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 160ms ease;
+}
+
+.guide-btn-close:hover,
+.guide-btn-close:focus {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: #fff;
+}
+
+/* Guide Main Body */
+.guide-main {
+  display: grid;
+  grid-template-columns: 280px 1fr 380px;
+  gap: 36px;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+/* Column 1: Categories Sidebar */
+.guide-categories {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.category-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-radius: var(--radius-md);
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-dim);
+  font-size: 1.15rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 160ms ease;
+  text-align: left;
+}
+
+.category-row:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+.category-row.active {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: rgba(245, 158, 11, 0.5);
+  color: var(--accent-gold);
+  font-weight: 800;
+}
+
+.category-row:focus-visible,
+.category-row.focused {
+  outline: none;
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 0 3px var(--accent-gold);
+  color: #fff;
+}
+
+/* Column 2: Channel Rows (EPG Table List - Large 10-Foot Scale) */
+.guide-channels-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  padding-right: 12px;
+}
+
+.channel-row {
+  display: grid;
+  grid-template-columns: 68px 52px 1fr 180px 140px;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 24px;
+  min-height: 84px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  outline: none;
+  transition: transform 160ms cubic-bezier(0.16, 1, 0.3, 1), background-color 160ms ease, border-color 160ms ease;
+}
+
+.channel-row:hover {
+  background: var(--bg-surface-hover);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.channel-row:focus,
+.channel-row.focused {
+  background: rgba(35, 45, 68, 0.98);
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 0 3.5px var(--accent-gold), 0 10px 30px var(--border-active-glow);
+  transform: translateX(6px) scale(1.015);
+}
+
+.channel-row.current-playing {
+  border-left: 6px solid var(--accent-emerald);
+}
+
+.row-num {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--accent-gold);
+}
+
+.row-badge {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 1.05rem;
+  color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.row-title-box {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  overflow: hidden;
+}
+
+.row-name {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.row-topic {
+  font-size: 1rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.row-tag {
+  font-size: 0.85rem;
+  font-weight: 800;
+  padding: 5px 12px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-dim);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.row-quality {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  font-weight: 700;
+  justify-content: flex-end;
+}
+
+.row-quality-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-emerald);
+  box-shadow: 0 0 8px var(--accent-emerald);
+}
+
+/* Column 3: Live Preview & Editorial Details Panel */
+.guide-preview-panel {
+  display: flex;
+  flex-direction: column;
+  background: rgba(14, 18, 28, 0.75);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  overflow-y: auto;
+}
+
+.preview-badge-large {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 1.9rem;
+  color: #fff;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+}
+
+.preview-channel-name {
+  font-size: 1.65rem;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.25;
+  margin-bottom: 6px;
+}
+
+.preview-category-tag {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--accent-gold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.preview-desc {
+  font-size: 1.1rem;
+  color: var(--text-dim);
+  line-height: 1.55;
+  margin-bottom: 28px;
+}
+
+.preview-meta-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 22px;
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+.preview-meta-item {
+  display: flex;
+  justify-content: space-between;
+}
+
+.preview-meta-item strong {
+  color: #fff;
+  font-weight: 700;
+}
+
+/* Guide Footer Hints */
+.guide-footer-hints {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-subtle);
+  margin-top: 24px;
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+.hints-group {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.hint-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.key-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  font-weight: 800;
+  color: #fff;
+  font-size: 0.9rem;
+}
+
+/* ==========================================================================
+   STAGE 3: QUICK OSD BANNER (FULLSCREEN BROADCAST - LARGE 10-FOOT SCALE)
+   ========================================================================== */
+.osd-channel-banner {
+  position: absolute;
+  bottom: 48px;
+  left: 50%;
+  transform: translateX(-50%) translateY(0);
+  z-index: 80;
+  width: 92%;
+  max-width: 1400px;
+  min-height: 120px;
+  background: rgba(8, 11, 18, 0.92);
+  border: 1.5px solid rgba(255, 255, 255, 0.18);
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  padding: 24px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+  transition: opacity 300ms ease, transform 300ms ease, visibility 300ms;
+}
+
+.osd-channel-banner.hidden {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) translateY(30px);
+  pointer-events: none;
+}
+
+.osd-left {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.osd-num {
+  font-size: 3.4rem;
+  font-weight: 900;
+  color: var(--accent-gold);
+  line-height: 1;
+}
+
+.osd-badge {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 1.35rem;
+  color: #fff;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6);
+}
+
+.osd-info h2 {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+
+.osd-info p {
+  font-size: 1.15rem;
+  color: var(--text-dim);
+  font-weight: 500;
+}
+
+.osd-right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.osd-tag {
+  font-size: 0.95rem;
+  font-weight: 800;
+  padding: 6px 14px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--border-subtle);
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.osd-quality {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-dim);
+}
+
+.osd-clock {
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #fff;
+  border-left: 1.5px solid var(--border-subtle);
+  padding-left: 24px;
+}

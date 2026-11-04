@@ -1,0 +1,21 @@
+{
+  "name": "nexus-tv-hub",
+  "version": "1.0.0",
+  "description": "Information, Finance, Public Policy & Culture TV Hub for Samsung The Frame & Web Browsers",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build:wgt": "bash build-wgt.sh"
+  },
+  "keywords": [
+    "tizen",
+    "samsung-tv",
+    "the-frame",
+    "iptv",
+    "finance",
+    "hls",
+    "youtube-live"
+  ],
+  "author": "NEXUS",
+  "license": "MIT"
+}

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>NEXUS TV // Smart TV Guide</title>
+  
+  <link rel="icon" type="image/png" href="icon.png">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ======================================================================
+       STAGE 1: FULLSCREEN VIDEO PLAYER (RUNS CONTINUOUSLY BEHIND)
+       ====================================================================== -->
+  <div id="video-stage">
+    <!-- Native / HLS.js Player -->
+    <video id="hls-video" playsinline preload="auto"></video>
+    
+    <!-- YouTube Live Stream Viewport Crop Engine (Crops out title/share/status bar) -->
+    <div class="yt-crop-container" id="yt-crop-stage" style="display: none;">
+      <div id="yt-player-target"></div>
+    </div>
+    
+    <!-- Web Embed Stage -->
+    <iframe id="web-embed-container" style="display: none;" sandbox="allow-scripts allow-same-origin allow-presentation allow-forms"></iframe>
+
+    <!-- Audio Unmute Prompt (for browsers restricting unmuted autoplay) -->
+    <div class="unmute-banner" id="unmute-prompt" style="display: none;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+      <span>Apasă orice tastă pentru sunet</span>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       STAGE 2: TV GUIDE OVERLAY (EPG GLASS ARCHITECTURE)
+       ====================================================================== -->
+  <div class="tv-guide-overlay" id="guide-overlay" role="dialog" aria-modal="true">
+    
+    <!-- Header -->
+    <header class="guide-header">
+      <div class="guide-brand">
+        <div class="guide-logo-box">N</div>
+        <div class="guide-brand-text">
+          <h1>NEXUS // TV GUIDE <span class="guide-tag">THE FRAME</span></h1>
+          <p>Grilă dedicată: Finanțe, Economie, Instituții Publice, TVR & Cultură</p>
+        </div>
+      </div>
+
+      <div class="guide-header-right">
+        <div class="guide-clock">
+          <span class="guide-clock-time tabular-nums" id="guide-clock">--:--:--</span>
+          <span class="guide-clock-date" id="guide-date">București</span>
+        </div>
+        <button class="guide-btn-close" id="btn-close-guide" title="Închide ghidul (ESC / Return)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          <span>Urmărește TV (Return / ESC)</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content: Categories Sidebar | Channel Rows | Live Details Preview -->
+    <div class="guide-main">
+      
+      <!-- Column 1: Categories -->
+      <nav class="guide-categories" id="guide-categories" role="tablist">
+        <!-- Dynamically rendered categories -->
+      </nav>
+
+      <!-- Column 2: Channel Rows (EPG Table List) -->
+      <section class="guide-channels-list" id="guide-channels-list" role="region">
+        <!-- Dynamically rendered channel rows -->
+      </section>
+
+      <!-- Column 3: Live Preview & Editorial Details Panel -->
+      <aside class="guide-preview-panel" id="guide-preview-panel">
+        <div class="preview-badge-large" id="prev-badge">BBG</div>
+        <h2 class="preview-channel-name" id="prev-name">Bloomberg Television</h2>
+        <div class="preview-category-tag" id="prev-cat">BURSĂ & FINANȚE</div>
+        <p class="preview-desc" id="prev-desc">Piețe internaționale de capital, earnings, decizii FED/BCE și analize macroeconomice în direct.</p>
+        
+        <div class="preview-meta-list">
+          <div class="preview-meta-item">
+            <span>Număr Canal:</span>
+            <strong class="tabular-nums" id="prev-num">CH 01</strong>
+          </div>
+          <div class="preview-meta-item">
+            <span>Calitate Stream:</span>
+            <strong class="tabular-nums" id="prev-quality">1080p HLS Direct</strong>
+          </div>
+          <div class="preview-meta-item">
+            <span>Protocol:</span>
+            <strong id="prev-protocol">HLS Direct CDN</strong>
+          </div>
+          <div class="preview-meta-item">
+            <span>Stare Sursă:</span>
+            <strong style="color: var(--accent-emerald);">● VERIFICAT ACTIV</strong>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+
+    <!-- Guide Footer Navigation Hints -->
+    <footer class="guide-footer-hints">
+      <div class="hints-group">
+        <span class="hint-pill"><span class="key-badge">▲ ▼</span> Navigare Canale</span>
+        <span class="hint-pill"><span class="key-badge">◄ ►</span> Comutare Categorii</span>
+        <span class="hint-pill"><span class="key-badge">OK / Enter</span> Deschide Canal</span>
+        <span class="hint-pill"><span class="key-badge">Return / ESC</span> Ascunde Ghidul</span>
+      </div>
+      <div class="hints-group">
+        <span class="hint-pill"><span class="key-badge">CH+ / CH-</span> Schimbare Rapidă</span>
+        <span class="hint-pill"><span class="key-badge">1 - 9</span> Săritură Directă Canal</span>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- ======================================================================
+       STAGE 3: QUICK OSD BANNER (FULLSCREEN BROADCAST - 10-FOOT SCALE)
+       ====================================================================== -->
+  <div class="osd-channel-banner hidden" id="osd-banner">
+    <div class="osd-left">
+      <span class="osd-num tabular-nums" id="osd-num">01</span>
+      <div class="osd-badge" id="osd-badge">BBG</div>
+      <div class="osd-info">
+        <h2 id="osd-name">Bloomberg Television</h2>
+        <p id="osd-desc">Piețe internaționale de capital, decizii FED & burse globale</p>
+      </div>
+    </div>
+
+    <div class="osd-right">
+      <span class="osd-tag" id="osd-tag">FINANȚE</span>
+      <div class="osd-quality">
+        <span class="row-quality-dot"></span>
+        <span class="tabular-nums" id="osd-quality">1080p Live</span>
+      </div>
+      <div class="osd-clock tabular-nums" id="osd-clock">--:--:--</div>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       SCRIPTS: 100% LOCAL STATIC ENGINE (ZERO EXTERNAL SERVER DEPENDENCY)
+       ====================================================================== -->
+  <script src="hls.min.js"></script>
+  <script src="channels.js"></script>
+  <script src="app.js"></script>
+
+</body>
+</html>
