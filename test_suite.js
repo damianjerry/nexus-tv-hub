@@ -318,8 +318,8 @@ runTest("Timeline grid and now-marker maintain synchronized coordinate space wit
   const PX_PER_MIN = EPG_DATA.PX_PER_MINUTE || 8;
   const markerOffsetPx = (elapsedMs / 60000) * PX_PER_MIN;
 
-  // 14:30 is 5.5 hours from 09:00 base = 330 minutes * 8 = 2640 px
-  assert.strictEqual(markerOffsetPx, 330 * 8, "Marker position must match actual elapsed time from grid base");
+  // 14:30 is 5.5 hours from 09:00 base = 330 minutes * 10 = 3300 px
+  assert.strictEqual(markerOffsetPx, 330 * 10, "Marker position must match actual elapsed time from grid base");
 });
 
 runTest("epg_real.json contains authentic channels object perfectly mirroring REAL_EPG_SCHEDULES", () => {
@@ -354,12 +354,12 @@ runTest("index.html: High-design official standby screen exists in stage", () =>
   assert.ok(indexHtml.includes("standby-portal"), "standby-portal must exist");
 });
 
-runTest("styles.css: 10-foot scale row height is 100px", () => {
-  assert.ok(stylesCss.includes("height: 100px;"), "epg-channel-row must have 100px height");
+runTest("styles.css: 10-foot scale row height is 124px for 5 visible channels", () => {
+  assert.ok(stylesCss.includes("height: 124px;"), "epg-channel-row must have 124px height");
 });
 
-runTest("styles.css: Channel title typography is scaled for 10-foot viewing (1.75rem)", () => {
-  assert.ok(stylesCss.includes("font-size: 1.75rem;"), "epg-ch-name must have 1.75rem (28px+) font");
+runTest("styles.css: Channel title typography is scaled for 10-foot viewing (1.45rem)", () => {
+  assert.ok(stylesCss.includes("font-size: 1.45rem;"), "epg-ch-name must have 1.45rem font");
 });
 
 runTest("styles.css: Timeline ruler typography is 1.5rem (24px) bold", () => {

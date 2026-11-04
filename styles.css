@@ -752,9 +752,9 @@ body, html {
 }
 
 .epg-channel-header-col {
-  width: 240px;
+  width: 330px;
   flex-shrink: 0;
-  padding-left: 12px;
+  padding-left: 14px;
   font-size: 0.8125rem;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -770,7 +770,7 @@ body, html {
 }
 
 .epg-time-slot {
-  width: 240px;
+  width: 300px;
   flex-shrink: 0;
   padding-left: 14px;
   border-left: 1px solid var(--border-subtle);
@@ -813,7 +813,7 @@ body, html {
   box-shadow: 0 0 6px rgba(255, 255, 255, 0.4);
 }
 
-/* Channel Rows Body */
+/* Channel Rows Body (5 Channels Visible at Once) */
 .epg-channels-body {
   display: flex;
   flex-direction: column;
@@ -822,12 +822,12 @@ body, html {
   position: relative;
 }
 
-/* 10-Foot Scale Channel Row */
+/* 10-Foot Scale Channel Row (124px height for 5 visible channels) */
 .epg-channel-row {
   display: flex;
   align-items: stretch;
-  height: 100px;
-  min-height: 100px;
+  height: 124px;
+  min-height: 124px;
   width: 100%;
   border-bottom: 1px solid rgba(255, 255, 255, 0.04);
   position: relative;
@@ -842,14 +842,14 @@ body, html {
   border-left: 3px solid var(--accent-cyan);
 }
 
-/* Channel Sticky Cell */
+/* Channel Sticky Cell (Clean & Authentic - No Fake Logos) */
 .epg-channel-cell {
-  width: 240px;
+  width: 330px;
   flex-shrink: 0;
-  padding: 0 14px;
+  padding: 0 16px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   background-color: var(--bg-container);
   position: sticky;
   left: 0;
@@ -858,10 +858,10 @@ body, html {
 }
 
 .epg-ch-num {
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   font-weight: 700;
   color: var(--text-muted);
-  width: 32px;
+  width: 38px;
   flex-shrink: 0;
 }
 
@@ -869,60 +869,20 @@ body, html {
   color: #ffffff;
 }
 
-.epg-ch-badge {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 800;
-  color: #ffffff;
-  flex-shrink: 0;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
-}
-
-.epg-ch-info {
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  min-width: 0;
-}
-
 .epg-ch-name {
-  font-size: 1.75rem;
+  font-size: 1.45rem;
   font-weight: 600;
   color: #ffffff;
   letter-spacing: -0.01em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
-.epg-ch-meta {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-top: 2px;
-}
-
-.epg-live-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: var(--text-dim);
-}
-
-.epg-live-dot.event-live {
-  background-color: var(--accent-red);
-  box-shadow: 0 0 6px rgba(239, 68, 68, 0.8);
-  animation: standbyPulse 1.5s infinite;
+.epg-channel-row.row-focused .epg-ch-name {
+  color: #ffffff;
+  font-weight: 700;
 }
 
 /* Programs Track */
@@ -931,13 +891,13 @@ body, html {
   height: 100%;
 }
 
-/* Program Cards */
+/* Program Cards (Generous 10-Foot Scale) */
 .epg-program-card {
   position: absolute;
-  top: 4px;
-  bottom: 4px;
-  border-radius: 8px;
-  padding: 8px 14px;
+  top: 6px;
+  bottom: 6px;
+  border-radius: 10px;
+  padding: 12px 18px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -965,7 +925,7 @@ body, html {
   background-color: #ffffff !important;
   color: #09090b !important;
   border: 2px solid #ffffff !important;
-  box-shadow: 0 4px 24px rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 6px 28px rgba(255, 255, 255, 0.4) !important;
   z-index: 20;
 }
 
@@ -983,57 +943,57 @@ body, html {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
 }
 
 .epg-prog-time {
-  font-size: 0.75rem;
+  font-size: 0.9375rem;
   color: var(--text-muted);
   font-weight: 500;
 }
 
 .epg-live-badge-mini {
-  font-size: 0.625rem;
+  font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--accent-red);
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
 }
 
 .epg-live-badge-mini::before {
   content: '';
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background-color: var(--accent-red);
   animation: standbyPulse 1.5s infinite;
 }
 
 .epg-prog-title {
-  font-size: 0.875rem;
+  font-size: 1.15rem;
   font-weight: 600;
   color: rgba(255, 255, 255, 0.95);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  line-height: 1.3;
+  line-height: 1.35;
 }
 
 /* Program Card Progress Bar */
 .epg-prog-progress-bar {
   width: 100%;
-  height: 3px;
+  height: 4px;
   background-color: rgba(255, 255, 255, 0.1);
   border-radius: 2px;
   overflow: hidden;
-  margin-top: 6px;
+  margin-top: 8px;
 }
 
 .epg-program-card.focused .epg-prog-progress-bar {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.12);
 }
 
 .epg-prog-progress-fill {
@@ -1043,7 +1003,7 @@ body, html {
 }
 
 /* ==========================================================================
-   EPG PROGRAM DETAILS / INSPECTOR PANEL
+   EPG PROGRAM DETAILS / INSPECTOR PANEL (EXPANDED PROPORTIONS)
    ========================================================================== */
 .epg-inspector-panel {
   width: 100%;
@@ -1060,28 +1020,28 @@ body, html {
 }
 
 .inspector-content {
-  padding: 18px 24px;
+  padding: 22px 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
+  gap: 28px;
 }
 
 .inspector-details {
   flex: 1;
-  max-width: 900px;
+  max-width: 1100px;
 }
 
 .inspector-meta-row {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 0.75rem;
+  font-size: 0.875rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-muted);
   font-weight: 600;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .inspector-ch-name {
@@ -1102,21 +1062,21 @@ body, html {
 }
 
 .inspector-title {
-  font-size: 1.45rem;
+  font-size: 1.85rem;
   font-weight: 700;
   color: #ffffff;
   letter-spacing: -0.015em;
-  line-height: 1.3;
-  margin-bottom: 4px;
+  line-height: 1.25;
+  margin-bottom: 8px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .inspector-desc {
-  font-size: 0.875rem;
+  font-size: 1.0625rem;
   color: var(--text-secondary);
-  line-height: 1.5;
+  line-height: 1.55;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -1130,13 +1090,13 @@ body, html {
 .insp-watch-btn {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 24px;
+  gap: 12px;
+  padding: 14px 28px;
   border-radius: 9999px;
   background-color: #ffffff;
   color: #09090b;
   font-weight: 700;
-  font-size: 0.875rem;
+  font-size: 0.95rem;
   border: none;
   cursor: pointer;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
@@ -1152,7 +1112,7 @@ body, html {
 /* Integrated Cyan Progress Bar in Inspector */
 .inspector-progress-track {
   width: 100%;
-  height: 4px;
+  height: 5px;
   background-color: rgba(255, 255, 255, 0.08);
   position: relative;
   overflow: hidden;
@@ -1199,13 +1159,13 @@ body, html {
    ========================================================================== */
 .osd-channel-banner {
   position: fixed;
-  bottom: 24px;
-  left: 32px;
-  right: 32px;
+  bottom: 36px;
+  left: 36px;
+  right: 36px;
   z-index: 50;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0;
   opacity: 1;
   visibility: visible;
   transition: opacity 250ms ease, transform 250ms cubic-bezier(0.16, 1, 0.3, 1), visibility 250ms;
@@ -1215,16 +1175,16 @@ body, html {
 .osd-channel-banner.hidden {
   opacity: 0;
   visibility: hidden;
-  transform: translateY(24px);
+  transform: translateY(28px);
   pointer-events: none;
 }
 
 .osd-card-inner {
   width: 100%;
   background-color: rgba(17, 19, 25, 0.96);
-  border-radius: 16px;
-  border: 1px solid var(--border-glass);
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85);
+  border-radius: 18px;
+  border: 1.5px solid var(--border-glass);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9);
   position: relative;
   overflow: hidden;
   display: flex;
@@ -1233,11 +1193,11 @@ body, html {
 }
 
 .osd-main-row {
-  padding: 22px 28px;
+  padding: 28px 36px;
   display: flex;
   align-items: stretch;
   justify-content: space-between;
-  gap: 24px;
+  gap: 32px;
 }
 
 /* Primary Live Section */
@@ -1253,17 +1213,17 @@ body, html {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 8px;
-  font-size: 0.75rem;
+  gap: 10px;
+  font-size: 0.875rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-muted);
   font-weight: 600;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .osd-num {
-  font-size: 0.875rem;
+  font-size: 1.15rem;
   font-weight: 800;
   color: #ffffff;
 }
@@ -1272,6 +1232,7 @@ body, html {
   color: #ffffff;
   font-weight: 700;
   letter-spacing: 0.05em;
+  font-size: 1.15rem;
 }
 
 .osd-sep-dot {
@@ -1284,64 +1245,64 @@ body, html {
 }
 
 .osd-quality-badge {
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 0.625rem;
+  padding: 3px 8px;
+  border-radius: 5px;
+  font-size: 0.75rem;
   font-weight: 800;
   letter-spacing: 0.1em;
   background-color: rgba(255, 255, 255, 0.1);
   color: var(--text-secondary);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   margin-left: 6px;
 }
 
 .osd-show-title {
-  font-size: 1.65rem;
+  font-size: 2.15rem;
   font-weight: 700;
   color: #ffffff;
   letter-spacing: -0.015em;
-  line-height: 1.3;
-  margin-bottom: 6px;
+  line-height: 1.25;
+  margin-bottom: 10px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .osd-show-desc {
-  font-size: 0.875rem;
+  font-size: 1.05rem;
   color: var(--text-secondary);
-  line-height: 1.5;
+  line-height: 1.55;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  max-width: 900px;
+  max-width: 1050px;
 }
 
 /* Split Section: Dedicated "UP NEXT" Preview Card */
 .osd-split-section {
-  width: 320px;
+  width: 380px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border-left: 1px solid var(--border-glass);
-  padding-left: 24px;
+  border-left: 1.5px solid var(--border-glass);
+  padding-left: 28px;
 }
 
 .osd-next-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 0.75rem;
-  margin-bottom: 6px;
+  font-size: 0.8125rem;
+  margin-bottom: 8px;
 }
 
 .osd-next-label {
   font-weight: 700;
   letter-spacing: 0.08em;
   color: var(--text-muted);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
 }
 
@@ -1352,17 +1313,17 @@ body, html {
 
 .osd-next-card {
   background-color: var(--bg-surface-low);
-  border-radius: 10px;
-  padding: 10px 14px;
+  border-radius: 12px;
+  padding: 14px 18px;
   border: 1px solid var(--border-subtle);
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
   overflow: hidden;
 }
 
 .osd-next-title {
-  font-size: 0.8125rem;
+  font-size: 0.95rem;
   font-weight: 600;
   color: #ffffff;
   white-space: nowrap;
@@ -1371,7 +1332,7 @@ body, html {
 }
 
 .osd-next-desc {
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   color: var(--text-muted);
   white-space: nowrap;
   overflow: hidden;
@@ -1381,7 +1342,7 @@ body, html {
 /* Cyan Progress Bar in OSD */
 .osd-progress-track {
   width: 100%;
-  height: 4px;
+  height: 5px;
   background-color: rgba(255, 255, 255, 0.1);
   position: relative;
   overflow: hidden;
@@ -1392,34 +1353,6 @@ body, html {
   background-color: var(--accent-cyan);
   box-shadow: 0 0 10px var(--accent-cyan-glow);
   transition: width 300ms linear;
-}
-
-/* OSD Footer Hints */
-.osd-footer-hints {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 0.75rem;
-  color: var(--text-muted);
-  padding: 0 4px;
-}
-
-.osd-hints-left {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.osd-hints-right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.osd-hint-action {
-  font-weight: 600;
-  color: #ffffff;
 }
 
 /* ==========================================================================

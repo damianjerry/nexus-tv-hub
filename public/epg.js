@@ -428,7 +428,7 @@ const EPG_DATA = (function () {
     };
   }
 
-  const PX_PER_MINUTE = 8;
+  const PX_PER_MINUTE = 10;
   const TIMELINE_HOURS = 24;
 
   // Generate time intervals for timeline headers (e.g. 30 min slices around current time)

@@ -263,9 +263,9 @@
     state.timelineBaseHour = startHour;
     state.gridBaseStartMs = EPG_DATA.getBaseTimelineStartMs ? EPG_DATA.getBaseTimelineStartMs(now) : new Date(now.getFullYear(), now.getMonth(), now.getDate(), startHour, 0, 0, 0).getTime();
 
-    // 1. Render Timeline Ruler
+    // 1. Render Timeline Ruler (300px per 30-min slot = 10px / minute)
     const intervals = EPG_DATA.getTimelineIntervals(now, EPG_DATA.TIMELINE_HOURS, 30);
-    const rulerTotalWidthPx = intervals.length * 240;
+    const rulerTotalWidthPx = intervals.length * 300;
 
     dom.epgTimeRuler.style.width = `${rulerTotalWidthPx}px`;
     dom.epgTimeRuler.innerHTML = "";
@@ -286,21 +286,12 @@
       row.dataset.channelId = ch.id;
       row.dataset.category = ch.category;
 
-      // Channel Sticky Left Cell
+      // Channel Sticky Left Cell - Clean number & full authentic channel name (No fake logos)
       const cell = document.createElement("div");
       cell.className = "epg-channel-cell";
       cell.innerHTML = `
         <span class="epg-ch-num tabular-nums">${ch.number}</span>
-        <div class="epg-ch-badge" style="background-color: ${ch.color || '#3b82f6'};">
-          ${ch.logoText || ch.name.substring(0, 3).toUpperCase()}
-        </div>
-        <div class="epg-ch-info">
-          <span class="epg-ch-name">${ch.name}</span>
-          <div class="epg-ch-meta">
-            <span class="epg-live-dot ${ch.isEventStream && ch.isLiveNow ? 'event-live' : ''}"></span>
-            <span>${ch.badge}</span>
-          </div>
-        </div>
+        <span class="epg-ch-name">${ch.name}</span>
       `;
 
       cell.addEventListener("click", () => {
@@ -378,10 +369,10 @@
   function updateNowMarkerPosition(now) {
     if (!dom.epgNowMarker) return;
     const baseTimelineStartMs = state.gridBaseStartMs || (EPG_DATA.getBaseTimelineStartMs ? EPG_DATA.getBaseTimelineStartMs(now) : new Date(now.getFullYear(), now.getMonth(), now.getDate(), state.timelineBaseHour || 0, 0, 0, 0).getTime());
-    const PX_PER_MIN = EPG_DATA.PX_PER_MINUTE || 8;
+    const PX_PER_MIN = EPG_DATA.PX_PER_MINUTE || 10;
 
     const elapsedMs = Math.max(0, now.getTime() - baseTimelineStartMs);
-    const markerLeftPx = 240 + (elapsedMs / 60000) * PX_PER_MIN;
+    const markerLeftPx = 330 + (elapsedMs / 60000) * PX_PER_MIN;
 
     dom.epgNowMarker.style.left = `${markerLeftPx}px`;
   }
@@ -482,13 +473,13 @@
 
         if (scroll && dom.epgGridContainer) {
           const container = dom.epgGridContainer;
-          const cardLeft = 240 + targetCard._progData.leftPx;
+          const cardLeft = 330 + targetCard._progData.leftPx;
           const cardRight = cardLeft + targetCard._progData.widthPx;
-          const viewLeft = container.scrollLeft + 240;
+          const viewLeft = container.scrollLeft + 330;
           const viewRight = container.scrollLeft + container.clientWidth - 40;
 
           if (cardLeft < viewLeft) {
-            container.scrollTo({ left: Math.max(0, cardLeft - 280), behavior: smooth ? "smooth" : "auto" });
+            container.scrollTo({ left: Math.max(0, cardLeft - 360), behavior: smooth ? "smooth" : "auto" });
           } else if (cardRight > viewRight) {
             container.scrollTo({ left: cardRight - container.clientWidth + 80, behavior: smooth ? "smooth" : "auto" });
           }
@@ -786,10 +777,10 @@
 
     // Center horizontal timeline on the LIVE time relative to grid base
     const baseTimelineStartMs = state.gridBaseStartMs || currentBaseMs;
-    const PX_PER_MIN = EPG_DATA.PX_PER_MINUTE || 8;
+    const PX_PER_MIN = EPG_DATA.PX_PER_MINUTE || 10;
     const nowOffset = ((now.getTime() - baseTimelineStartMs) / 60000) * PX_PER_MIN;
     if (dom.epgGridContainer) {
-      dom.epgGridContainer.scrollLeft = Math.max(0, nowOffset - 280);
+      dom.epgGridContainer.scrollLeft = Math.max(0, nowOffset - 330);
     }
 
     state.currentInspectedTimeMs = now.getTime();
